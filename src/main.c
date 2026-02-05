@@ -8,23 +8,23 @@
 int	main(int argc, char const *argv[])
 {
 	t_minishell minishell;
-	char	*line;
 
 	(void)argc;
 	(void)argv;
 	while (1)
 	{
-		line = readline("foo$> ");
-		ft_gc_add_node(&minishell.gc, (void *)line);
-		if (!line)
+		minishell.line = readline("foo$> ");
+		ft_gc_add_node(&minishell.gc, minishell.line);
+		if (!minishell.line)
 			ft_printf("\n");
-		if (*line)
+		if (*minishell.line)
 		{
-            char *args[] = {line, NULL};
-			execve(line, args, NULL);
+            char *args[] = {minishell.line, NULL};
+			ft_parse(&minishell);
+			execve(minishell.line, args, NULL);
 		}
-		printf("You entered: %s\n", line);
-		free(line);
+		printf("You entered: %s\n", minishell.line);
 	}
+	ft_gc_free_all(&minishell.gc);
 	return (0);
 }

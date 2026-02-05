@@ -1,6 +1,8 @@
 NAME= minishell
 
-SRCS = src/main.c
+SRCS = src/main.c \
+		src/errors/errors.c \
+		src/parsing/lexer.c
 
 OBJ_DIR = objs
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)

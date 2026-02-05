@@ -2,6 +2,7 @@
 # define MINISHELL_H
 
 # include "libft.h"
+# include "errors.h"
 
 typedef enum e_type {
 	PIPE,
@@ -13,6 +14,13 @@ typedef enum e_type {
 	NBR_TYPES,
 }	t_types;
 
+typedef enum e_state {
+	NORMAL,
+	IN_QUOTE,
+	IN_DQUOTE,
+	NBR_STATE,
+}	t_state;
+
 typedef struct s_element {
 	char				*str;
 	t_types				type;
@@ -23,5 +31,9 @@ typedef struct s_minishell {
 	t_elements	*head;
 	t_list		*gc;
 	char		*line;
+	t_state			state;
 }	t_minishell;
+
+void	ft_parse(t_minishell *minishell);
+
 #endif
