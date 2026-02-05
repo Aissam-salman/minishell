@@ -4,6 +4,7 @@
 # include "libft.h"
 # include "errors.h"
 
+// ENUM TYPES ELEMENTS
 typedef enum e_type {
 	PIPE,
 	IN_CHEVRON,
@@ -14,6 +15,7 @@ typedef enum e_type {
 	NBR_TYPES,
 }	t_types;
 
+// ENUMS ETATS MACHINE STATE
 typedef enum e_state {
 	NORMAL,
 	IN_QUOTE,
@@ -22,12 +24,14 @@ typedef enum e_state {
 	NEUTRAL,
 }	t_state;
 
+// STRUCTURE POUR UN ELEMENT
 typedef struct s_element {
 	char				*str;
 	t_types				type;
 	struct s_element	*next;
 }	t_elements;
 
+// STRUCTURE GLOBALE POUR LE MINISHELL
 typedef struct s_minishell {
 	t_elements	*head;
 	t_list		*gc;
