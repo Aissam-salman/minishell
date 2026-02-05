@@ -14,12 +14,12 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 INCS = -I. -Iincludes -I$(LIBFT_DIR)
 
-all: $(NAME) $(LIBFT)
+all: $(NAME)
 
 $(LIBFT): 
 	make -C $(LIBFT_DIR)
 
-$(NAME): $(OBJS)
+$(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(OBJS) $(LIBFT) $(INCS) -lreadline -o $(NAME)
 
 $(OBJ_DIR)/%.o: %.c

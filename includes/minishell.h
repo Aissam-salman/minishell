@@ -19,6 +19,7 @@ typedef enum e_state {
 	IN_QUOTE,
 	IN_DQUOTE,
 	NBR_STATE,
+	NEUTRAL,
 }	t_state;
 
 typedef struct s_element {

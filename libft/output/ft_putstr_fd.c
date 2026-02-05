@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 19:26:19 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/05 16:36:23 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/05 18:54:32 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,5 @@
 
 void	ft_putstr_fd(char *s, int fd)
 {
-	write(fd, &str, ft_strlen(str));
+	write(fd, &s, ft_strlen(s));
 }

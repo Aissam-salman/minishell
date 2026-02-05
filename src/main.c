@@ -11,14 +11,20 @@ int	main(int argc, char const *argv[])
 
 	(void)argc;
 	(void)argv;
+	ft_bzero(&minishell, sizeof(t_minishell));
 	while (1)
 	{
 		minishell.line = readline("foo$> ");
-		ft_gc_add_node(&minishell.gc, minishell.line);
 		if (!minishell.line)
 			ft_printf("\n");
+		ft_gc_add_node(&minishell.gc, minishell.line);
 		if (*minishell.line)
 		{
+			if (ft_strncmp(minishell.line, "exit", 4) == 0)
+			{
+				ft_gc_free_all(&minishell.gc);
+				exit(0);
+			}
             char *args[] = {minishell.line, NULL};
 			ft_parse(&minishell);
 			execve(minishell.line, args, NULL);

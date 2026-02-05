@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 15:58:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/05 17:27:42 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/05 18:57:03 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 */
 void	ft_detect_state(char c, t_minishell *minishell)
 {
+	// SI GUILLEMETS
 	if (c == '"')
 	{
 		ft_printf("Double Quote\n");
@@ -28,6 +29,7 @@ void	ft_detect_state(char c, t_minishell *minishell)
 		else if (minishell->state == IN_DQUOTE)
 			minishell->state = NORMAL;
 	}
+	// SI APOSTROPHE
 	else if (c ==  '\'')
 	{
 		ft_printf("Simple Quote\n");
@@ -36,13 +38,12 @@ void	ft_detect_state(char c, t_minishell *minishell)
 		else if (minishell->state == IN_QUOTE)
 			minishell->state = NORMAL;
 	}
-	else if (ft_ischarset(c, SPACE) && minishell->state == NORMAL)
+	// SI ESPACES
+	else if (ft_ischarset(c, SPACES))
 	{
+		// ON CONVERTIT LE BUFFER EN STRUCT ET ON SET A NEUTRAL
+		// if (minishell->state == NORMAL)
 	}
-	else
-		buffer[j] = str[i];
-	}
-	i++;
 }
 
 // ON RECUPERE LA LIGNE
@@ -59,12 +60,11 @@ void	ft_create_elem_lst(t_minishell *minishell)
 	while (line[i])
 	{
 		// ON DETECTE L'ETAT POUR POUVOIR DETERMINER QUOI FAIRE DU CHARACTERE
-		buffer = ft_calloc_gc(ft_strlen(line) + 1, sizeof(char), &minishell->gc)
+		buffer = ft_calloc_gc(ft_strlen(line) + 1, sizeof(char), &minishell->gc);
 		ft_detect_state(line[i], minishell);
-		
-		// ON TRAITE line[i] EN FONCTION DE L'ETAT 
-		//				-> Si line[]
+		ft_printf("%d\n", minishell->state);
 		i++;
+		// ON TRAITE line[i] EN FONCTION DE L'ETAT 
 	}
 
 }
