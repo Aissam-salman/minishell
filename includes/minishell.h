@@ -54,6 +54,9 @@ typedef struct s_minishell {
 	t_state			state;
 }	t_minishell;
 
+
 void	ft_parse(t_minishell *minishell);
+//parser
+void	ft_create_cmd_lst(t_minishell *minishell);
 
 #endif

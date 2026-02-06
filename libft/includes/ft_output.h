@@ -13,8 +13,6 @@
 #ifndef FT_OUTPUT_H
 # define FT_OUTPUT_H
 
-#include "libft.h"
-
 // Base definitions for printf
 # define BASE_10 "0123456789"
 # define BASE_UPPER "0123456789ABCDEF"

@@ -4,7 +4,7 @@ int	main()
 {
 	t_minishell minishell;
 
-	// handle signal 
+	// handle signal
 	// printf("%s",getenv("PATH"));
 	ft_bzero(&minishell, sizeof(t_minishell));
 	while (1)
@@ -15,7 +15,7 @@ int	main()
 		ft_gc_add_node(&minishell.gc, minishell.line);
 		if (*minishell.line)
 		{
-			// history 
+			// history
 			if (ft_strncmp(minishell.line, "exit", 4) == 0)
 			{
 				ft_gc_free_all(&minishell.gc);
