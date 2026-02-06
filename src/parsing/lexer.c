@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 15:58:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/05 18:57:03 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/06 13:35:55 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 	Lorsque '
 	Lorsque SPACE
 */
-void	ft_detect_state(char c, t_minishell *minishell)
+void	ft_state_detect(char c, char *buffer, t_minishell *minishell)
 {
 	// SI GUILLEMETS
 	if (c == '"')
@@ -38,16 +38,7 @@ void	ft_detect_state(char c, t_minishell *minishell)
 		else if (minishell->state == IN_QUOTE)
 			minishell->state = NORMAL;
 	}
-	// SI ESPACES
-	else if (ft_ischarset(c, SPACES))
-	{
-		// ON CONVERTIT LE BUFFER EN STRUCT ET ON SET A NEUTRAL
-		// if (minishell->state == NORMAL)
-		ft_printf("Space\n");
-		// if (!(minishell->state == IN_DQUOTE || minishell->state == IN_QUOTE))
-	}
 }
-
 
 // int ft_interpret_state(char line[i], t_minishell *minishell);
 // 	check le state et le char .
@@ -57,6 +48,28 @@ void	ft_detect_state(char c, t_minishell *minishell)
 // 		fin de buffer return 2 
 // 	else 
 // 		append au buffer return 1
+
+void	ft_state_interprete(char c, char *buffer, t_minishell *minishell)
+{
+	if (c == '|')
+	{
+		if (minishell->state == NORMAL)
+		else
+	}
+	else if (c == '<' || c == '>')
+	{
+		if (minishell->state == NORMAL)
+		else
+	}
+	else if (ft_ischarset(c, SPACES))
+	{
+		if (minishell->state == NORMAL)
+		else
+
+	}
+	else
+
+}
 
 // ON RECUPERE LA LIGNE
 void	ft_create_elem_lst(t_minishell *minishell)
@@ -70,11 +83,13 @@ void	ft_create_elem_lst(t_minishell *minishell)
 	line = minishell->line;
 	i = 0;
 	// On parcourt la ligne pour ajouter a chaque fois
+	buffer = ft_calloc_gc(ft_strlen(line) + 1, sizeof(char), &minishell->gc);
 	while (line[i])
 	{
 		// ON DETECTE L'ETAT POUR POUVOIR DETERMINER QUOI FAIRE DU CHARACTERE
-		buffer = ft_calloc_gc(ft_strlen(line) + 1, sizeof(char), &minishell->gc);
-		ft_detect_state(line[i], minishell);
+		ft_state_detect(line[i], minishell);
+		ft_state_interprete(line[i], buffer, minishell);
+		// ft_interprete_state
 		ft_printf("%d\n", minishell->state);
 		i++;
 		(void)buffer;
