@@ -20,15 +20,15 @@
 # include <stdarg.h>
 
 // Include all subdirectory headers
-# include "ft_char.h"
-# include "ft_strings.h"
-# include "ft_conversion.h"
-# include "ft_memory.h"
-# include "ft_list.h"
-# include "ft_gnl.h"
-# include "ft_output.h"
-# include "sorting.h"
-# include "ft_gc.h"
+# include "includes/ft_char.h"
+# include "includes/ft_strings.h"
+# include "includes/ft_conversion.h"
+# include "includes/ft_memory.h"
+# include "includes/ft_list.h"
+# include "includes/ft_gnl.h"
+# include "includes/ft_output.h"
+# include "includes/sorting.h"
+# include "includes/ft_gc.h"
 
 
 #endif
