@@ -26,10 +26,10 @@ int	main()
 				ft_gc_free_all(&minishell.gc);
 				exit(0);
 			}
-			char *args[] = {minishell.line, NULL};
+			// char *args[] = {minishell.line, NULL};
 			ft_parse(&minishell);
 			// execution
-			execve("/bin/echo", args, NULL);
+			// execve("/bin/echo", args, NULL);
 		}
 		printf("You entered: %s\n", minishell.line);
 	}

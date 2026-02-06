@@ -4,6 +4,8 @@
 # include "../libft/libft.h"
 # include "errors.h"
 
+# define OPERATORS "|<>"
+
 // ENUM TYPES ELEMENTS
 typedef enum e_type {
 	PIPE,
@@ -21,7 +23,7 @@ typedef enum e_state {
 	IN_QUOTE,
 	IN_DQUOTE,
 	NBR_STATE,
-	NEUTRAL,
+	WAITING,
 }	t_state;
 
 // STRUCTURE POUR UN ELEMENT
@@ -41,4 +43,5 @@ typedef struct s_minishell {
 
 void	ft_parse(t_minishell *minishell);
 
+void	ft_print_state(char c, char *buffer, t_minishell *minishell);
 #endif
