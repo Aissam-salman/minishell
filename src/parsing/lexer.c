@@ -13,6 +13,7 @@
 #include "../../includes/minishell.h"
 #include <algorithm>
 #include <stdio.h>
+#include <stdlib.h>
 
 t_elements *create_mocks_element();
 void ft_create_cmd_lst(t_minishell *minishell);
@@ -147,13 +148,22 @@ void ft_create_cmd_lst(t_minishell *minishell)
 {
 	(void)minishell;
 	t_elements *ele = NULL;
+	char **args;
+	t_elements *e;
+	int i;
+	int len_ele;
 
 	ele = create_mocks_element();
 	minishell->elements = ele;
-
+	len_ele = 6; //FIX: make lst_size for t_element 
+	args = ft_gc_malloc(sizeof(char *) * len_ele, &minishell->gc);
+	if (!args)
+		return;
 	while (ele)
 	{
 		printf("%s\n", ele->str);
+		if (ele->next && ele->is_taken == 1)
+			ele = ele->next;
 		if (ele->type == REDIRECTION)
 		{
 			//NOTE: check word after if is file ?? 
@@ -169,12 +179,27 @@ void ft_create_cmd_lst(t_minishell *minishell)
 		{
 			if (!ft_check_cmd(minishell, ele))
 				error_parsing_cmd();
+			e = ele;
+			i = 0;
+			while (e && e->type != PIPE)
+			{
+				if (e->type == REDIRECTION && e->next && e->next->next)
+							e = e->next->next;
+				if ((!*args[i] || e->type == WORD) && e->is_taken == 0)
+				{
+					args[i] = ft_gc_malloc(ft_strlen(e->str) + 1, &minishell->gc);
+					args[i] = e->str;
+					e->is_taken = 1;
+				}
+				if (e->type != REDIRECTION)
+					e = e->next;
+				i++;
+			}
 			// check si after type redirection si oui, 
 			// avancer de 2 ele, et si type=word avec -* alors append join les 2 ele 
 			// sinon si | void
 			// si '-' seul -> error 
 			// marquer l'element parcourue
-			// 
 		}
 		else if (ele->type == PIPE)
 		{
