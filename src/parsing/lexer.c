@@ -149,7 +149,7 @@ void ft_create_cmd_lst(t_minishell *minishell)
 	t_elements *ele = NULL;
 
 	ele = create_mocks_element();
-	minishell->head = ele;
+	minishell->elements = ele;
 
 	while (ele)
 	{
@@ -160,21 +160,22 @@ void ft_create_cmd_lst(t_minishell *minishell)
 			if (ft_check_redirection(minishell, ele) == 0)
 				error_parsing_redirection();
 		}
-		else if (ele->type == WORD)
-		{
-			if (!ft_check_cmd(minishell, ele))
-				error_parsing_cmd();
-			// check si after type redirection si oui, 
-			// avancer de 2 ele, et si texte avec -* alors append join les 2 ele 
-			// si - seul error 
-			// marquer l'element parcourue
-		}
 		else if (ele->type == WORD && ft_strchr(ele->str, '\'') || ft_strchr(ele->str, '\"'))
 		{
 			if (!ft_check_expends(minishell, ele))
 				error_parsing_expends();
 		}
-
+		else if (ele->type == WORD)
+		{
+			if (!ft_check_cmd(minishell, ele))
+				error_parsing_cmd();
+			// check si after type redirection si oui, 
+			// avancer de 2 ele, et si type=word avec -* alors append join les 2 ele 
+			// sinon si | void
+			// si '-' seul -> error 
+			// marquer l'element parcourue
+			// 
+		}
 		else if (ele->type == PIPE)
 		{
 			if (!ft_check_pipe(minishell, ele))
