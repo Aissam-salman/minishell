@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <readline/readline.h>
 #include "errors.h"
+#include <signal.h>
 
 // ENUM TYPES ELEMENTS
 typedef enum e_type {

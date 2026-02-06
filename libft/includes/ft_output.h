@@ -18,6 +18,9 @@
 # define BASE_UPPER "0123456789ABCDEF"
 # define BASE_LOWER "0123456789abcdef"
 
+#include "../includes/ft_strings.h"
+#include <stddef.h>
+
 // File descriptor output functions
 void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
