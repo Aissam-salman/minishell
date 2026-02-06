@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <readline/readline.h>
 
 #include "../includes/minishell.h"
 
@@ -29,9 +25,10 @@ int	main()
 			char *args[] = {minishell.line, NULL};
 			ft_parse(&minishell);
 			// execution
+			exit(0);
 			execve("/bin/echo", args, NULL);
 		}
-		printf("You entered: %s\n", minishell.line);
+		// printf("You entered: %s\n", minishell.line);
 	}
 	ft_gc_free_all(&minishell.gc);
 	return (0);

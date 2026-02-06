@@ -11,6 +11,10 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <stdio.h>
+
+t_elements *create_mocks_element();
+void ft_create_cmd_lst(t_minishell *minishell);
 
 // TRAITER LES CHANGEMENTS D'ETAT
 /*
@@ -97,11 +101,27 @@ void	ft_create_elem_lst(t_minishell *minishell)
 // On récupere la ligne, on traite pour avoir des types de mots 
 // On les récupere ensuite pour créer des phrases
 
+
 void	ft_parse(t_minishell *minishell)
 {
 	// ON RECUPERE LES TYPES DANS UN PREMIER TEMPS
-	ft_create_elem_lst(minishell);
+	// ft_create_elem_lst(minishell);
 	
+	ft_create_cmd_lst(minishell);
+}
+
+void ft_create_cmd_lst(t_minishell *minishell)
+{
+	(void)minishell;
+	t_elements *head = NULL;
+
+	head = create_mocks_element();
+
+	while (head)
+	{
+		printf("%s\n", head->str);
+		head = head->next;
+	}
 	// UTILISATION DU PARSER
 	//
 	//
@@ -114,4 +134,42 @@ void	ft_parse(t_minishell *minishell)
 	//  	eroor 
 	//  int ft_check_pipe()
 	//  		
+}
+
+t_elements *create_mocks_element()
+{
+	t_elements *head = NULL;
+	t_elements element2;
+	t_elements element3;
+	t_elements element4;
+	t_elements element5;
+	t_elements element6;
+	// PIPE,
+	// IN_CHEVRON,
+	// IN_DCHEVRON,
+	// OUT_CHEVRON,
+	// OUT_DCHEVRON,
+	// WORD,
+	// NBR_TYPES,
+	// FILE ?? 
+	head->str = ft_strdup("<");
+	head->type = IN_CHEVRON;
+	element2.str = ft_strdup("logs.txt");
+	element2.type = WORD;
+	element3.str = ft_strdup("cat");
+	element3.type = WORD;
+	element4.str = ft_strdup("|");
+	element4.type = PIPE;
+	element5.str = ft_strdup("grep");
+	element5.type = WORD;
+	element6.str = ft_strdup("\"error\"");
+	element6.type = WORD;
+
+	head->next = &element2;
+	head->next->next = &element3;
+	head->next->next->next = &element4;
+	head->next->next->next->next = &element5;
+	head->next->next->next->next->next = NULL;
+	(void)element6;
+	return (head);
 }
