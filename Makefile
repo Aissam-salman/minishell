@@ -35,5 +35,6 @@ fclean: clean
 
 re: fclean all
 
-test: re
-	./$(NAME)
+test: all
+	@echo "Running automated tests..."
+	./tests/example.sh

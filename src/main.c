@@ -1,9 +1,9 @@
-#include <readline/readline.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <readline/readline.h>
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 int	main(int argc, char const *argv[])
 {

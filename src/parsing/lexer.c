@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 // TRAITER LES CHANGEMENTS D'ETAT
 /*
@@ -43,8 +43,15 @@ void	ft_detect_state(char c, t_minishell *minishell)
 	{
 		// ON CONVERTIT LE BUFFER EN STRUCT ET ON SET A NEUTRAL
 		// if (minishell->state == NORMAL)
+		ft_printf("Space\n");
+		if (minishell->state == NORMAL)
+			minishell->state = NEUTRAL;
+		else if (minishell->state == NEUTRAL)
+			minishell->state = NORMAL;
 	}
 }
+
+
 
 // ON RECUPERE LA LIGNE
 void	ft_create_elem_lst(t_minishell *minishell)
@@ -64,7 +71,12 @@ void	ft_create_elem_lst(t_minishell *minishell)
 		ft_detect_state(line[i], minishell);
 		ft_printf("%d\n", minishell->state);
 		i++;
+		(void)buffer;
 		// ON TRAITE line[i] EN FONCTION DE L'ETAT 
+		// Si NEUTRAL ? 
+		//  word ou operator, besoin de append au mot current 
+		//  j'aurais fait une sub boucle  tant !NEUTRAL i++ pour avoir le truc,
+		//  malloc ensuite 
 	}
 
 }
