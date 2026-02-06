@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <algorithm>
 #include <stdio.h>
 
 t_elements *create_mocks_element();
@@ -110,40 +111,88 @@ void	ft_parse(t_minishell *minishell)
 	ft_create_cmd_lst(minishell);
 }
 
+#define REDIRECTION IN_CHEVRON || OUT_CHEVRON || IN_DCHEVRON || OUT_DCHEVRON
+
+void error_parsing_redirection()
+{
+	printf("Error Redirection");
+	exit(12);
+}
+
+void error_parsing_cmd()
+{
+	printf("Error cmd");
+	exit(13);
+}
+
+void error_parsing_expends()
+{
+	printf("Error expends");
+	exit(14);
+}
+
+void error_parsing_pipe()
+{
+	printf("Error pipe");
+	exit(15);
+}
+//TODO:
+int ft_check_redirection(t_minishell *minishell, t_elements *ele);
+int ft_check_cmd(t_minishell *minishell, t_elements *ele);
+int ft_check_expends(t_minishell *minishell, t_elements *ele);
+int ft_check_pipe(t_minishell *minishell, t_elements *ele);
+void cmd_append(t_minishell *minishell, t_elements *ele);
+
 void ft_create_cmd_lst(t_minishell *minishell)
 {
 	(void)minishell;
-	t_elements *head = NULL;
+	t_elements *ele = NULL;
 
-	head = create_mocks_element();
+	ele = create_mocks_element();
+	minishell->head = ele;
 
-	while (head)
+	while (ele)
 	{
-		printf("%s\n", head->str);
-		head = head->next;
+		printf("%s\n", ele->str);
+		if (ele->type == REDIRECTION)
+		{
+			//NOTE: check word after if is file ?? 
+			if (ft_check_redirection(minishell, ele) == 0)
+				error_parsing_redirection();
+		}
+		else if (ele->type == WORD)
+		{
+			if (!ft_check_cmd(minishell, ele))
+				error_parsing_cmd();
+			// check si after type redirection si oui, 
+			// avancer de 2 ele, et si texte avec -* alors append join les 2 ele 
+			// si - seul error 
+			// marquer l'element parcourue
+		}
+		else if (ele->type == WORD && ft_strchr(ele->str, '\'') || ft_strchr(ele->str, '\"'))
+		{
+			if (!ft_check_expends(minishell, ele))
+				error_parsing_expends();
+		}
+
+		else if (ele->type == PIPE)
+		{
+			if (!ft_check_pipe(minishell, ele))
+				error_parsing_pipe();
+		}
+		cmd_append(minishell, ele);
+		ele = ele->next;
 	}
-	// UTILISATION DU PARSER
-	//
-	//
-	//loop sur t_element
-	//  int ft_check_redirection(minishell, element) < > << >>
-	//        error 
-	//  int ft_check_cmd(minishell, element)
-	//        error 
-	//  int ft_check_expends()
-	//  	eroor 
-	//  int ft_check_pipe()
-	//  		
 }
 
 t_elements *create_mocks_element()
 {
-	t_elements *head = NULL;
-	t_elements element2;
-	t_elements element3;
-	t_elements element4;
-	t_elements element5;
-	t_elements element6;
+	t_elements *head = malloc(sizeof(t_elements));
+	t_elements *element2 = malloc(sizeof(t_elements));
+	t_elements *element3 = malloc(sizeof(t_elements));
+	t_elements *element4 = malloc(sizeof(t_elements));
+	t_elements *element5 = malloc(sizeof(t_elements));
+	t_elements *element6 = malloc(sizeof(t_elements));
 	// PIPE,
 	// IN_CHEVRON,
 	// IN_DCHEVRON,
@@ -154,21 +203,21 @@ t_elements *create_mocks_element()
 	// FILE ?? 
 	head->str = ft_strdup("<");
 	head->type = IN_CHEVRON;
-	element2.str = ft_strdup("logs.txt");
-	element2.type = WORD;
-	element3.str = ft_strdup("cat");
-	element3.type = WORD;
-	element4.str = ft_strdup("|");
-	element4.type = PIPE;
-	element5.str = ft_strdup("grep");
-	element5.type = WORD;
-	element6.str = ft_strdup("\"error\"");
-	element6.type = WORD;
+	element2->str = ft_strdup("logs.txt");
+	element2->type = WORD;
+	element3->str = ft_strdup("cat");
+	element3->type = WORD;
+	element4->str = ft_strdup("|");
+	element4->type = PIPE;
+	element5->str = ft_strdup("grep");
+	element5->type = WORD;
+	element6->str = ft_strdup("\"error\"");
+	element6->type = WORD;
 
-	head->next = &element2;
-	head->next->next = &element3;
-	head->next->next->next = &element4;
-	head->next->next->next->next = &element5;
+	head->next = element2;
+	head->next->next = element3;
+	head->next->next->next = element4;
+	head->next->next->next->next = element5;
 	head->next->next->next->next->next = NULL;
 	(void)element6;
 	return (head);
