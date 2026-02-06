@@ -5,12 +5,12 @@
 
 #include "../includes/minishell.h"
 
-int	main(int argc, char const *argv[])
+int	main()
 {
 	t_minishell minishell;
 
-	(void)argc;
-	(void)argv;
+	// handle signal 
+	// printf("%s",getenv("PATH"));
 	ft_bzero(&minishell, sizeof(t_minishell));
 	while (1)
 	{
@@ -20,14 +20,16 @@ int	main(int argc, char const *argv[])
 		ft_gc_add_node(&minishell.gc, minishell.line);
 		if (*minishell.line)
 		{
+			// history 
 			if (ft_strncmp(minishell.line, "exit", 4) == 0)
 			{
 				ft_gc_free_all(&minishell.gc);
 				exit(0);
 			}
-            char *args[] = {minishell.line, NULL};
+			char *args[] = {minishell.line, NULL};
 			ft_parse(&minishell);
-			execve(minishell.line, args, NULL);
+			// execution
+			execve("/bin/echo", args, NULL);
 		}
 		printf("You entered: %s\n", minishell.line);
 	}

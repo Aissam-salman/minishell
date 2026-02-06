@@ -44,14 +44,19 @@ void	ft_detect_state(char c, t_minishell *minishell)
 		// ON CONVERTIT LE BUFFER EN STRUCT ET ON SET A NEUTRAL
 		// if (minishell->state == NORMAL)
 		ft_printf("Space\n");
-		if (minishell->state == NORMAL)
-			minishell->state = NEUTRAL;
-		else if (minishell->state == NEUTRAL)
-			minishell->state = NORMAL;
+		// if (!(minishell->state == IN_DQUOTE || minishell->state == IN_QUOTE))
 	}
 }
 
 
+// int ft_interpret_state(char line[i], t_minishell *minishell);
+// 	check le state et le char .
+// 	if operateur et NORMAL 
+// 		fin de string return 2 
+// 	else if space || operateur et normal 
+// 		fin de buffer return 2 
+// 	else 
+// 		append au buffer return 1
 
 // ON RECUPERE LA LIGNE
 void	ft_create_elem_lst(t_minishell *minishell)
@@ -59,6 +64,7 @@ void	ft_create_elem_lst(t_minishell *minishell)
 	int i;
 	char *line;
 	char *buffer;
+	
 
 	// On recupere la ligne
 	line = minishell->line;
@@ -73,12 +79,19 @@ void	ft_create_elem_lst(t_minishell *minishell)
 		i++;
 		(void)buffer;
 		// ON TRAITE line[i] EN FONCTION DE L'ETAT 
-		// Si NEUTRAL ? 
-		//  word ou operator, besoin de append au mot current 
-		//  j'aurais fait une sub boucle  tant !NEUTRAL i++ pour avoir le truc,
-		//  malloc ensuite 
+		// 
+		// int s = ft_interpret_state
+		//
+		//if (s == 1)
+		// append(buffer, line[i])
+		//else if  (s == 2)
+		// lst_add(&t_element, lst_new(buffer)); 
+		//
+		//bzero(buffer);
+		//append(buffer, line[i])
+		//
+		// void ft_detect_type(char *buffer, t_minishell *minishell) -> t_element ele->type
 	}
-
 }
 
 // On récupere la ligne, on traite pour avoir des types de mots 
@@ -91,5 +104,14 @@ void	ft_parse(t_minishell *minishell)
 	
 	// UTILISATION DU PARSER
 	//
-
+	//
+	//loop sur t_element
+	//  int ft_check_redirection(minishell, element) < > << >>
+	//        error 
+	//  int ft_check_cmd(minishell, element)
+	//        error 
+	//  int ft_check_expends()
+	//  	eroor 
+	//  int ft_check_pipe()
+	//  		
 }
