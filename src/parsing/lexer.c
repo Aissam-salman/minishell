@@ -162,8 +162,11 @@ void ft_create_cmd_lst(t_minishell *minishell)
 	while (ele)
 	{
 		printf("%s\n", ele->str);
-		if (ele->next && ele->is_taken == 1)
+		if (ele->is_taken)
+		{
 			ele = ele->next;
+			continue;
+		}
 		if (ele->type == REDIRECTION)
 		{
 			//NOTE: check word after if is file ?? 
@@ -184,16 +187,21 @@ void ft_create_cmd_lst(t_minishell *minishell)
 			while (e && e->type != PIPE)
 			{
 				if (e->type == REDIRECTION && e->next && e->next->next)
-							e = e->next->next;
-				if ((!*args[i] || e->type == WORD) && e->is_taken == 0)
 				{
+							e->is_taken = 1;
+							e->next->is_taken = 1;
+				}
+				if ((!args[i] || e->type == WORD) && e->is_taken == 0)
+				{
+					// if exec just put 
+					// else 
+					//   check flag
 					args[i] = ft_gc_malloc(ft_strlen(e->str) + 1, &minishell->gc);
 					args[i] = e->str;
 					e->is_taken = 1;
+					i++;
 				}
-				if (e->type != REDIRECTION)
-					e = e->next;
-				i++;
+				e = e->next;
 			}
 			// check si after type redirection si oui, 
 			// avancer de 2 ele, et si type=word avec -* alors append join les 2 ele 
