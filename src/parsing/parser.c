@@ -6,7 +6,7 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 18:26:24 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/07 22:50:09 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/07 23:00:58 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int ft_check_flags(char *str)
 int ft_check_redirection(t_elements *ele)
 {
     char *str;
+    char *file;
 
     str = ele->str;
     if (!str)
@@ -52,6 +53,11 @@ int ft_check_redirection(t_elements *ele)
     else if ((str[0] == '<' && str[1] == '<' && !str[2]) ||
 		    (str[0] == '>' && str[1] == '>' && !str[2]))
 	    return (1);
+    if (ele->next)
+    {
+	    ele->next->type = R_FILE;
+	    file = ele->next->str;
+    }
     return (0);
 }
 int ft_check_cmd(t_minishell *minishell, t_elements *ele)
