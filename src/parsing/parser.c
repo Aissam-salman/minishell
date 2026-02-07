@@ -6,15 +6,41 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 18:26:24 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/06 18:28:07 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/07 21:32:58 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <stdio.h>
 
 void ft_create_cmd_lst(t_minishell *minishell);
 t_elements *create_mocks_element();
 //TODO: code it gooooooooooooo
+
+int ft_check_flags(char *str)
+{
+	int i;
+
+	i = 0;
+	if (str[i] != '-' || !str[i])
+		return (0);
+	else
+		i++;
+	if (!str[i])
+		return (0);
+	if (str[i] == '-')
+		i++;
+	while (str[i])
+	{
+		if (!ft_isalnum(str[i]))
+			return(0);
+		i++;
+	}
+
+	// ls -ls -l   or  --format=
+	return (1);
+}
+
 int ft_check_redirection(t_minishell *minishell, t_elements *ele)
 {
     (void)minishell;
@@ -46,6 +72,7 @@ void cmd_append(t_minishell *minishell, t_elements *ele, char **args)
     (void)args;
 }
 
+
 void error_parsing_redirection()
 {
 	printf("Error Redirection");
@@ -68,6 +95,12 @@ void error_parsing_pipe()
 {
 	printf("Error pipe");
 	exit(15);
+}
+
+void error_parsing_flags()
+{
+	printf("Error flags");
+	exit(16);
 }
 
 int is_redirection(t_elements *ele)
@@ -116,6 +149,7 @@ void ft_create_cmd_lst(t_minishell *minishell)
 		}
 		else if (ele->type == WORD)
 		{
+			//NOTE: set type CMD if X_OK
 			if (!ft_check_cmd(minishell, ele))
 				error_parsing_cmd();
 			e = ele;
@@ -129,21 +163,20 @@ void ft_create_cmd_lst(t_minishell *minishell)
 				}
 				if ((!args[i] || e->type == WORD) && e->is_taken == 0)
 				{
-					// if exec just put
-					// else
-					//   check flag
 					args[i] = ft_gc_malloc(ft_strlen(e->str) + 1, &minishell->gc);
-					args[i] = e->str;
+					if (e->type == CMD)
+						args[i] = e->str;
+					else
+					{
+						if (ft_check_flags(e->str) == 0)
+							error_parsing_flags();
+						args[i] = e->str;
+					}
 					e->is_taken = 1;
 					i++;
 				}
 				e = e->next;
 			}
-			// check si after type redirection si oui,
-			// avancer de 2 ele, et si type=word avec -* alors append join les 2 ele
-			// sinon si | void
-			// si '-' seul -> error
-			// marquer l'element parcourue
 		}
 		else if (ele->type == PIPE)
 		{

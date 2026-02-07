@@ -18,6 +18,8 @@ typedef enum e_type {
 	OUT_DCHEVRON,
 	WORD,
 	NBR_TYPES,
+	CMD,
+	FLAG
 }	t_types;
 
 // ENUMS ETATS MACHINE STATE
