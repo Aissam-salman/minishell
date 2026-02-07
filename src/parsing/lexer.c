@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fardeau <fardeau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 15:58:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/06 18:43:03 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/07 15:23:36 by fardeau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,9 @@ void	ft_state_detect(char c, t_minishell *minishell)
 		minishell->state = NORMAL;
 }
 
-void	ft_state_interpret(char *line, int index, char *buffer, t_minishell *minishell)
+void	ft_state_interpret(char *line, int *index, char *buffer, t_minishell *minishell)
 {
-	// if ((ft_ischarset(line[index], OPERATORS) || ft_ischarset(line[index], 
-	// 		SPACES)) && minishell->state == NORMAL)
-	if (ft_ischarset(line[index], SPACES) && minishell->state == NORMAL)
+	if (ft_ischarset(line[*index], SPACES) && minishell->state == NORMAL)
 	{
 			// SIGNALE LA FIN DU BUFFER
 			// INITIALISATION NOUVEAU NOEUD AVEC CONTENT BUFFER
@@ -75,30 +73,34 @@ void	ft_state_interpret(char *line, int index, char *buffer, t_minishell *minish
 					// ERROR ls >>> wc zsh: parse error near `>'
 		if (ft_strlen(buffer) > 0)
 		{
-			ft_print_state(line[index],buffer, minishell);
+			ft_print_state(line[*index],buffer, minishell);
+			ft_token_add(minishell, ft_token_create(minishell, buffer));
 			ft_bzero(buffer, ft_strlen(buffer));
 		}
 		minishell->state = WAITING;
 		return;
 	}
-	if (ft_ischarset(line[index], OPERATORS) && minishell->state == NORMAL)
+	// IF IT IS AN OPERATOR
+	if (ft_ischarset(line[*index], OPERATORS) && minishell->state == NORMAL)
 	{
 		if (ft_strlen(buffer) > 0)
 		{
-			ft_print_state(line[index],buffer, minishell);
+			ft_print_state(line[*index],buffer, minishell);
 			ft_bzero(buffer, ft_strlen(buffer));
+		}
+		if (line[*index] == '<' || line[*index] == '>')
+		{
+			if (line[*index + 1] == line[*index])
+				ft_printf("DOUBLE CHEVRON\n");
+			else
+				ft_printf("SIMPLE CHEVRON OU PIPE \n");
+
 		}
 		return;
 	}
 	if (minishell->state != WAITING)
-		ft_buffer_add(buffer, line[index]);
+		ft_buffer_add(buffer, line[*index]);
 }
-
-
-
-
-
-
 
 void	ft_create_elem_lst(t_minishell *minishell)
 {
@@ -121,23 +123,29 @@ void	ft_create_elem_lst(t_minishell *minishell)
 
 		// ON TRAITE line[i] EN FONCTION DE L'ETAT 
 		// ON INTERPRETE L'ETAT POUR CREER LE
-		ft_state_interpret(line, i, buffer, minishell);
+		ft_state_interpret(line, &i, buffer, minishell);
 		i++;
 
 		// void ft_detect_type(char *buffer, t_minishell *minishell) -> t_element ele->type
 	}
-	ft_print_state(0,buffer, minishell);
+	if (ft_strlen(buffer) > 0)
+		ft_token_add(minishell, ft_token_create(minishell, buffer));
+	ft_print_state(0, buffer, minishell);
 }
+
 
 // On récupere la ligne, on traite pour avoir des types de mots 
 // On les récupere ensuite pour créer des phrases
 
 void	ft_parse(t_minishell *minishell)
+
 {
 	// ON RECUPERE LES TYPES DANS UN PREMIER TEMPS
 	ft_create_elem_lst(minishell);
+	ft_print_tokens(minishell->head_token);
 	
 	// UTILISATION DU PARSER
+
 	//
 	//
 	//loop sur t_element
