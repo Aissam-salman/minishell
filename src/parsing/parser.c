@@ -6,7 +6,7 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 18:26:24 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/07 21:32:58 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/07 22:50:09 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 void ft_create_cmd_lst(t_minishell *minishell);
 t_elements *create_mocks_element();
-//TODO: code it gooooooooooooo
 
 int ft_check_flags(char *str)
 {
@@ -26,25 +25,33 @@ int ft_check_flags(char *str)
 		return (0);
 	else
 		i++;
-	if (!str[i])
-		return (0);
 	if (str[i] == '-')
 		i++;
+	if (!str[i])
+		return (0);
 	while (str[i])
 	{
 		if (!ft_isalnum(str[i]))
 			return(0);
 		i++;
 	}
-
-	// ls -ls -l   or  --format=
 	return (1);
 }
 
-int ft_check_redirection(t_minishell *minishell, t_elements *ele)
+int ft_check_redirection(t_elements *ele)
 {
-    (void)minishell;
-    (void)ele;
+    char *str;
+
+    str = ele->str;
+    if (!str)
+	    return (0);
+    if (str[0] == ' ')
+	    return (0);
+    else if ((str[0] == '<' && !str[1]) || (str[0] == '>' && !str[1]))
+	    return (1);
+    else if ((str[0] == '<' && str[1] == '<' && !str[2]) ||
+		    (str[0] == '>' && str[1] == '>' && !str[2]))
+	    return (1);
     return (0);
 }
 int ft_check_cmd(t_minishell *minishell, t_elements *ele)
@@ -139,7 +146,7 @@ void ft_create_cmd_lst(t_minishell *minishell)
 		if (is_redirection(ele))
 		{
 			//NOTE: check word after if is file ??
-			if (ft_check_redirection(minishell, ele) == 0)
+			if (ft_check_redirection(ele) == 0)
 				error_parsing_redirection();
 		}
 		else if (ele->type == WORD && (ft_strchr(ele->str, '\'') || ft_strchr(ele->str, '\"')))
@@ -221,7 +228,7 @@ t_elements *create_mocks_element()
 	head->next->next = element3;
 	head->next->next->next = element4;
 	head->next->next->next->next = element5;
-	head->next->next->next->next->next = NULL;
-	(void)element6;
+	head->next->next->next->next->next = element6;
+	head->next->next->next->next->next->next = NULL;
 	return (head);
 }

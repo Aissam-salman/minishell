@@ -47,7 +47,7 @@ SRCS_NO_MAIN = src/errors/errors.c \
 		src/parsing/parser.c
 OBJS_NO_MAIN = $(SRCS_NO_MAIN:%.c=$(OBJ_DIR)/%.o)
 
-TEST_SRCS = $(addprefix tests/units/, test.c)
+TEST_SRCS = $(addprefix tests/units/, mocks.c test_parsing.c)
 TEST_OBJS = $(TEST_SRCS:%.c=%.o)
 TEST_NAME = unit_tests
 
@@ -55,11 +55,9 @@ testf: all
 	@echo "Running automated tests..."
 	./tests/example.sh
 
-ut: $(LIBFT) $(OBJS_NO_MAIN) $(TEST_OBJS)
+units: $(LIBFT) $(OBJS_NO_MAIN) $(TEST_OBJS)
 	@echo "Compiling unit tests..."
 	@$(CC) -o $(TEST_NAME) $(TEST_OBJS) $(OBJS_NO_MAIN) $(LIBFT) -lcriterion -lreadline
-	@echo "Running unit tests..."
-	./unit_tests
 
 tests/units/%.o: tests/units/%.c
 	$(CC) $(INCS) -c $< -o $@
