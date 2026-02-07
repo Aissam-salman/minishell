@@ -1,8 +1,13 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "../libft/libft.h"
-# include "errors.h"
+#include "../libft/libft.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <readline/readline.h>
+#include "errors.h"
+#include <signal.h>
 
 // ENUM TYPES ELEMENTS
 typedef enum e_type {
@@ -24,21 +29,35 @@ typedef enum e_state {
 	NEUTRAL,
 }	t_state;
 
+// STRUCTURE POUR CMD
+typedef struct s_cmd
+{
+	char *path;
+	char **args;
+	int infd;
+	int outfd;
+} t_cmd;
+
 // STRUCTURE POUR UN ELEMENT
 typedef struct s_element {
 	char				*str;
 	t_types				type;
+	int			is_taken;
 	struct s_element	*next;
 }	t_elements;
 
 // STRUCTURE GLOBALE POUR LE MINISHELL
 typedef struct s_minishell {
-	t_elements	*head;
+	t_cmd		*cmds;
+	t_elements	*elements;
 	t_list		*gc;
 	char		*line;
 	t_state			state;
 }	t_minishell;
 
+
 void	ft_parse(t_minishell *minishell);
+//parser
+void	ft_create_cmd_lst(t_minishell *minishell);
 
 #endif

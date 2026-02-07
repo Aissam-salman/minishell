@@ -6,11 +6,15 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 15:58:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/05 18:57:03 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/06 18:29:03 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+
 
 // TRAITER LES CHANGEMENTS D'ETAT
 /*
@@ -96,22 +100,13 @@ void	ft_create_elem_lst(t_minishell *minishell)
 
 // On récupere la ligne, on traite pour avoir des types de mots 
 // On les récupere ensuite pour créer des phrases
-
 void	ft_parse(t_minishell *minishell)
 {
 	// ON RECUPERE LES TYPES DANS UN PREMIER TEMPS
-	ft_create_elem_lst(minishell);
+	// ft_create_elem_lst(minishell);
 	
-	// UTILISATION DU PARSER
-	//
-	//
-	//loop sur t_element
-	//  int ft_check_redirection(minishell, element) < > << >>
-	//        error 
-	//  int ft_check_cmd(minishell, element)
-	//        error 
-	//  int ft_check_expends()
-	//  	eroor 
-	//  int ft_check_pipe()
-	//  		
+	ft_create_cmd_lst(minishell);
 }
+
+
+

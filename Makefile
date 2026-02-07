@@ -2,21 +2,22 @@ NAME= minishell
 
 SRCS = src/main.c \
 		src/errors/errors.c \
-		src/parsing/lexer.c
+		src/parsing/lexer.c \
+		src/parsing/parser.c
 
 OBJ_DIR = objs
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
 
-CC = cc -Wall -Wextra -Werror 
+CC = cc -Wall -Wextra -Werror
 
-LIBFT_DIR = ./libft
+LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 INCS = -I. -Iincludes -I$(LIBFT_DIR)
 
 all: $(NAME)
 
-$(LIBFT): 
+$(LIBFT):
 	make -C $(LIBFT_DIR)
 
 $(NAME): $(LIBFT) $(OBJS)
@@ -28,10 +29,11 @@ $(OBJ_DIR)/%.o: %.c
 
 clean:
 	rm -rf $(OBJ_DIR)
+	make clean -C $(LIBFT_DIR)
 
 fclean: clean
 	rm -f $(NAME)
-	rm -f $(LIBFT)
+	make fclean -C $(LIBFT_DIR)
 
 re: fclean all
 
