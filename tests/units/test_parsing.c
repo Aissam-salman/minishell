@@ -26,38 +26,34 @@ Test(Parser, test_check_flags) {
 
 Test(Parser, test_check_redirection)
 {
-	// <
-	t_elements* ele = create_mocks_element1();
-	cr_expect(ft_check_redirection(ele) == 1);
-	ele->str = ft_strdup(">");
-	cr_expect(ft_check_redirection(ele) == 1);
-	ele->str = ft_strdup(">>");
-	cr_expect(ft_check_redirection(ele) == 1);
-	ele->str = ft_strdup("<<");
-	cr_expect(ft_check_redirection(ele) == 1);
+	cr_expect(ft_check_redirection(">") == 1);
+	cr_expect(ft_check_redirection("<") == 1);
+	cr_expect(ft_check_redirection(">>") == 1);
+	cr_expect(ft_check_redirection("<<") == 1);
 
-	ele->str = ft_strdup("");
-	cr_expect(ft_check_redirection(ele) == 0);
-	ele->str = ft_strdup(" ");
-	cr_expect(ft_check_redirection(ele) == 0);
-	ele->str = ft_strdup("      ");
-	cr_expect(ft_check_redirection(ele) == 0);
-	ele->str = ft_strdup("  <");
-	cr_expect(ft_check_redirection(ele) == 0);
-	ele->str = ft_strdup("><");
-	cr_expect(ft_check_redirection(ele) == 0);
-	ele->str = ft_strdup(">>>");
-	cr_expect(ft_check_redirection(ele) == 0);
-	ele->str = ft_strdup("<<<");
-	cr_expect(ft_check_redirection(ele) == 0);
-	ele->str = ft_strdup("<<>>>>>>");
-	cr_expect(ft_check_redirection(ele) == 0);
-	ele->str = ft_strdup("<< >>>>>>");
-	cr_expect(ft_check_redirection(ele) == 0);
-	ele->str = ft_strdup("< >>");
-	cr_expect(ft_check_redirection(ele) == 0);
-	ele->str = ft_strdup("> >>");
-	cr_expect(ft_check_redirection(ele) == 0);
-	ele->str = ft_strdup("> > > >");
-	cr_expect(ft_check_redirection(ele) == 0);
+	cr_expect(ft_check_redirection("") == 0);
+	cr_expect(ft_check_redirection(" ") == 0);
+	cr_expect(ft_check_redirection("      ") == 0);
+	cr_expect(ft_check_redirection("  <") == 0);
+	cr_expect(ft_check_redirection("><") == 0);
+	cr_expect(ft_check_redirection(">>>") == 0);
+	cr_expect(ft_check_redirection("<<<") == 0);
+	cr_expect(ft_check_redirection("<<>>>>>>") == 0);
+	cr_expect(ft_check_redirection("<< >>>>>>") == 0);
+	cr_expect(ft_check_redirection("< >>") == 0);
+	cr_expect(ft_check_redirection("> >>") == 0);
+	cr_expect(ft_check_redirection("> > > >") == 0);
+}
+
+Test(Parser, test_check_file)
+{
+	t_elements *ele = malloc(sizeof(t_elements));
+	t_elements *ele1 = malloc(sizeof(t_elements));
+	ele->str = ft_strdup(">");
+	ele->type = IN_CHEVRON;
+	ele1->str = ft_strdup("file");
+	ele1->type = WORD;
+	ele->next = ele1;
+	ele1->next = NULL;
+	cr_expect(ft_check_file(ele) == 0);
 }

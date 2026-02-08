@@ -15,6 +15,7 @@
 #include "minishell.h"
 
 int ft_check_flags(char *str);
-int ft_check_redirection(t_elements *ele);
+int ft_check_redirection(char *str);
+int ft_check_file(t_elements *ele);
 
 #endif

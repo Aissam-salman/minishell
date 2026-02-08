@@ -6,7 +6,7 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 18:26:24 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/07 23:00:58 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/07 23:20:41 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,8 @@ int ft_check_flags(char *str)
 	return (1);
 }
 
-int ft_check_redirection(t_elements *ele)
+int ft_check_redirection(char *str)
 {
-    char *str;
-    char *file;
-
-    str = ele->str;
     if (!str)
 	    return (0);
     if (str[0] == ' ')
@@ -53,13 +49,19 @@ int ft_check_redirection(t_elements *ele)
     else if ((str[0] == '<' && str[1] == '<' && !str[2]) ||
 		    (str[0] == '>' && str[1] == '>' && !str[2]))
 	    return (1);
-    if (ele->next)
-    {
-	    ele->next->type = R_FILE;
-	    file = ele->next->str;
-    }
     return (0);
 }
+
+int ft_check_file(t_elements *ele)
+{
+	//NOTE: if < try to access R mode 
+	//     else if > try to open O_CREAT | O_TRUNCT | O_W
+	//     else if << check_heredoc_end
+	//     else if >> try to open O_W | O_APPEND mode 
+	(void)ele;
+	return (0);
+}
+
 int ft_check_cmd(t_minishell *minishell, t_elements *ele)
 {
     (void)minishell;
@@ -89,6 +91,12 @@ void cmd_append(t_minishell *minishell, t_elements *ele, char **args)
 void error_parsing_redirection()
 {
 	printf("Error Redirection");
+	exit(12);
+}
+
+void error_parsing_files()
+{
+	printf("Error file");
 	exit(12);
 }
 
@@ -152,8 +160,13 @@ void ft_create_cmd_lst(t_minishell *minishell)
 		if (is_redirection(ele))
 		{
 			//NOTE: check word after if is file ??
-			if (ft_check_redirection(ele) == 0)
+			if (ft_check_redirection(ele->str) == 0)
 				error_parsing_redirection();
+			if (ele->next)
+			{
+				if (ft_check_file(ele) == 0)
+					error_parsing_files();
+			}
 		}
 		else if (ele->type == WORD && (ft_strchr(ele->str, '\'') || ft_strchr(ele->str, '\"')))
 		{

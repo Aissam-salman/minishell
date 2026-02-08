@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 15:58:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/06 18:29:03 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/07 23:20:52 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ void	ft_parse(t_minishell *minishell)
 	// ft_create_elem_lst(minishell);
 	
 	ft_create_cmd_lst(minishell);
+
 }
 
 
