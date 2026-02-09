@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 15:58:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/09 15:17:23 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/09 15:26:34 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,11 +95,12 @@ int	ft_create_elem_lst(t_minishell *minishell)
 	// On recupere la ligne
 	line = minishell->line;
 	line_len = ft_strlen(line);
-	i = 0;
-	// On parcourt la ligne pour ajouter a chaque fois
 	minishell->state = NORMAL;
 	buffer = ft_calloc_gc(ft_strlen(line) + 1, sizeof(char), &minishell->gc);
+	if (!buffer)
+		return (ft_error(MALLOC_FAIL, "Fail Malloc Buffer Interpreter"));
 	// BOUCLE POUR TRAITER CHAQUE CHAR DE MINISHELL.LINE
+	i = 0;
 	while (i < line_len)
 	{
 		// ON DETECTE L'ETAT POUR POUVOIR DETERMINER QUOI FAIRE DU CHARACTERE
