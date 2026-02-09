@@ -87,7 +87,7 @@ Test(Parser, test_check_file)
 	cr_expect(ft_check_file(ele3) == 1);
 	free_ele(ele3);
 
-	t_elements *ele4 = create_mock_ele("<<", IN_DCHEVRON, "infile");
+	t_elements *ele4 = create_mock_ele("<<", IN_DCHEVRON, "eof");
 	cr_expect(ft_check_file(ele4) == 1);
 	free_ele(ele4);
 
@@ -99,4 +99,23 @@ Test(Parser, test_check_file)
 	t_elements *ele5 = create_mock_ele(">", OUT_CHEVRON, "foo"); 
 	cr_expect(ft_check_file(ele5) == 1);
 	free_ele(ele5);
+
+	t_elements *ele6 = create_mock_ele(">>", OUT_DCHEVRON, "foo"); 
+	cr_expect(ft_check_file(ele6) == 1);
+	free_ele(ele6);
+
+	t_elements *ele7 = create_mock_ele("<<", OUT_CHEVRON, "eof"); 
+	cr_expect(ft_check_file(ele7) == 1);
+	free_ele(ele7);
+
+	// no endfile
+	t_elements *ele8 = create_mock_ele("<<", OUT_CHEVRON, ""); 
+	cr_expect(ft_check_file(ele8) == 0);
+	free_ele(ele8);
+	t_elements *ele9 = create_mock_ele("<<", OUT_CHEVRON, " "); 
+	cr_expect(ft_check_file(ele9) == 1);
+	free_ele(ele9);
+	t_elements *ele10 = create_mock_ele("<<", OUT_CHEVRON, "   "); 
+	cr_expect(ft_check_file(ele10) == 1);
+	free_ele(ele10);
 }

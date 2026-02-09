@@ -56,7 +56,7 @@ int ft_check_redirection(char *str)
 int ft_check_heredoc_end(char *str)
 {
 	//NOTE: maybe handle " " and ""
-	if (!str || !*str)
+	if (!str)
 		return (0);
 	return (1);
 }
