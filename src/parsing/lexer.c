@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 15:58:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/09 14:14:00 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/09 15:03:19 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	ft_buffer_add(char *buffer, char c)
 	buffer[i + 1] = '\0';
 }
 
+// AFFECTE L'ETAT A MINISHELL POUR
 void	ft_state_detect(char c, t_minishell *minishell)
 {
 	// SI GUILLEMETS
@@ -54,52 +55,33 @@ void	ft_state_detect(char c, t_minishell *minishell)
 		minishell->state = NORMAL;
 }
 
-void	ft_state_interpret(char *line, int *index, char *buffer, t_minishell *minishell)
+// INTERPRETE LE CARACTERE EN FONCTION DE L'ETAT
+int	ft_state_interpret(char *line, int *index, char *buffer, t_minishell *minishell)
 {
 	if (ft_ischarset(line[*index], SPACES) && minishell->state == NORMAL)
 	{
 		if (ft_strlen(buffer) > 0)
-		{
-			ft_print_state(line[*index],buffer, minishell);
-
-			// CREEER ET AJOUTER BUFFER A LA LIST T_ELEMENT
 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
-				// ERROR
-				return;
-
-			// REMETTRE A ZERO BUFFER
-			ft_bzero(buffer, ft_strlen(buffer));
-		}
+				return (ft_error(MALLOC_FAIL, "Fail Malloc Interpreter\n"));
 		minishell->state = WAITING;
 	}
-	// IF IT IS AN OPERATOR
 	if (ft_ischarset(line[*index], OPERATORS) && minishell->state == NORMAL)
 	{
-		// IF BUFFER ISN'T EMPTY
 		if (ft_strlen(buffer) > 0 && buffer[0] != line[*index])
-		{
-			ft_print_state(line[*index],buffer, minishell);
 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
-				// ERROR
-				return;
-			ft_bzero(buffer, ft_strlen(buffer));
-		}
+				return (ft_error(MALLOC_FAIL, "Fail Malloc Interpreter\n"));
 	}
 	if (minishell->state != WAITING)
 	{
 		if (!ft_ischarset(line[*index], OPERATORS) && ft_ischarset(buffer[0], OPERATORS))
-		{
-			ft_print_state(line[*index],buffer, minishell);
 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
-				// ERROR
-				return;
-			ft_bzero(buffer, ft_strlen(buffer));
-		}
+				return (ft_error(MALLOC_FAIL, "Fail Malloc Interpreter\n"));
 		ft_buffer_add(buffer, line[*index]);
 	}
+	return (0);
 }
 
-void	ft_create_elem_lst(t_minishell *minishell)
+int	ft_create_elem_lst(t_minishell *minishell)
 {
 	char *line;
 	char *buffer;
@@ -119,26 +101,24 @@ void	ft_create_elem_lst(t_minishell *minishell)
 		ft_state_detect(line[i], minishell);
 
 		// ON TRAITE line[i] EN FONCTION DE L'ETAT 
-		// ON INTERPRETE L'ETAT POUR CREER LE
-		ft_state_interpret(line, &i, buffer, minishell);
+		// ON INTERPRETE L'ETAT POUR CREER LA CHAINE DE TOKENS
+		if (ft_state_interpret(line, &i, buffer, minishell))
+			return (1);
 		i++;
-
-		// void ft_detect_type(char *buffer, t_minishell *minishell) -> t_element ele->type
 	}
 	if (ft_strlen(buffer) > 0)
 		ft_token_add(minishell, ft_token_create(minishell, buffer));
-	ft_print_state(0, buffer, minishell);
+	return (0);
 }
-
 
 // On récupere la ligne, on traite pour avoir des types de mots 
 // On les récupere ensuite pour créer des phrases
-
 void	ft_parse(t_minishell *minishell)
 
 {
 	// ON RECUPERE LES TYPES DANS UN PREMIER TEMPS
-	ft_create_elem_lst(minishell);
+	if (ft_create_elem_lst(minishell))
+		return ;
 	ft_print_tokens(minishell->head_token);
 	
 	// UTILISATION DU PARSER
@@ -155,3 +135,48 @@ void	ft_parse(t_minishell *minishell)
 	//  int ft_check_pipe()
 	//  		
 }
+
+// void	ft_state_interpret(char *line, int *index, char *buffer, t_minishell *minishell)
+// {
+// 	if (ft_ischarset(line[*index], SPACES) && minishell->state == NORMAL)
+// 	{
+// 		if (ft_strlen(buffer) > 0)
+// 		{
+// 			ft_print_state(line[*index],buffer, minishell);
+
+// 			// CREEER ET AJOUTER BUFFER A LA LIST T_ELEMENT
+// 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
+// 				// ERROR
+// 				return;
+
+// 			// REMETTRE A ZERO BUFFER
+// 			ft_bzero(buffer, ft_strlen(buffer));
+// 		}
+// 		minishell->state = WAITING;
+// 	}
+// 	// IF IT IS AN OPERATOR
+// 	if (ft_ischarset(line[*index], OPERATORS) && minishell->state == NORMAL)
+// 	{
+// 		// IF BUFFER ISN'T EMPTY
+// 		if (ft_strlen(buffer) > 0 && buffer[0] != line[*index])
+// 		{
+// 			ft_print_state(line[*index],buffer, minishell);
+// 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
+// 				// ERROR
+// 				return;
+// 			ft_bzero(buffer, ft_strlen(buffer));
+// 		}
+// 	}
+// 	if (minishell->state != WAITING)
+// 	{
+// 		if (!ft_ischarset(line[*index], OPERATORS) && ft_ischarset(buffer[0], OPERATORS))
+// 		{
+// 			ft_print_state(line[*index],buffer, minishell);
+// 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
+// 				// ERROR
+// 				return;
+// 			ft_bzero(buffer, ft_strlen(buffer));
+// 		}
+// 		ft_buffer_add(buffer, line[*index]);
+// 	}
+// }
