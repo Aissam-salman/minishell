@@ -1,13 +1,15 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "../libft/libft.h"
-# include "errors.h"
-# include <readline/history.h>
+#include "../libft/libft.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <readline/readline.h>
+#include "errors.h"
+#include <signal.h>
 
 # define OPERATORS "|<>"
-
 // ENUM TYPES ELEMENTS
 typedef enum e_type {
 	DEFAULT = 0,
@@ -18,6 +20,9 @@ typedef enum e_type {
 	OUT_DCHEVRON,
 	WORD,
 	NBR_TYPES,
+	CMD,
+	FLAG,
+	R_FILE
 }	t_types;
 
 // ENUMS ETATS MACHINE STATE
@@ -28,6 +33,15 @@ typedef enum e_state {
 	NBR_STATE,
 	WAITING,
 }	t_state;
+
+// STRUCTURE POUR CMD
+typedef struct s_cmd
+{
+	char *path;
+	char **args;
+	int infd;
+	int outfd;
+} t_cmd;
 
 // STRUCTURE POUR UN ELEMENT
 typedef struct s_token {
@@ -44,9 +58,11 @@ typedef struct s_minishell {
 	t_state			state;
 }	t_minishell;
 
+
 // PARSING/LEXER.C
 void	ft_parse(t_minishell *minishell);
 
+void	ft_create_cmd_lst(t_minishell *minishell);
 // UTILS/OUTPUT.C
 void	ft_tokens_print(t_token *head);
 void	ft_type_print(t_token *token);

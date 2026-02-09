@@ -6,7 +6,7 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 18:26:24 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/07 23:20:41 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/09 16:42:11 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int ft_check_heredoc_end(char *str)
 
 int ft_check_file(t_elements *ele)
 {
-	//NOTE: if < try to access R mode 
+	//NOTE: if < try to access R mode
 	//     else if > try to open O_CREAT | O_TRUNCT | O_W
 	//     else if << check_heredoc_end
 	//     else if >> try to open O_W | O_APPEND | O_CREAT if not exist

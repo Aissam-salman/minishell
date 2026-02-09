@@ -46,7 +46,7 @@ run_test() {
     print_separator
 
     # Get output from Bash
-    bash_out=$(echo "$cmd" | bash 2>&1)
+    bash_out=$(echo "$cmd" | bash -posix 2>&1)
     bash_exit=$?
 
     # Get output from Minishell (adjust prompt removal if needed)
