@@ -4,6 +4,8 @@ SRCS = src/main.c \
 		src/errors/errors.c \
 		src/parsing/lexer.c \
 		src/parsing/parser.c
+		src/utils/output.c \
+		src/utils/tokens.c
 
 OBJ_DIR = objs
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
