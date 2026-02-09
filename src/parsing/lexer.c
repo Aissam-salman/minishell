@@ -104,13 +104,14 @@ int	ft_token_lst_create(t_minishell *minishell)
 	{
 		// ON DETECTE L'ETAT POUR POUVOIR DETERMINER QUOI FAIRE DU CHARACTERE
 		ft_state_detect(line[i], minishell);
-
 		// ON TRAITE line[i] EN FONCTION DE L'ETAT
 		// ON INTERPRETE L'ETAT POUR CREER LA CHAINE DE TOKENS
 		if (ft_state_interpret(line, &i, buffer, minishell))
 			return (1);
 		i++;
 	}
+	if (minishell->state == IN_QUOTE || minishell->state == IN_DQUOTE)
+		return (ft_error(PARSING_FAIL, "Syntax error: unclosed quotes\n"));
 	if (ft_strlen(buffer) > 0)
 		if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
 			return (ft_error(MALLOC_FAIL, "Fail Malloc Interpreter\n"));
