@@ -30,6 +30,7 @@ int	main()
 			ft_parse(&minishell);
 			// POUR LIBERER LA LISTE DES TOKENS A CHAQUE EXECT
 			minishell.head_token = NULL;
+
 			// execution
 			// execve("/bin/echo", args, NULL);
 		}
