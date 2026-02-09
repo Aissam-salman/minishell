@@ -41,6 +41,7 @@ typedef struct s_cmd
 	char **args;
 	int infd;
 	int outfd;
+	struct s_cmd *next;
 } t_cmd;
 
 // STRUCTURE POUR UN ELEMENT
@@ -53,6 +54,7 @@ typedef struct s_token {
 // STRUCTURE GLOBALE POUR LE MINISHELL
 typedef struct s_minishell {
 	t_token		*head_token;
+	t_cmd		*head_cmd;
 	t_list		*gc;
 	char		*line;
 	t_state			state;
@@ -64,6 +66,7 @@ void	ft_parse(t_minishell *minishell);
 
 void	ft_create_cmd_lst(t_minishell *minishell);
 // UTILS/OUTPUT.C
+void	ft_cmd_print(t_cmd *head);
 void	ft_tokens_print(t_token *head);
 void	ft_type_print(t_token *token);
 void	ft_state_print(char c, char *buffer, t_minishell *minishell);
@@ -75,4 +78,7 @@ int	ft_token_add(t_minishell *minishell, t_token *to_add);
 // UTILS/ERRORS.C
 int	ft_error(int error, char *str);
 void	ft_exit(t_minishell *minishell, int error, char *str );
+
+// UTILS/CMDS.C
+void ft_cmd_lst_create(t_minishell *minishell);
 #endif

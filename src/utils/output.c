@@ -6,11 +6,31 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:40:37 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/09 15:51:39 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/09 18:23:49 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	ft_cmd_print(t_cmd *head)
+{
+	t_cmd *current;
+	int	i;
+
+	current = head;
+	while (current)
+	{
+		i = 0;
+		if (head->path)
+			ft_printf("PATH = %s ||", head->path);
+		else
+			ft_printf("NO PATH YET ||");
+		while(head->args[i++])
+			ft_printf("ARGV[%d] = %s\n", i - 1, head->args[i - 1]);
+		ft_printf("OUTFILE = %d || INFILE = %d\n", head->outfd, head->infd);
+		current = current->next;
+	}
+}
 
 void	ft_tokens_print(t_token *head)
 {

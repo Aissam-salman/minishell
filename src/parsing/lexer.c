@@ -84,7 +84,7 @@ int	ft_state_interpret(char *line, int *index, char *buffer, t_minishell *minish
 }
 
 // CREE LA LISTE DES TOKENS A UTILSER POUR LE PARSING
-int	ft_create_elem_lst(t_minishell *minishell)
+int	ft_token_lst_create(t_minishell *minishell)
 {
 	char *line;
 	char *buffer;
@@ -152,10 +152,10 @@ void	ft_parse(t_minishell *minishell)
 	// ft_create_elem_lst(minishell);
 
 
-	if (ft_create_elem_lst(minishell))
+	if (ft_token_lst_create(minishell))
 		return ;
 	ft_type_affect(minishell);
-	ft_tokens_print(minishell->head_token);
-
-	ft_create_cmd_lst(minishell);
+	// ft_tokens_print(minishell->head_token);
+	ft_cmd_lst_create(minishell);
+	// ft_create_cmd_lst(minishell);
 }
