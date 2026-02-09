@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 15:58:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/05 18:57:03 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/09 15:57:15 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,26 @@
 	Lorsque '
 	Lorsque SPACE
 */
-void	ft_detect_state(char c, t_minishell *minishell)
+
+// A SECURISER VIA LA TAILLE MAX
+void	ft_buffer_add(char *buffer, char c)
+{
+	int i;
+
+	i = 0;
+	while (buffer[i])
+		i++;
+	buffer[i] = c;
+	buffer[i + 1] = '\0';
+}
+
+// AFFECTE L'ETAT A MINISHELL POUR
+void	ft_state_detect(char c, t_minishell *minishell)
 {
 	// SI GUILLEMETS
 	if (c == '"')
 	{
-		ft_printf("Double Quote\n");
-		if (minishell->state == NORMAL)
+		if (minishell->state == NORMAL || minishell->state == WAITING)
 			minishell->state = IN_DQUOTE;
 		else if (minishell->state == IN_DQUOTE)
 			minishell->state = NORMAL;
@@ -32,78 +45,115 @@ void	ft_detect_state(char c, t_minishell *minishell)
 	// SI APOSTROPHE
 	else if (c ==  '\'')
 	{
-		ft_printf("Simple Quote\n");
-		if (minishell->state == NORMAL)
+		if (minishell->state == NORMAL || minishell->state == WAITING)
 			minishell->state = IN_QUOTE;
 		else if (minishell->state == IN_QUOTE)
 			minishell->state = NORMAL;
 	}
-	// SI ESPACES
-	else if (ft_ischarset(c, SPACES))
-	{
-		// ON CONVERTIT LE BUFFER EN STRUCT ET ON SET A NEUTRAL
-		// if (minishell->state == NORMAL)
-		ft_printf("Space\n");
-		// if (!(minishell->state == IN_DQUOTE || minishell->state == IN_QUOTE))
-	}
+	// SI EN PAUSE ET TROUVE UN AUTRE 
+	else if (!ft_ischarset(c, SPACES) && minishell->state == WAITING)
+		minishell->state = NORMAL;
 }
 
-
-// int ft_interpret_state(char line[i], t_minishell *minishell);
-// 	check le state et le char .
-// 	if operateur et NORMAL 
-// 		fin de string return 2 
-// 	else if space || operateur et normal 
-// 		fin de buffer return 2 
-// 	else 
-// 		append au buffer return 1
-
-// ON RECUPERE LA LIGNE
-void	ft_create_elem_lst(t_minishell *minishell)
+// INTERPRETE LE CARACTERE EN FONCTION DE L'ETAT
+int	ft_state_interpret(char *line, int *index, char *buffer, t_minishell *minishell)
 {
-	int i;
+	// SI ESPACES
+	if (ft_ischarset(line[*index], SPACES) && minishell->state == NORMAL)
+	{
+		if (ft_strlen(buffer) > 0)
+			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
+				return (ft_error(MALLOC_FAIL, "Fail Malloc Interpreter\n"));
+		minishell->state = WAITING;
+	}
+	// SI OPERATORS
+	if (ft_ischarset(line[*index], OPERATORS) && minishell->state == NORMAL)
+	{
+		if (ft_strlen(buffer) > 0 && buffer[0] != line[*index])
+			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
+				return (ft_error(MALLOC_FAIL, "Fail Malloc Interpreter\n"));
+	}
+	// SI STATE != WAITING
+	if (minishell->state != WAITING)
+	{
+		if (!ft_ischarset(line[*index], OPERATORS) && ft_ischarset(buffer[0], OPERATORS))
+			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
+				return (ft_error(MALLOC_FAIL, "Fail Malloc Interpreter\n"));
+		ft_buffer_add(buffer, line[*index]);
+	}
+	return (0);
+}
+
+// CREE LA LISTE DES TOKENS A UTILSER POUR LE PARSING
+int	ft_create_elem_lst(t_minishell *minishell)
+{
 	char *line;
 	char *buffer;
-	
+	int		line_len;
+	int i;
 
 	// On recupere la ligne
 	line = minishell->line;
+	line_len = ft_strlen(line);
+	minishell->state = NORMAL;
+	buffer = ft_calloc_gc(ft_strlen(line) + 1, sizeof(char), &minishell->gc);
+	if (!buffer)
+		return (ft_error(MALLOC_FAIL, "Fail Malloc Buffer Interpreter"));
+	// BOUCLE POUR TRAITER CHAQUE CHAR DE MINISHELL.LINE
 	i = 0;
-	// On parcourt la ligne pour ajouter a chaque fois
-	while (line[i])
+	while (i < line_len)
 	{
 		// ON DETECTE L'ETAT POUR POUVOIR DETERMINER QUOI FAIRE DU CHARACTERE
-		buffer = ft_calloc_gc(ft_strlen(line) + 1, sizeof(char), &minishell->gc);
-		ft_detect_state(line[i], minishell);
-		ft_printf("%d\n", minishell->state);
-		i++;
-		(void)buffer;
+		ft_state_detect(line[i], minishell);
+
 		// ON TRAITE line[i] EN FONCTION DE L'ETAT 
-		// 
-		// int s = ft_interpret_state
-		//
-		//if (s == 1)
-		// append(buffer, line[i])
-		//else if  (s == 2)
-		// lst_add(&t_element, lst_new(buffer)); 
-		//
-		//bzero(buffer);
-		//append(buffer, line[i])
-		//
-		// void ft_detect_type(char *buffer, t_minishell *minishell) -> t_element ele->type
+		// ON INTERPRETE L'ETAT POUR CREER LA CHAINE DE TOKENS
+		if (ft_state_interpret(line, &i, buffer, minishell))
+			return (1);
+		i++;
+	}
+	if (ft_strlen(buffer) > 0)
+		if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
+			return (ft_error(MALLOC_FAIL, "Fail Malloc Interpreter\n"));
+	return (0);
+}
+
+void ft_type_affect(t_minishell *minishell)
+{
+	t_token *current;
+	
+	current = minishell->head_token;
+	while (current)
+	{
+		if (current->str[0] == '|')
+			current->type = PIPE;
+		else if (current->str[0] == '<')
+		{
+				current->type = IN_CHEVRON;
+			if (current->str[1])
+				current->type = IN_DCHEVRON;
+		}
+		else if (current->str[0] == '>')
+		{
+			current->type = OUT_CHEVRON;
+			if (current->str[1])
+				current->type = OUT_DCHEVRON;
+		}
+		else
+			current->type = WORD;
+		current = current->next;
 	}
 }
 
 // On récupere la ligne, on traite pour avoir des types de mots 
 // On les récupere ensuite pour créer des phrases
-
 void	ft_parse(t_minishell *minishell)
 {
 	// ON RECUPERE LES TYPES DANS UN PREMIER TEMPS
-	ft_create_elem_lst(minishell);
-	
-	// UTILISATION DU PARSER
-	//
+	if (ft_create_elem_lst(minishell))
+		return ;
+	ft_type_affect(minishell);
+	ft_tokens_print(minishell->head_token);
 	//
 	//loop sur t_element
 	//  int ft_check_redirection(minishell, element) < > << >>

@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 16:31:44 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/05 16:34:57 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/09 14:52:56 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 typedef enum e_errors {
 	CLEAN_EXIT = 0,
+	PARSING_FAIL = 50,
 	MALLOC_FAIL = 99,
 } t_errors ;
 
