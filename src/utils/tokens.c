@@ -1,5 +1,15 @@
 #include "minishell.h"
 
+// RECUPERE LE DERNIER TOKEN
+t_token	*ft_token_last(t_token *token)
+{
+    if (!token)
+        return (NULL);
+    while (token->next)
+        token = token->next;
+    return (token);
+}
+
 // CREATION DU TOKEN A PARTIR DU BUFFER
 t_token *ft_token_create(t_minishell *minishell, char *buffer)
 {
@@ -15,19 +25,18 @@ t_token *ft_token_create(t_minishell *minishell, char *buffer)
 }
 
 // AJOUT DU TOKEN A LA LISTE CHAINEE *head_token
-void	ft_token_add(t_minishell *minishell, t_token *to_add)
+int	ft_token_add(t_minishell *minishell, t_token *to_add)
 {
-	t_token	*tmp;
+	t_token	*last;
 
 	if (!minishell || !to_add)
-		return ;
+		return (1);
 	if (!minishell->head_token)
 	{
 		minishell->head_token = to_add;
-		return ;
+		return (0);
 	}
-	tmp = minishell->head_token;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = to_add;
+	last = ft_token_last(minishell->head_token);
+	last->next = to_add;
+	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fardeau <fardeau@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 15:58:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/07 15:23:36 by fardeau          ###   ########.fr       */
+/*   Updated: 2026/02/09 14:14:00 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,48 +58,45 @@ void	ft_state_interpret(char *line, int *index, char *buffer, t_minishell *minis
 {
 	if (ft_ischarset(line[*index], SPACES) && minishell->state == NORMAL)
 	{
-			// SIGNALE LA FIN DU BUFFER
-			// INITIALISATION NOUVEAU NOEUD AVEC CONTENT BUFFER
-			// ft_printf("Buffer end\n");
-
-			// CREEER ET AJOUTER BUFFER A LA LIST T_ELEMENT
-			// ft_token_create(buffer, minishell);
-
-			// REMETTRE A ZERO BUFFER
-
-			// SI PIPE
-				// REGARDER SI line[index + 1] == line[index]
-					// SI OUI -> RETURN SYNTAX ERROR : minishell: syntax error near unexpected token '||'
-					// ERROR ls >>> wc zsh: parse error near `>'
 		if (ft_strlen(buffer) > 0)
 		{
 			ft_print_state(line[*index],buffer, minishell);
-			ft_token_add(minishell, ft_token_create(minishell, buffer));
+
+			// CREEER ET AJOUTER BUFFER A LA LIST T_ELEMENT
+			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
+				// ERROR
+				return;
+
+			// REMETTRE A ZERO BUFFER
 			ft_bzero(buffer, ft_strlen(buffer));
 		}
 		minishell->state = WAITING;
-		return;
 	}
 	// IF IT IS AN OPERATOR
 	if (ft_ischarset(line[*index], OPERATORS) && minishell->state == NORMAL)
 	{
-		if (ft_strlen(buffer) > 0)
+		// IF BUFFER ISN'T EMPTY
+		if (ft_strlen(buffer) > 0 && buffer[0] != line[*index])
 		{
 			ft_print_state(line[*index],buffer, minishell);
+			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
+				// ERROR
+				return;
 			ft_bzero(buffer, ft_strlen(buffer));
 		}
-		if (line[*index] == '<' || line[*index] == '>')
-		{
-			if (line[*index + 1] == line[*index])
-				ft_printf("DOUBLE CHEVRON\n");
-			else
-				ft_printf("SIMPLE CHEVRON OU PIPE \n");
-
-		}
-		return;
 	}
 	if (minishell->state != WAITING)
+	{
+		if (!ft_ischarset(line[*index], OPERATORS) && ft_ischarset(buffer[0], OPERATORS))
+		{
+			ft_print_state(line[*index],buffer, minishell);
+			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
+				// ERROR
+				return;
+			ft_bzero(buffer, ft_strlen(buffer));
+		}
 		ft_buffer_add(buffer, line[*index]);
+	}
 }
 
 void	ft_create_elem_lst(t_minishell *minishell)
