@@ -13,6 +13,7 @@
 #include "../../includes/minishell.h"
 #include <stdio.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 void ft_create_cmd_lst(t_minishell *minishell);
 t_token *create_mocks_element();
@@ -155,15 +156,14 @@ int is_redirection(t_token *ele)
 
 void ft_create_cmd_lst(t_minishell *minishell)
 {
-	(void)minishell;
-	t_token *ele = NULL;
+	t_token *ele;
 	char **args;
 	t_token *e;
 	int i;
 	int len_ele;
+	int fd_out;
 
-	ele = create_mocks_element();
-	minishell->elements = ele;
+	ele = minishell->head_token;
 	len_ele = 6; //FIX: make lst_size for t_element
 	args = ft_gc_malloc(sizeof(char *) * len_ele, &minishell->gc);
 	if (!args)
@@ -185,9 +185,21 @@ void ft_create_cmd_lst(t_minishell *minishell)
 			{
 				if (ft_check_file(ele) == 0)
 					error_parsing_files();
+				if (ele->type == OUT_CHEVRON)
+				{
+					fd_out = open(ele->next->str, O_CREAT | O_TRUNC | O_WRONLY);
+					if (fd_out == -1)
+						error_parsing_files();
+				}
+				else if (ele->type == OUT_DCHEVRON)
+				{
+					fd_out = open(ele->next->str, O_CREAT | O_APPEND | O_WRONLY);
+					if (fd_out == -1)
+						error_parsing_files();
+				}
 			}
 		}
-		else if (ele->type == WORD && (ft_strchr(ele->str, '\'') || ft_strchr(ele->str, '\"')))
+		else if (ele->type == WORD && ft_strchr(ele->str, '\"'))
 		{
 			if (!ft_check_expends(minishell, ele))
 				error_parsing_expends();
@@ -232,42 +244,4 @@ void ft_create_cmd_lst(t_minishell *minishell)
 		cmd_append(minishell, ele, args);
 		ele = ele->next;
 	}
-}
-
-t_token *create_mocks_element()
-{
-	t_token *head = calloc(1,sizeof(t_token));
-	t_token *element2 = calloc(1,sizeof(t_token));
-	t_token *element3 = calloc(1,sizeof(t_token));
-	t_token *element4 = calloc(1,sizeof(t_token));
-	t_token *element5 = calloc(1,sizeof(t_token));
-	t_token *element6 = calloc(1,sizeof(t_token));
-	// PIPE,
-	// IN_CHEVRON,
-	// IN_DCHEVRON,
-	// OUT_CHEVRON,
-	// OUT_DCHEVRON,
-	// WORD,
-	// NBR_TYPES,
-	// FILE ??
-	head->str = ft_strdup("<");
-	head->type = IN_CHEVRON;
-	element2->str = ft_strdup("logs.txt");
-	element2->type = WORD;
-	element3->str = ft_strdup("cat");
-	element3->type = WORD;
-	element4->str = ft_strdup("|");
-	element4->type = PIPE;
-	element5->str = ft_strdup("grep");
-	element5->type = WORD;
-	element6->str = ft_strdup("\"error\"");
-	element6->type = WORD;
-
-	head->next = element2;
-	head->next->next = element3;
-	head->next->next->next = element4;
-	head->next->next->next->next = element5;
-	head->next->next->next->next->next = element6;
-	head->next->next->next->next->next->next = NULL;
-	return (head);
 }

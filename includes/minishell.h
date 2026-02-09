@@ -48,6 +48,7 @@ typedef struct s_token {
 	char				*str;
 	t_types				type;
 	struct s_token	*next;
+	int 			is_taken;
 }	t_token;
 
 // STRUCTURE GLOBALE POUR LE MINISHELL
