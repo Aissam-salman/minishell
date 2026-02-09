@@ -1,16 +1,15 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
+/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 15:58:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/09 15:57:15 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/09 16:22:59 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 // TRAITER LES CHANGEMENTS D'ETAT
 /*
@@ -50,7 +49,7 @@ void	ft_state_detect(char c, t_minishell *minishell)
 		else if (minishell->state == IN_QUOTE)
 			minishell->state = NORMAL;
 	}
-	// SI EN PAUSE ET TROUVE UN AUTRE 
+	// SI EN PAUSE ET TROUVE UN AUTRE
 	else if (!ft_ischarset(c, SPACES) && minishell->state == WAITING)
 		minishell->state = NORMAL;
 }
@@ -106,7 +105,7 @@ int	ft_create_elem_lst(t_minishell *minishell)
 		// ON DETECTE L'ETAT POUR POUVOIR DETERMINER QUOI FAIRE DU CHARACTERE
 		ft_state_detect(line[i], minishell);
 
-		// ON TRAITE line[i] EN FONCTION DE L'ETAT 
+		// ON TRAITE line[i] EN FONCTION DE L'ETAT
 		// ON INTERPRETE L'ETAT POUR CREER LA CHAINE DE TOKENS
 		if (ft_state_interpret(line, &i, buffer, minishell))
 			return (1);
@@ -121,7 +120,7 @@ int	ft_create_elem_lst(t_minishell *minishell)
 void ft_type_affect(t_minishell *minishell)
 {
 	t_token *current;
-	
+
 	current = minishell->head_token;
 	while (current)
 	{
@@ -145,23 +144,18 @@ void ft_type_affect(t_minishell *minishell)
 	}
 }
 
-// On récupere la ligne, on traite pour avoir des types de mots 
+// On récupere la ligne, on traite pour avoir des types de mots
 // On les récupere ensuite pour créer des phrases
 void	ft_parse(t_minishell *minishell)
 {
 	// ON RECUPERE LES TYPES DANS UN PREMIER TEMPS
+	// ft_create_elem_lst(minishell);
+
+
 	if (ft_create_elem_lst(minishell))
 		return ;
 	ft_type_affect(minishell);
 	ft_tokens_print(minishell->head_token);
-	//
-	//loop sur t_element
-	//  int ft_check_redirection(minishell, element) < > << >>
-	//        error 
-	//  int ft_check_cmd(minishell, element)
-	//        error 
-	//  int ft_check_expends()
-	//  	eroor 
-	//  int ft_check_pipe()
-	//  		
+
+	ft_create_cmd_lst(minishell);
 }

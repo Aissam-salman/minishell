@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_output.h"
+#include "../includes/ft_output.h"
 
 void	ft_putnbr_base(int nbr, char *base)
 {
