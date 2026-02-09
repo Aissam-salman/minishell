@@ -16,7 +16,7 @@
 
 int ft_check_flags(char *str);
 int ft_check_redirection(char *str);
-int ft_check_file(t_elements *ele);
+int ft_check_file_of_redirection(t_token *token);
 int ft_check_heredoc_end(char *str);
 
 #endif

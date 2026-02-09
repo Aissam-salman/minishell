@@ -41,8 +41,12 @@ re: fclean all
 ############## TESTING ########################
 
 SRCS_NO_MAIN = src/errors/errors.c \
-		src/parsing/lexer.c \
-		src/parsing/parser.c
+				src/parsing/lexer.c \
+				src/parsing/parser.c \
+				src/utils/cmds.c \
+				src/utils/output.c \
+				src/utils/tokens.c
+
 OBJS_NO_MAIN = $(SRCS_NO_MAIN:%.c=$(OBJ_DIR)/%.o)
 
 CRITERION_DIR = lib/criterion

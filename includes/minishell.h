@@ -21,8 +21,9 @@ typedef enum e_type {
 	WORD,
 	NBR_TYPES,
 	CMD,
+	R_FILE,
 	FLAG,
-	R_FILE
+	EXPEND
 }	t_types;
 
 // ENUMS ETATS MACHINE STATE
