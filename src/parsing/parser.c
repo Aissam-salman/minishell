@@ -15,7 +15,7 @@
 #include <unistd.h>
 
 void ft_create_cmd_lst(t_minishell *minishell);
-t_elements *create_mocks_element();
+t_token *create_mocks_element();
 
 int ft_check_flags(char *str)
 {
@@ -61,7 +61,7 @@ int ft_check_heredoc_end(char *str)
 	return (1);
 }
 
-int ft_check_file(t_elements *ele)
+int ft_check_file(t_token *ele)
 {
 	//NOTE: if < try to access R mode 
 	//     else if > try to open O_CREAT | O_TRUNCT | O_W
@@ -80,25 +80,26 @@ int ft_check_file(t_elements *ele)
 	return (1);
 }
 
-int ft_check_cmd(t_minishell *minishell, t_elements *ele)
+int ft_check_cmd(t_minishell *minishell, t_token *ele)
 {
     (void)minishell;
     (void)ele;
     return (0);
 }
-int ft_check_expends(t_minishell *minishell, t_elements *ele)
+int ft_check_expends(t_minishell *minishell, t_token *ele)
 {
     (void)minishell;
     (void)ele;
     return (0);
 }
-int ft_check_pipe(t_minishell *minishell, t_elements *ele)
+int ft_check_pipe(t_minishell *minishell, t_token *ele)
 {
     (void)minishell;
     (void)ele;
     return (0);
 }
-void cmd_append(t_minishell *minishell, t_elements *ele, char **args)
+
+void cmd_append(t_minishell *minishell, t_token *ele, char **args)
 {
     (void)minishell;
     (void)ele;
@@ -142,7 +143,7 @@ void error_parsing_flags()
 	exit(16);
 }
 
-int is_redirection(t_elements *ele)
+int is_redirection(t_token *ele)
 {
     if (ele->type == IN_CHEVRON ||
         ele->type == OUT_CHEVRON ||
@@ -155,9 +156,9 @@ int is_redirection(t_elements *ele)
 void ft_create_cmd_lst(t_minishell *minishell)
 {
 	(void)minishell;
-	t_elements *ele = NULL;
+	t_token *ele = NULL;
 	char **args;
-	t_elements *e;
+	t_token *e;
 	int i;
 	int len_ele;
 
@@ -195,6 +196,7 @@ void ft_create_cmd_lst(t_minishell *minishell)
 		{
 			//NOTE: set type CMD if X_OK
 			if (!ft_check_cmd(minishell, ele))
+				//FIX: Make cmd NULL
 				error_parsing_cmd();
 			e = ele;
 			i = 0;
@@ -232,14 +234,14 @@ void ft_create_cmd_lst(t_minishell *minishell)
 	}
 }
 
-t_elements *create_mocks_element()
+t_token *create_mocks_element()
 {
-	t_elements *head = calloc(1,sizeof(t_elements));
-	t_elements *element2 = calloc(1,sizeof(t_elements));
-	t_elements *element3 = calloc(1,sizeof(t_elements));
-	t_elements *element4 = calloc(1,sizeof(t_elements));
-	t_elements *element5 = calloc(1,sizeof(t_elements));
-	t_elements *element6 = calloc(1,sizeof(t_elements));
+	t_token *head = calloc(1,sizeof(t_token));
+	t_token *element2 = calloc(1,sizeof(t_token));
+	t_token *element3 = calloc(1,sizeof(t_token));
+	t_token *element4 = calloc(1,sizeof(t_token));
+	t_token *element5 = calloc(1,sizeof(t_token));
+	t_token *element6 = calloc(1,sizeof(t_token));
 	// PIPE,
 	// IN_CHEVRON,
 	// IN_DCHEVRON,
