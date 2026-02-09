@@ -4,3 +4,4 @@ minishell
 objs/**
 *.swp
 a.out
+.vscode
