@@ -12,6 +12,7 @@
 
 #include "../../includes/minishell.h"
 #include <stdio.h>
+#include <unistd.h>
 
 void ft_create_cmd_lst(t_minishell *minishell);
 t_elements *create_mocks_element();
@@ -52,14 +53,31 @@ int ft_check_redirection(char *str)
     return (0);
 }
 
+int ft_check_heredoc_end(char *str)
+{
+	//NOTE: maybe handle " " and ""
+	if (!str || !*str)
+		return (0);
+	return (1);
+}
+
 int ft_check_file(t_elements *ele)
 {
 	//NOTE: if < try to access R mode 
 	//     else if > try to open O_CREAT | O_TRUNCT | O_W
 	//     else if << check_heredoc_end
-	//     else if >> try to open O_W | O_APPEND mode 
-	(void)ele;
-	return (0);
+	//     else if >> try to open O_W | O_APPEND | O_CREAT if not exist
+	if (ele->type == IN_CHEVRON)
+	{
+		if (access(ele->next->str, R_OK) == -1)
+			return (0);
+	}
+	else if (ele->type == IN_DCHEVRON)
+	{
+		if (ft_check_heredoc_end(ele->next->str) == 0)
+			return (0);
+	}
+	return (1);
 }
 
 int ft_check_cmd(t_minishell *minishell, t_elements *ele)

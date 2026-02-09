@@ -5,15 +5,11 @@ SRCS = src/main.c \
 		src/parsing/lexer.c \
 		src/parsing/parser.c
 
-
 OBJ_DIR = objs
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
-
 CC = cc -Wall -Wextra -Werror
-
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
-
 INCS = -I. -Iincludes -I$(LIBFT_DIR)
 
 all: $(NAME)
@@ -47,6 +43,10 @@ SRCS_NO_MAIN = src/errors/errors.c \
 		src/parsing/parser.c
 OBJS_NO_MAIN = $(SRCS_NO_MAIN:%.c=$(OBJ_DIR)/%.o)
 
+CRITERION_DIR = lib/criterion
+CRITERION_INC = -I$(CRITERION_DIR)/include
+CRITERION_LIB = -L$(CRITERION_DIR)/lib -Wl,-rpath,$(CRITERION_DIR)/lib
+
 TEST_SRCS = $(addprefix tests/units/, mocks.c test_parsing.c)
 TEST_OBJS = $(TEST_SRCS:%.c=%.o)
 TEST_NAME = unit_tests
@@ -57,7 +57,7 @@ testf: all
 
 units: $(LIBFT) $(OBJS_NO_MAIN) $(TEST_OBJS)
 	@echo "Compiling unit tests..."
-	@$(CC) -o $(TEST_NAME) $(TEST_OBJS) $(OBJS_NO_MAIN) $(LIBFT) -lcriterion -lreadline
+	@$(CC) -o $(TEST_NAME) $(TEST_OBJS) $(OBJS_NO_MAIN) $(LIBFT) $(CRITERION_LIB) -lcriterion -lreadline
 
 tests/units/%.o: tests/units/%.c
-	$(CC) $(INCS) -c $< -o $@
+	$(CC) $(INCS) $(CRITERION_INC) -c $< -o $@
