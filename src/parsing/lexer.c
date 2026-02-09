@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 15:58:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/09 15:03:19 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/09 15:17:23 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ void	ft_state_detect(char c, t_minishell *minishell)
 // INTERPRETE LE CARACTERE EN FONCTION DE L'ETAT
 int	ft_state_interpret(char *line, int *index, char *buffer, t_minishell *minishell)
 {
+	// SI ESPACES
 	if (ft_ischarset(line[*index], SPACES) && minishell->state == NORMAL)
 	{
 		if (ft_strlen(buffer) > 0)
@@ -65,12 +66,14 @@ int	ft_state_interpret(char *line, int *index, char *buffer, t_minishell *minish
 				return (ft_error(MALLOC_FAIL, "Fail Malloc Interpreter\n"));
 		minishell->state = WAITING;
 	}
+	// SI OPERATORS
 	if (ft_ischarset(line[*index], OPERATORS) && minishell->state == NORMAL)
 	{
 		if (ft_strlen(buffer) > 0 && buffer[0] != line[*index])
 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
 				return (ft_error(MALLOC_FAIL, "Fail Malloc Interpreter\n"));
 	}
+	// SI STATE != WAITING
 	if (minishell->state != WAITING)
 	{
 		if (!ft_ischarset(line[*index], OPERATORS) && ft_ischarset(buffer[0], OPERATORS))
@@ -81,6 +84,7 @@ int	ft_state_interpret(char *line, int *index, char *buffer, t_minishell *minish
 	return (0);
 }
 
+// CREE LA LISTE DES TOKENS A UTILSER POUR LE PARSING
 int	ft_create_elem_lst(t_minishell *minishell)
 {
 	char *line;
@@ -95,6 +99,7 @@ int	ft_create_elem_lst(t_minishell *minishell)
 	// On parcourt la ligne pour ajouter a chaque fois
 	minishell->state = NORMAL;
 	buffer = ft_calloc_gc(ft_strlen(line) + 1, sizeof(char), &minishell->gc);
+	// BOUCLE POUR TRAITER CHAQUE CHAR DE MINISHELL.LINE
 	while (i < line_len)
 	{
 		// ON DETECTE L'ETAT POUR POUVOIR DETERMINER QUOI FAIRE DU CHARACTERE
@@ -107,7 +112,8 @@ int	ft_create_elem_lst(t_minishell *minishell)
 		i++;
 	}
 	if (ft_strlen(buffer) > 0)
-		ft_token_add(minishell, ft_token_create(minishell, buffer));
+		if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
+			return (ft_error(MALLOC_FAIL, "Fail Malloc Interpreter\n"));
 	return (0);
 }
 
@@ -122,8 +128,6 @@ void	ft_parse(t_minishell *minishell)
 	ft_print_tokens(minishell->head_token);
 	
 	// UTILISATION DU PARSER
-
-	//
 	//
 	//loop sur t_element
 	//  int ft_check_redirection(minishell, element) < > << >>
@@ -135,48 +139,3 @@ void	ft_parse(t_minishell *minishell)
 	//  int ft_check_pipe()
 	//  		
 }
-
-// void	ft_state_interpret(char *line, int *index, char *buffer, t_minishell *minishell)
-// {
-// 	if (ft_ischarset(line[*index], SPACES) && minishell->state == NORMAL)
-// 	{
-// 		if (ft_strlen(buffer) > 0)
-// 		{
-// 			ft_print_state(line[*index],buffer, minishell);
-
-// 			// CREEER ET AJOUTER BUFFER A LA LIST T_ELEMENT
-// 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
-// 				// ERROR
-// 				return;
-
-// 			// REMETTRE A ZERO BUFFER
-// 			ft_bzero(buffer, ft_strlen(buffer));
-// 		}
-// 		minishell->state = WAITING;
-// 	}
-// 	// IF IT IS AN OPERATOR
-// 	if (ft_ischarset(line[*index], OPERATORS) && minishell->state == NORMAL)
-// 	{
-// 		// IF BUFFER ISN'T EMPTY
-// 		if (ft_strlen(buffer) > 0 && buffer[0] != line[*index])
-// 		{
-// 			ft_print_state(line[*index],buffer, minishell);
-// 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
-// 				// ERROR
-// 				return;
-// 			ft_bzero(buffer, ft_strlen(buffer));
-// 		}
-// 	}
-// 	if (minishell->state != WAITING)
-// 	{
-// 		if (!ft_ischarset(line[*index], OPERATORS) && ft_ischarset(buffer[0], OPERATORS))
-// 		{
-// 			ft_print_state(line[*index],buffer, minishell);
-// 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
-// 				// ERROR
-// 				return;
-// 			ft_bzero(buffer, ft_strlen(buffer));
-// 		}
-// 		ft_buffer_add(buffer, line[*index]);
-// 	}
-// }

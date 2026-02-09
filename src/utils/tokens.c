@@ -19,6 +19,8 @@ t_token *ft_token_create(t_minishell *minishell, char *buffer)
 	if (!new_token)
 		return (NULL);
 	new_token->str = ft_strdup_gc(buffer, &minishell->gc);
+	if (!new_token->str)
+		return (NULL);
 	new_token->type = DEFAULT;
 	new_token->next = NULL;
 	ft_bzero(buffer, ft_strlen(buffer));
