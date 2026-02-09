@@ -170,7 +170,6 @@ void ft_create_cmd_lst(t_minishell *minishell)
 		return;
 	while (ele)
 	{
-		printf("%s\n", ele->str);
 		if (ele->is_taken)
 		{
 			ele = ele->next;
