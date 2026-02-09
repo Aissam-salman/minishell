@@ -48,14 +48,15 @@ typedef struct s_minishell {
 void	ft_parse(t_minishell *minishell);
 
 // UTILS/OUTPUT.C
-void	ft_print_tokens(t_token *head);
-void	ft_print_state(char c, char *buffer, t_minishell *minishell);
-
+void	ft_tokens_print(t_token *head);
+void	ft_type_print(t_token *token);
+void	ft_state_print(char c, char *buffer, t_minishell *minishell);
 
 // UTILS/TOKENS.C
 t_token *ft_token_create(t_minishell *minishell, char *buffer);
 int	ft_token_add(t_minishell *minishell, t_token *to_add);
 
+// UTILS/ERRORS.C
 int	ft_error(int error, char *str);
 void	ft_exit(t_minishell *minishell, int error, char *str );
 #endif

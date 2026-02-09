@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 15:58:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/09 15:26:34 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/09 15:57:15 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,17 +118,42 @@ int	ft_create_elem_lst(t_minishell *minishell)
 	return (0);
 }
 
+void ft_type_affect(t_minishell *minishell)
+{
+	t_token *current;
+	
+	current = minishell->head_token;
+	while (current)
+	{
+		if (current->str[0] == '|')
+			current->type = PIPE;
+		else if (current->str[0] == '<')
+		{
+				current->type = IN_CHEVRON;
+			if (current->str[1])
+				current->type = IN_DCHEVRON;
+		}
+		else if (current->str[0] == '>')
+		{
+			current->type = OUT_CHEVRON;
+			if (current->str[1])
+				current->type = OUT_DCHEVRON;
+		}
+		else
+			current->type = WORD;
+		current = current->next;
+	}
+}
+
 // On récupere la ligne, on traite pour avoir des types de mots 
 // On les récupere ensuite pour créer des phrases
 void	ft_parse(t_minishell *minishell)
-
 {
 	// ON RECUPERE LES TYPES DANS UN PREMIER TEMPS
 	if (ft_create_elem_lst(minishell))
 		return ;
-	ft_print_tokens(minishell->head_token);
-	
-	// UTILISATION DU PARSER
+	ft_type_affect(minishell);
+	ft_tokens_print(minishell->head_token);
 	//
 	//loop sur t_element
 	//  int ft_check_redirection(minishell, element) < > << >>

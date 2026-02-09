@@ -20,7 +20,9 @@ int	main()
 		ft_gc_add_node(&minishell.gc, minishell.line);
 		if (*minishell.line)
 		{
-			// history 
+			if (ft_strncmp(minishell.line, "exit", 4) == 0)
+				ft_exit(&minishell, 0, "See ya!");
+
 			if (minishell.line[0] != 0)
 				add_history(minishell.line);
 			ft_parse(&minishell);
@@ -28,11 +30,8 @@ int	main()
 			// POUR LIBERER LA LISTE DES TOKENS A CHAQUE EXECT
 			minishell.head_token = NULL;
 			// execve("/bin/echo", args, NULL);
-			if (ft_strncmp(minishell.line, "exit", 4) == 0)
-				ft_exit(&minishell, 0, "See ya!");
 		}
 		printf("You entered: %s\n", minishell.line);
 	}
-	return (0);
 	ft_exit(&minishell, 0, NULL);
 }
