@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:34:00 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/09 18:30:07 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/10 15:21:36 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ t_cmd	*ft_cmd_new(t_minishell *minishell)
 	if (!new)
 		return (NULL);
 	new->next = NULL;
+	new->infd = STDIN_FILENO;
+	new->outfd = STDOUT_FILENO;
 	return (new);
 }
 
@@ -52,7 +54,8 @@ int	ft_token_word_count(t_token *current)
 {
 	int count;
 
-	count = 0;
+	// COMMENCE A 1 POUR CMD->ARGS[0] == PATH | CMD
+	count = 1;
 	while (current)
 	{
 		if (current->type == PIPE)
@@ -64,35 +67,59 @@ int	ft_token_word_count(t_token *current)
 	return (count);
 }
 
-// CREER UNE LISTE A PARTIR DES TOKENS
+void	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token *token, int *i)
+{
+	if (!minishell || !cmd || !token)
+		return ;
+	// SI WORD = AJOUTE A ARGS
+	if (token->type == WORD)
+	{
+		cmd->args[*i] = token->str;
+		(*i)++;
+	}
+	// SI CMD => REMPLIR PATH ET ARGV[0]
+	else if (token->type == CMD) 
+	{
+		cmd->path = token->path;
+		cmd->args[0] = token->str;
+	}
+	// SI OUTFILE => REMPLIR OUTFD
+	// else if (token->type == OUTFILE)
+	// {
+	// 	// cmd->outfd = token->
+	// }
+	// SI INFILE => REMPLIR INFD
+	// else if (token->type == INFILE)
+}
+
+// CREER UNE LISTE DE COMMANDE A PARTIR DES TOKENS
 void ft_cmd_lst_create(t_minishell *minishell)
 {
-	t_token *current;
-	t_cmd	*new;
+	t_token *tok_current;
+	t_cmd	*cmd_new;
 	int i;
 	int count;
 
-	current = minishell->head_token;
-	while (current)
+	// COMMENCE A PARCOURIR LA CHAINE DE TOKENS
+	tok_current = minishell->head_token;
+	while (tok_current)
 	{
-		i = 0;
-		new = ft_cmd_new(minishell);
-		count = ft_token_word_count(current);
-		new->args = ft_calloc_gc(count + 1, sizeof(char *), &minishell->gc);
-		while (current && current->type != PIPE)
+		i = 1;
+		// INITIALISE LE NOUVEAU NOEUD
+		cmd_new = ft_cmd_new(minishell);
+		count = ft_token_word_count(tok_current);
+		// ALLOUE LE NOMBRE DE WORDS
+		cmd_new->args = ft_calloc_gc(count + 1, sizeof(char *), &minishell->gc);
+		while (tok_current && tok_current->type != PIPE)
 		{
-			if (current->type == WORD)
-			{
-				new->args[i] = current->str;
-				i++;
-			}
-			current = current->next;
+			ft_token_affect(minishell, cmd_new, tok_current, &i);
+			tok_current = tok_current->next;
 		}
-		new->args[i] = NULL;
-		ft_cmd_add(minishell, new);
-		ft_cmd_print(new);
-		if (current)
-			current = current->next;
+		cmd_new->args[i] = NULL;
+		ft_cmd_add(minishell, cmd_new);
+		ft_cmd_print(cmd_new);
+		if (tok_current)
+			tok_current = tok_current->next;
 	}
 }
 

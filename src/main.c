@@ -56,7 +56,6 @@ int	main()
 			ft_gc_add_node(&minishell.gc, minishell.line);
 			if (ft_strncmp(minishell.line, "exit", 4) == 0)
 				ft_exit(&minishell, 0, "See ya!");
-
 			if (minishell.line[0] != 0)
 				add_history(minishell.line);
 			ft_parse(&minishell);

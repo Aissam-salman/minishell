@@ -46,9 +46,10 @@ typedef struct s_cmd
 
 // STRUCTURE POUR UN ELEMENT
 typedef struct s_token {
-	char				*str;
-	t_types				type;
+	char			*str;
+	t_types			type;
 	struct s_token	*next;
+	char			*path;
 }	t_token;
 
 // STRUCTURE GLOBALE POUR LE MINISHELL
