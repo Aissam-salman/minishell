@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 // RECUPERE LE DERNIER TOKEN
 t_token	*ft_token_last(t_token *token)

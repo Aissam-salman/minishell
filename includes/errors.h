@@ -15,6 +15,8 @@
 
 typedef enum e_errors {
 	CLEAN_EXIT = 0,
+	NO_SUCH_FILE_O_DIR = 1,
+	SYNTAX_ERROR = 2,
 	PARSING_FAIL = 50,
 	MALLOC_FAIL = 99,
 } t_errors ;

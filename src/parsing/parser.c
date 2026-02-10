@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
+/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 18:26:24 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/09 17:55:39 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/09 19:12:36 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-#include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 
 void ft_create_cmd_lst(t_minishell *minishell);
 t_token *create_mocks_element();
@@ -61,7 +63,7 @@ int ft_check_heredoc_end(char *str)
 	return (1);
 }
 
-int ft_check_file(t_token *ele)
+int ft_check_file_of_redirection(t_token *ele)
 {
 	//NOTE: if < try to access R mode
 	//     else if > try to open O_CREAT | O_TRUNCT | O_W
@@ -77,69 +79,97 @@ int ft_check_file(t_token *ele)
 		if (ft_check_heredoc_end(ele->next->str) == 0)
 			return (0);
 	}
+	//NOTE: open >  and >>
 	return (1);
+}
+
+int ft_check_file(t_token *ele)
+{
+	if (access(ele->str, R_OK | W_OK) == -1) 
+		return (0);
+	return (1);
+}
+
+char **ft_get_path(t_minishell *minishell)
+{
+	char *env;
+	char **envp;
+
+	env = getenv("PATH");
+	if (!env)
+		return (NULL);
+	envp = ft_split_sep_gc(env, ':', &minishell->gc);
+	if  (!envp)
+		return (NULL);
+	return (envp);
+}
+
+int ft_test_path(t_minishell *minishell, char **envp, t_token *ele)
+{
+	char *tmp;
+	char *cur_path;
+	int i;
+	struct stat stat_file;
+
+	i = 0;
+	while (envp[i])
+	{
+		tmp = ft_strjoin_gc(envp[i], "/", &minishell->gc);
+		cur_path = ft_strjoin_gc(tmp, ele->str, &minishell->gc);
+
+		if (stat(cur_path, &stat_file) == 0 && S_ISREG(stat_file.st_mode))
+		{
+			if (cur_path && access(cur_path, X_OK) == 0)
+			{
+				ele->path = cur_path;
+				return (1);
+			}
+		}
+		i++;
+	}
+    return (0);
 }
 
 int ft_check_cmd(t_minishell *minishell, t_token *ele)
 {
-    (void)minishell;
-    (void)ele;
+	char **envp;
+	int res;
+	struct stat stat_file;
+
+	if (!ele || !ele->str || !*ele->str)
+		return (0);
+	if (ele->str[0] == '/' && !ele->str[1])
+		return (0);
+	//NOTE: check si c'est bien un fichier executable et pas un dossier
+	if (stat(ele->str, &stat_file) == 0 && S_ISREG(stat_file.st_mode))
+	{
+		if (access(ele->str, X_OK) == 0)
+		{
+			ele->path = ele->str;
+			return (1);
+		}
+	}
+	envp = ft_get_path(minishell);
+	if  (!envp)
+		return (0);
+	res = ft_test_path(minishell, envp, ele);
+	if (res == 1)
+		return 1;
     return (0);
 }
+
 int ft_check_expends(t_minishell *minishell, t_token *ele)
 {
+	// $""HOME
     (void)minishell;
     (void)ele;
-    return (0);
+    return (1);
 }
-int ft_check_pipe(t_minishell *minishell, t_token *ele)
+int ft_check_pipe(t_minishell *minishell, char *str)
 {
     (void)minishell;
-    (void)ele;
-    return (0);
-}
-void cmd_append(t_minishell *minishell, t_token *ele, char **args)
-{
-    (void)minishell;
-    (void)ele;
-    (void)args;
-}
-
-
-void error_parsing_redirection()
-{
-	printf("Error Redirection");
-	exit(12);
-}
-
-void error_parsing_files()
-{
-	printf("Error file");
-	exit(12);
-}
-
-void error_parsing_cmd()
-{
-	printf("Error cmd");
-	exit(13);
-}
-
-void error_parsing_expends()
-{
-	printf("Error expends");
-	exit(14);
-}
-
-void error_parsing_pipe()
-{
-	printf("Error pipe");
-	exit(15);
-}
-
-void error_parsing_flags()
-{
-	printf("Error flags");
-	exit(16);
+    (void)str;
+    return (1);
 }
 
 int is_redirection(t_token *ele)
@@ -152,83 +182,62 @@ int is_redirection(t_token *ele)
     return (0);
 }
 
-void ft_create_cmd_lst(t_minishell *minishell)
+void checker_token(t_minishell *minishell)
 {
-	(void)minishell;
-	t_token *ele = NULL;
-	char **args;
-	t_token *e;
-	int i;
-	int len_ele;
-
-	ele = create_mocks_element();
-	// minishell->elements = ele;
-	len_ele = 6; //FIX: make lst_size for t_element
-	args = ft_gc_malloc(sizeof(char *) * len_ele, &minishell->gc);
-	if (!args)
-		return;
-	// ft_bzero(void *s, size_t n)
-	while (ele)
+	t_token *token;
+	int		cmd_find = 0;
+	
+	token = minishell->head_token;
+	while (token)
 	{
-		printf("%s\n", ele->str);
-		if (ele->is_taken)
+		if (is_redirection(token))
 		{
-			ele = ele->next;
-			continue;
-		}
-		if (is_redirection(ele))
-		{
-			//NOTE: check word after if is file ??
-			if (ft_check_redirection(ele->str) == 0)
-				error_parsing_redirection();
-			if (ele->next)
+			if (ft_check_redirection(token->str) == 0)
+				token->code_error = SYNTAX_ERROR;
+			if (token->next)
 			{
-				if (ft_check_file(ele) == 0)
-					error_parsing_files();
+				//FIX: recup code error de open
+				if (ft_check_file_of_redirection(token) == 0)
+					token->code_error = NO_SUCH_FILE_O_DIR;
+				else 
+					token->next->type = R_FILE;
 			}
 		}
-		else if (ele->type == WORD && (ft_strchr(ele->str, '\'') || ft_strchr(ele->str, '\"')))
+		else if (token->type == WORD && (ft_strchr(token->str, '\"') ||
+		   ft_strchr(token->str, '$')))
 		{
-			if (!ft_check_expends(minishell, ele))
-				error_parsing_expends();
+			//NOTE: while find $ parcours jusqu'a pas alnum
+			// 		si rien trouver mettre chaine vide
+			// 		sinon remplacer
+			if (ft_check_expends(minishell, token) == 0)
+				return ft_error(1, "Error expension");
 		}
-		else if (ele->type == WORD)
+		else if (token->type == WORD)
 		{
 			//NOTE: set type CMD if X_OK
-			if (!ft_check_cmd(minishell, ele))
-				error_parsing_cmd();
-			e = ele;
-			i = 0;
-			while (e && e->type != PIPE)
+			//FIX: !!!! une seul cmd par slot de pipe
+			if (ft_check_cmd(minishell, token) == 1 && cmd_find == 0)
 			{
-				if (is_redirection(e) && e->next && e->next->next)
-				{
-							e->is_taken = 1;
-							e->next->is_taken = 1;
-				}
-				if ((!args[i] || e->type == WORD) && e->is_taken == 0)
-				{
-					args[i] = ft_gc_malloc(ft_strlen(e->str) + 1, &minishell->gc);
-					if (e->type == CMD)
-						args[i] = e->str;
-					else
-					{
-						if (ft_check_flags(e->str) == 0)
-							error_parsing_flags();
-						args[i] = e->str;
-					}
-					e->is_taken = 1;
-					i++;
-				}
-				e = e->next;
+				token->type = CMD;
+				cmd_find = 1;
 			}
+			if (ft_check_flags(token->str) == 1)
+				token->type = FLAG;
+			if (ft_check_file(token) == 1)
+				token->type = R_FILE;
 		}
-		else if (ele->type == PIPE)
+		else if (token->type == PIPE)
 		{
-			if (!ft_check_pipe(minishell, ele))
-				error_parsing_pipe();
+			if (!ft_check_pipe(minishell, token))
+				return ft_error(1, "Error pipe");
+			cmd_find = 0;
 		}
-		cmd_append(minishell, ele, args);
-		ele = ele->next;
+		token = token->next;
 	}
+	return (0);
+}
+
+void ft_create_cmd_lst(t_minishell *minishell)
+{
+	checker_token(minishell);
 }

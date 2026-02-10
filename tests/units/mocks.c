@@ -1,14 +1,14 @@
 
 #include "../../includes/minishell.h"
 
-t_elements *create_mocks_element1()
+t_token *create_mocks_element1()
 {
-	t_elements *head = calloc(1,sizeof(t_elements));
-	t_elements *element2 = calloc(1,sizeof(t_elements));
-	t_elements *element3 = calloc(1,sizeof(t_elements));
-	t_elements *element4 = calloc(1,sizeof(t_elements));
-	t_elements *element5 = calloc(1,sizeof(t_elements));
-	t_elements *element6 = calloc(1,sizeof(t_elements));
+	t_token *head = calloc(1,sizeof(t_token));
+	t_token *element2 = calloc(1,sizeof(t_token));
+	t_token *element3 = calloc(1,sizeof(t_token));
+	t_token *element4 = calloc(1,sizeof(t_token));
+	t_token *element5 = calloc(1,sizeof(t_token));
+	t_token *element6 = calloc(1,sizeof(t_token));
 
 	head->str = ft_strdup("<");
 	head->type = IN_CHEVRON;
@@ -31,14 +31,14 @@ t_elements *create_mocks_element1()
 	return (head);
 }
 
-t_elements *create_mocks_element2()
+t_token *create_mocks_element2()
 {
-	t_elements *head = calloc(1,sizeof(t_elements));
-	t_elements *element2 = calloc(1,sizeof(t_elements));
-	t_elements *element3 = calloc(1,sizeof(t_elements));
-	t_elements *element4 = calloc(1,sizeof(t_elements));
-	t_elements *element5 = calloc(1,sizeof(t_elements));
-	t_elements *element6 = calloc(1,sizeof(t_elements));
+	t_token *head = calloc(1,sizeof(t_token));
+	t_token *element2 = calloc(1,sizeof(t_token));
+	t_token *element3 = calloc(1,sizeof(t_token));
+	t_token *element4 = calloc(1,sizeof(t_token));
+	t_token *element5 = calloc(1,sizeof(t_token));
+	t_token *element6 = calloc(1,sizeof(t_token));
 
 	head->str = ft_strdup(">");
 	head->type = IN_CHEVRON;
