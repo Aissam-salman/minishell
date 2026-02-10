@@ -227,7 +227,7 @@ void ft_filter_quote(t_token *token, t_minishell *minishell)
 	type_quote = '\0';
 	if (token->str[0] == '\"' && token->str[ft_strlen(token->str) - 1] == '\"')
 		type_quote = '\"';
-	else if (token->str[0] == '\'' && token->str[ft_strlen(token->str) - 2] == '\'')
+	else if (token->str[0] == '\'' && token->str[ft_strlen(token->str) - 1] == '\'')
 		type_quote = '\'';
 	if (type_quote != '\0')
 		token->str = ft_strdup_without(token->str, minishell);
