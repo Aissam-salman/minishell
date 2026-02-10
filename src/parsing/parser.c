@@ -150,19 +150,42 @@ int ft_check_cmd(t_minishell *minishell, t_token *token)
     return (0);
 }
 
-int ft_check_expends(t_minishell *minishell, char *str)
+char *ft_check_expends(t_minishell *minishell, char *str)
 {
-	// $""HOME
-	// $''HOME 
-	// $TO
-	// $""
-	// $''
-	// $
-	// $"HOME"
-	// $'HOME'
-    (void)minishell;
-	(void)str;
-    return (1);
+	int start;
+	int end;
+	char *var_env;
+	char *test_env;
+	int quote_mode;
+
+	start = 0;
+	if (str[0] == '$' && !str[1])
+		return (ft_strdup_gc("$", &minishell->gc));
+	while (str[start] && str[start] != '$')
+		start++;
+	//FIX: cas  $""HOME, garder home 
+	if (str[start] == '$')
+		start++;
+	while (str[start] == '\'' || str[start] == '\"')
+	{
+		quote_mode = 1;
+		start++;
+	}
+	end = start;
+	while (str[end] && ft_isalnum(str[end]))
+		end++;
+	end++;
+	var_env = ft_substr_gc(str, start, ft_strlen(str) - start + 1,
+			&minishell->gc);
+	ft_printf("var_env: %s\n", var_env);
+	if (!var_env)
+		return (ft_strdup_gc("", &minishell->gc));
+	if (quote_mode == 1)
+		return (var_env);
+	test_env = getenv(var_env);
+	if (!test_env)
+		return (ft_strdup_gc("", &minishell->gc));
+	return (test_env);
 }
 
 int ft_check_pipe(char *str)
@@ -184,40 +207,13 @@ int is_redirection(t_token *token)
     return (0);
 }
 
-int ft_strlen_without_quote(char *str, char type_quote)
-{
-	int i;
-	int len;
-
-	i = 0;
-	len = 0;
-	while (str[i])
-	{
-		if (str[i] != type_quote)
-			len++;
-		i++;
-	}
-	return (len);
-}
-
-char *ft_strdup_without(char *str, char type_quote, t_minishell *minishell)
-{
+char *ft_strdup_without(char *str, t_minishell *minishell) {
 	char *clear_word;
-	int i;
-	int j;
 
-	clear_word = ft_gc_malloc(ft_strlen_without_quote(str, type_quote) + 1, 
-						   &minishell->gc);
+	clear_word = ft_gc_malloc(ft_strlen(str) - 2 + 1, &minishell->gc);
 	if (!clear_word)
 		return (NULL);
-	i = 0;
-	j = 0;
-	while (str[i])
-	{
-		if (str[i] != type_quote)
-			clear_word[j++] = str[i];
-		i++;
-	}
+	clear_word = ft_substr_gc(str, 1, ft_strlen(str) - 2, &minishell->gc);
 	return (clear_word);
 }
 
@@ -225,15 +221,17 @@ void ft_filter_quote(t_token *token, t_minishell *minishell)
 {
 	char type_quote;
 
+	// printf("filter quote before: %s\n", token->str);
 	if (!token || !*token->str)
 		return;
 	type_quote = '\0';
-	if (ft_strchr(token->str, '\"'))
+	if (token->str[0] == '\"' && token->str[ft_strlen(token->str) - 1] == '\"')
 		type_quote = '\"';
-	else if (ft_strchr(token->str, '\''))
+	else if (token->str[0] == '\'' && token->str[ft_strlen(token->str) - 2] == '\'')
 		type_quote = '\'';
-	token->str = ft_strdup_without(token->str, type_quote, minishell);
-	printf("t: %s\n", token->str);
+	if (type_quote != '\0')
+		token->str = ft_strdup_without(token->str, minishell);
+	// printf("filter quote after: %s\n", token->str);
 }
 
 void checker_token(t_minishell *minishell)
@@ -256,13 +254,10 @@ void checker_token(t_minishell *minishell)
 					token->next->type = R_FILE;
 			}
 		}
-		else if (token->type == WORD && ft_strchr(token->str, '$'))
+		else if ((token->type == WORD && (ft_strchr(token->str, '$') &&  token->str[0] == '\"')) || (ft_strchr(token->str, '$') && token->str[0] != '\''))
 		{
-			//NOTE: while find $ parcours jusqu'a pas alnum
-			// 		si rien trouver mettre chaine vide
-			// 		sinon remplacer
-			if (ft_check_expends(minishell, token->str) == 0)
-					token->code_error = 300;
+			ft_filter_quote(token, minishell);
+			token->str= ft_check_expends(minishell, token->str);
 		}
 		else if (token->type == WORD)
 		{

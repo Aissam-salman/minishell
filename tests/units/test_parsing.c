@@ -170,4 +170,18 @@ Test(Parser, test_check_pipe) {
   cr_expect(ft_check_pipe("|") == 1);
   cr_expect(ft_check_pipe("") == 0);
   cr_expect(ft_check_pipe(" ") == 0);
+  cr_expect(ft_check_pipe("   ") == 0);
+  cr_expect(ft_check_pipe("||") == 0);
+  cr_expect(ft_check_pipe("|||") == 0);
+  cr_expect(ft_check_pipe("||||||||||||||") == 0);
+}
+
+Test(Parser, test_check_expends)
+{
+  t_minishell *mini = malloc(sizeof(t_minishell));
+  ft_bzero(mini, sizeof(t_minishell));
+
+  cr_expect(ft_strcmp(ft_check_expends(mini, "$"),"$") == 0);
+
+  cr_expect(ft_strcmp(ft_check_expends(mini, "$HOME"),"/home/salman"));
 }
