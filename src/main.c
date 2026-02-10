@@ -24,19 +24,23 @@ void	signal_callback_handler(int sig)
 
 //TODO: make func for setup signal
 
-int	main()
+int	main(int argc, char **argv, char **envp)
 {
 	t_minishell minishell;
-	struct sigaction	sa;
 
-	ft_bzero(&sa, sizeof(sa));
-	sa.sa_handler = &signal_callback_handler;
-	sa.sa_flags = 0;
-	sigemptyset(&sa.sa_mask);
-	// C-C
-	sigaction(SIGINT, &sa, NULL);
-	// C-'\'
-	sigaction(SIGQUIT, &sa, NULL);
+	(void)argc;
+	(void)argv;
+	minishell.envs = envp;
+	// struct sigaction	sa;
+
+	// ft_bzero(&sa, sizeof(sa));
+	// sa.sa_handler = &signal_callback_handler;
+	// sa.sa_flags = 0;
+	// sigemptyset(&sa.sa_mask);
+	// // C-C
+	// sigaction(SIGINT, &sa, NULL);
+	// // C-'\'
+	// sigaction(SIGQUIT, &sa, NULL);
 
 	// printf("%s",getenv("PATH"));
 	ft_bzero(&minishell, sizeof(t_minishell));
@@ -44,31 +48,37 @@ int	main()
 	{
 		minishell.line = readline("foo$> ");
 		//NOTE: CTRL-D
-		if (minishell.line == NULL)
-		{
-			ft_gc_free_all(&minishell.gc);
-			exit(0);
-		}
-		else if (*minishell.line == EOF)
-			ft_printf("\n");
-		ft_gc_add_node(&minishell.gc, minishell.line);
+		// if (minishell.line == NULL)
+		// {
+		// 	ft_gc_free_all(&minishell.gc);
+		// 	exit(0);
+		// }
 		if (*minishell.line)
 		{
+			if (*minishell.line == EOF)
+				ft_printf("\n");
+			ft_gc_add_node(&minishell.gc, minishell.line);
 			if (ft_strncmp(minishell.line, "exit", 4) == 0)
 				ft_exit(&minishell, 0, "See ya!");
-
 			if (minishell.line[0] != 0)
 				add_history(minishell.line);
-			ft_parse(&minishell);
-			// execution
-			exit(0);
-			execve("/bin/echo", args, NULL);
-			// char *args[] = {minishell.line, NULL};
-			// POUR LIBERER LA LISTE DES TOKENS A CHAQUE EXECT
+			ft_tokenize(&minishell);
+			// ft_tokens_print(minishell.head_token);
+			// if (ft_parse(minishell, minishell.head_token) == ERROR)
+			// {
+			//		minishell.exit_status = 2;	
+			//		minishell.head_token = NULL || ft_clear_tokens(&minishell.head_token)
+			//		continue;
+			// }
+			ft_cmd_lst_create(&minishell);
+			ft_cmd_print(minishell.head_cmd);
+			ft_exec(&minishell);
+
+			// POUR REMETTRE A ZERO LA LISTE DES TOKENS A CHAQUE EXEC (Free avec garbage collector)
 			minishell.head_token = NULL;
-			// execve("/bin/echo", args, NULL);
+			minishell.head_cmd = NULL;
+
 		}
-		// printf("You entered: %s\n", minishell.line);
 	}
 	ft_exit(&minishell, 0, NULL);
 }

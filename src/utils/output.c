@@ -6,11 +6,29 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:40:37 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/09 15:51:39 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/10 17:07:39 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	ft_cmd_print(t_cmd *head)
+{
+	int	i;
+
+	while (head)
+	{
+		i = 0;
+		if (head->path)
+			ft_printf("|[ PATH = %s ]|\n", head->path);
+		else
+			ft_printf("|[ NO PATH YET ]|\n");
+		while(head->args[i] && head->args[i++])
+			ft_printf("[ARGV[%d] = %s]\n", i - 1, head->args[i - 1]);
+		ft_printf("[OUTFILE = %d || INFILE = %d]\n\n", head->outfd, head->infd);
+		head = head->next;
+	}
+}
 
 void	ft_tokens_print(t_token *head)
 {
@@ -46,7 +64,7 @@ void	ft_type_print(t_token *token)
 void	ft_state_print(char c, char *buffer, t_minishell *minishell)
 {
 	if (!buffer[0])
-		ft_printf("EMPTY BUFFER ||", buffer);
+		ft_printf("|{EMPTY BUFFER }|", buffer);
 	else
 		ft_printf("BUFFER = {%s} || ", buffer);
 	ft_printf("CHARACTER  = \"%c\" || STATE = ", c);

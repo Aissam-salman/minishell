@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 18:26:24 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/09 16:42:11 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/09 17:55:39 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <unistd.h>
 
 void ft_create_cmd_lst(t_minishell *minishell);
-t_elements *create_mocks_element();
+t_token *create_mocks_element();
 
 int ft_check_flags(char *str)
 {
@@ -61,7 +61,7 @@ int ft_check_heredoc_end(char *str)
 	return (1);
 }
 
-int ft_check_file(t_elements *ele)
+int ft_check_file(t_token *ele)
 {
 	//NOTE: if < try to access R mode
 	//     else if > try to open O_CREAT | O_TRUNCT | O_W
@@ -80,25 +80,25 @@ int ft_check_file(t_elements *ele)
 	return (1);
 }
 
-int ft_check_cmd(t_minishell *minishell, t_elements *ele)
+int ft_check_cmd(t_minishell *minishell, t_token *ele)
 {
     (void)minishell;
     (void)ele;
     return (0);
 }
-int ft_check_expends(t_minishell *minishell, t_elements *ele)
+int ft_check_expends(t_minishell *minishell, t_token *ele)
 {
     (void)minishell;
     (void)ele;
     return (0);
 }
-int ft_check_pipe(t_minishell *minishell, t_elements *ele)
+int ft_check_pipe(t_minishell *minishell, t_token *ele)
 {
     (void)minishell;
     (void)ele;
     return (0);
 }
-void cmd_append(t_minishell *minishell, t_elements *ele, char **args)
+void cmd_append(t_minishell *minishell, t_token *ele, char **args)
 {
     (void)minishell;
     (void)ele;
@@ -142,7 +142,7 @@ void error_parsing_flags()
 	exit(16);
 }
 
-int is_redirection(t_elements *ele)
+int is_redirection(t_token *ele)
 {
     if (ele->type == IN_CHEVRON ||
         ele->type == OUT_CHEVRON ||
@@ -155,19 +155,19 @@ int is_redirection(t_elements *ele)
 void ft_create_cmd_lst(t_minishell *minishell)
 {
 	(void)minishell;
-	t_elements *ele = NULL;
+	t_token *ele = NULL;
 	char **args;
-	t_elements *e;
+	t_token *e;
 	int i;
 	int len_ele;
 
 	ele = create_mocks_element();
-	minishell->elements = ele;
+	// minishell->elements = ele;
 	len_ele = 6; //FIX: make lst_size for t_element
 	args = ft_gc_malloc(sizeof(char *) * len_ele, &minishell->gc);
 	if (!args)
 		return;
-	ft_bzero(void *s, size_t n)
+	// ft_bzero(void *s, size_t n)
 	while (ele)
 	{
 		printf("%s\n", ele->str);
@@ -231,42 +231,4 @@ void ft_create_cmd_lst(t_minishell *minishell)
 		cmd_append(minishell, ele, args);
 		ele = ele->next;
 	}
-}
-
-t_elements *create_mocks_element()
-{
-	t_elements *head = calloc(1,sizeof(t_elements));
-	t_elements *element2 = calloc(1,sizeof(t_elements));
-	t_elements *element3 = calloc(1,sizeof(t_elements));
-	t_elements *element4 = calloc(1,sizeof(t_elements));
-	t_elements *element5 = calloc(1,sizeof(t_elements));
-	t_elements *element6 = calloc(1,sizeof(t_elements));
-	// PIPE,
-	// IN_CHEVRON,
-	// IN_DCHEVRON,
-	// OUT_CHEVRON,
-	// OUT_DCHEVRON,
-	// WORD,
-	// NBR_TYPES,
-	// FILE ??
-	head->str = ft_strdup("<");
-	head->type = IN_CHEVRON;
-	element2->str = ft_strdup("logs.txt");
-	element2->type = WORD;
-	element3->str = ft_strdup("cat");
-	element3->type = WORD;
-	element4->str = ft_strdup("|");
-	element4->type = PIPE;
-	element5->str = ft_strdup("grep");
-	element5->type = WORD;
-	element6->str = ft_strdup("\"error\"");
-	element6->type = WORD;
-
-	head->next = element2;
-	head->next->next = element3;
-	head->next->next->next = element4;
-	head->next->next->next->next = element5;
-	head->next->next->next->next->next = element6;
-	head->next->next->next->next->next->next = NULL;
-	return (head);
 }
