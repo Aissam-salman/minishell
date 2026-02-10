@@ -136,6 +136,7 @@ int is_redirection(t_token *ele)
 int checker_token(t_minishell *minishell)
 {
 	t_token *token;
+	int		cmd_find = 0;
 	
 	token = minishell->head_token;
 	while (token)
@@ -143,14 +144,14 @@ int checker_token(t_minishell *minishell)
 		if (is_redirection(token))
 		{
 			if (ft_check_redirection(token->str) == 0)
-				//FIX: stocker code error 
-				return ft_error(2, "Error redirection");
+				token->code_error = SYNTAX_ERROR;
 			if (token->next)
 			{
 				//FIX: recup code error de open
 				if (ft_check_file_of_redirection(token) == 0)
-					return ft_error(1, "Error file of redirection");
-				token->next->type = R_FILE;
+					token->code_error = NO_SUCH_FILE_O_DIR;
+				else 
+					token->next->type = R_FILE;
 			}
 		}
 		else if (token->type == WORD && (ft_strchr(token->str, '\"') ||
@@ -158,14 +159,19 @@ int checker_token(t_minishell *minishell)
 		{
 			//NOTE: while find $ parcours jusqu'a pas alnum
 			// 		si rien trouver mettre chaine vide
+			// 		sinon remplacer
 			if (ft_check_expends(minishell, token) == 0)
 				return ft_error(1, "Error expension");
 		}
 		else if (token->type == WORD)
 		{
 			//NOTE: set type CMD if X_OK
-			if (ft_check_cmd(minishell, token) == 1)
+			//FIX: !!!! une seul cmd par slot de pipe
+			if (ft_check_cmd(minishell, token) == 1 && cmd_find == 0)
+			{
 				token->type = CMD;
+				cmd_find = 1;
+			}
 			if (ft_check_flags(token->str) == 1)
 				token->type = FLAG;
 			if (ft_check_file(token) == 1)
@@ -175,6 +181,7 @@ int checker_token(t_minishell *minishell)
 		{
 			if (!ft_check_pipe(minishell, token))
 				return ft_error(1, "Error pipe");
+			cmd_find = 0;
 		}
 		token = token->next;
 	}
