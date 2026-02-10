@@ -11,10 +11,10 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/stat.h>
 
 void ft_create_cmd_lst(t_minishell *minishell);
 t_token *create_mocks_element();
@@ -109,16 +109,21 @@ int ft_test_path(t_minishell *minishell, char **envp, t_token *ele)
 	char *tmp;
 	char *cur_path;
 	int i;
+	struct stat stat_file;
 
 	i = 0;
 	while (envp[i])
 	{
 		tmp = ft_strjoin_gc(envp[i], "/", &minishell->gc);
 		cur_path = ft_strjoin_gc(tmp, ele->str, &minishell->gc);
-		if (cur_path && access(cur_path, X_OK) == 0)
+
+		if (stat(cur_path, &stat_file) == 0 && S_ISREG(stat_file.st_mode))
 		{
-			ele->path = cur_path;
-			return (1);
+			if (cur_path && access(cur_path, X_OK) == 0)
+			{
+				ele->path = cur_path;
+				return (1);
+			}
 		}
 		i++;
 	}
@@ -129,13 +134,20 @@ int ft_check_cmd(t_minishell *minishell, t_token *ele)
 {
 	char **envp;
 	int res;
+	struct stat stat_file;
 
 	if (!ele || !ele->str || !*ele->str)
 		return (0);
-	if (access(ele->str, X_OK) == 0)
+	if (ele->str[0] == '/' && !ele->str[1])
+		return (0);
+	//NOTE: check si c'est bien un fichier executable et pas un dossier
+	if (stat(ele->str, &stat_file) == 0 && S_ISREG(stat_file.st_mode))
 	{
-		ele->path = ele->str;
-		return (1);
+		if (access(ele->str, X_OK) == 0)
+		{
+			ele->path = ele->str;
+			return (1);
+		}
 	}
 	envp = ft_get_path(minishell);
 	if  (!envp)
@@ -152,7 +164,7 @@ int ft_check_expends(t_minishell *minishell, t_token *ele)
     (void)ele;
     return (0);
 }
-int ft_check_pipe(t_minishell *minishell, t_token *ele)
+int ft_check_pipe(t_minishell *minishell, char *str)
 {
     (void)minishell;
     (void)ele;

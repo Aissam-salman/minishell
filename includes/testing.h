@@ -19,5 +19,6 @@ int ft_check_redirection(char *str);
 int ft_check_file_of_redirection(t_token *token);
 int ft_check_heredoc_end(char *str);
 int ft_check_cmd(t_minishell *minishell, t_token *ele);
+int ft_check_pipe(t_minishell *minishell, char *str);
 
 #endif

@@ -129,8 +129,42 @@ Test(Parser, test_check_cmd)
 	if (!token)
 		return;
 	ft_bzero(token, sizeof(t_token));
+
 	token->str = ft_strdup("ls");
 	cr_expect(ft_check_cmd(mini,token) == 1);
+
+	free(token->str);
+	token->str = ft_strdup("/bin/ls");
+	cr_expect(ft_check_cmd(mini,token) == 1);
+
+	free(token->str);
+	token->str = ft_strdup("/foo/bin/ls");
+	cr_expect(ft_check_cmd(mini,token) == 0);
+
+	free(token->str);
+	token->str = ft_strdup("foo");
+	cr_expect(ft_check_cmd(mini,token) == 0);
+
+	free(token->str);
+	token->str = ft_strdup("");
+	cr_expect(ft_check_cmd(mini,token) == 0);
+
+	free(token->str);
+	token->str = ft_strdup(" ");
+	cr_expect(ft_check_cmd(mini,token) == 0);
+	
+	free(token->str);
+	token->str = ft_strdup("  ");
+	cr_expect(ft_check_cmd(mini,token) == 0);
+
+	free(token->str);
+	token->str = ft_strdup("/");
+	cr_expect(ft_check_cmd(mini,token) == 0);
+
+	free(token->str);
+	token->str = ft_strdup("/bin");
+	cr_expect(ft_check_cmd(mini,token) == 0);
+
 	free(token->str);
 	free(mini);
 	free_ele(token);
