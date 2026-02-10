@@ -66,12 +66,13 @@ int	main(int argc, char **argv, char **envp)
 			// ft_tokens_print(minishell.head_token);
 			// if (ft_parse(minishell, minishell.head_token) == ERROR)
 			// {
-			//		minishell.exit_status = 2;	
+			//		minishell.exit_status = 2;
 			//		minishell.head_token = NULL || ft_clear_tokens(&minishell.head_token)
 			//		continue;
 			// }
+			checker_token(&minishell);
 			ft_cmd_lst_create(&minishell);
-			ft_cmd_print(minishell.head_cmd);
+			// ft_cmd_print(minishell.head_cmd);
 			ft_exec(&minishell);
 
 			// POUR REMETTRE A ZERO LA LISTE DES TOKENS A CHAQUE EXEC (Free avec garbage collector)

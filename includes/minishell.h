@@ -52,6 +52,8 @@ typedef struct s_token {
 	char			*str;
 	t_types			type;
 	struct s_token	*next;
+	int 			code_error;
+	char			*path;
 }	t_token;
 
 // STRUCTURE GLOBALE POUR LE MINISHELL
@@ -80,6 +82,8 @@ void	ft_state_print(char c, char *buffer, t_minishell *minishell);
 t_token *ft_token_create(t_minishell *minishell, char *buffer);
 int	ft_token_add(t_minishell *minishell, t_token *to_add);
 
+// PARSING/PARSER.C
+void checker_token(t_minishell *minishell);
 // UTILS/ERRORS.C
 int	ft_error(int error, char *str);
 void	ft_exit(t_minishell *minishell, int error, char *str );

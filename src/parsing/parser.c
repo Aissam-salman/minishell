@@ -6,7 +6,7 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 18:26:24 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/09 19:12:36 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/10 18:23:21 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 
 void ft_create_cmd_lst(t_minishell *minishell);
 t_token *create_mocks_element();
-
 int ft_check_flags(char *str)
 {
 	int i;
@@ -85,7 +84,7 @@ int ft_check_file_of_redirection(t_token *ele)
 
 int ft_check_file(t_token *ele)
 {
-	if (access(ele->str, R_OK | W_OK) == -1) 
+	if (access(ele->str, R_OK | W_OK) == -1)
 		return (0);
 	return (1);
 }
@@ -165,11 +164,14 @@ int ft_check_expends(t_minishell *minishell, t_token *ele)
     (void)ele;
     return (1);
 }
-int ft_check_pipe(t_minishell *minishell, char *str)
+
+int ft_check_pipe(char *str)
 {
-    (void)minishell;
-    (void)str;
-    return (1);
+	if (!str)
+		return (0);
+	if (str[0] == '|' && !str[1])
+		return (1);
+    return (0);
 }
 
 int is_redirection(t_token *ele)
@@ -186,7 +188,7 @@ void checker_token(t_minishell *minishell)
 {
 	t_token *token;
 	int		cmd_find = 0;
-	
+
 	token = minishell->head_token;
 	while (token)
 	{
@@ -199,7 +201,7 @@ void checker_token(t_minishell *minishell)
 				//FIX: recup code error de open
 				if (ft_check_file_of_redirection(token) == 0)
 					token->code_error = NO_SUCH_FILE_O_DIR;
-				else 
+				else
 					token->next->type = R_FILE;
 			}
 		}
@@ -210,12 +212,11 @@ void checker_token(t_minishell *minishell)
 			// 		si rien trouver mettre chaine vide
 			// 		sinon remplacer
 			if (ft_check_expends(minishell, token) == 0)
-				return ft_error(1, "Error expension");
+					token->code_error = NO_SUCH_FILE_O_DIR;
 		}
 		else if (token->type == WORD)
 		{
 			//NOTE: set type CMD if X_OK
-			//FIX: !!!! une seul cmd par slot de pipe
 			if (ft_check_cmd(minishell, token) == 1 && cmd_find == 0)
 			{
 				token->type = CMD;
@@ -225,19 +226,16 @@ void checker_token(t_minishell *minishell)
 				token->type = FLAG;
 			if (ft_check_file(token) == 1)
 				token->type = R_FILE;
+			//FIX: enlever les "" ou ''
+			// ft_filter_quote()
 		}
 		else if (token->type == PIPE)
 		{
-			if (!ft_check_pipe(minishell, token))
-				return ft_error(1, "Error pipe");
+			if (!ft_check_pipe(token->str))
+					token->code_error = NO_SUCH_FILE_O_DIR;
 			cmd_find = 0;
 		}
+		printf("CHECKER TOKEN = %s\n", token->str);
 		token = token->next;
 	}
-	return (0);
-}
-
-void ft_create_cmd_lst(t_minishell *minishell)
-{
-	checker_token(minishell);
 }

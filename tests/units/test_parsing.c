@@ -169,3 +169,15 @@ Test(Parser, test_check_cmd)
 	free(mini);
 	free_ele(token);
 }
+
+
+Test(Parser, test_check_pipe)
+{
+	t_minishell *mini = malloc(sizeof(t_minishell));
+	ft_bzero(mini, sizeof(t_minishell));
+
+	cr_expect(ft_check_pipe("|") == 1);
+	cr_expect(ft_check_pipe("") == 0);
+	cr_expect(ft_check_pipe(" ") == 0);
+}
+
