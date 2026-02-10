@@ -2,6 +2,7 @@
 #include "../../includes/testing.h"
 #include "../../lib/criterion/include/criterion/criterion.h"
 #include "../../lib/criterion/include/criterion/internal/assert.h"
+#include <stdlib.h>
 
 
 Test(Parser, test_check_flags) {
@@ -120,7 +121,17 @@ Test(Parser, test_check_file)
 
 Test(Parser, test_check_cmd)
 {
-	t_minishell *mini;
-	t_token *token;
+	t_minishell *mini = malloc(sizeof(t_minishell));
+	if (!mini)
+		return;
+	ft_bzero(mini, sizeof(t_minishell));
+	t_token *token = malloc(sizeof(t_token));
+	if (!token)
+		return;
+	ft_bzero(token, sizeof(t_token));
+	token->str = ft_strdup("ls");
 	cr_expect(ft_check_cmd(mini,token) == 1);
+	free(token->str);
+	free(mini);
+	free_ele(token);
 }

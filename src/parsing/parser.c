@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -91,25 +90,62 @@ int ft_check_file(t_token *ele)
 	return (1);
 }
 
-int ft_check_cmd(t_minishell *minishell, t_token *ele)
+char **ft_get_path(t_minishell *minishell)
 {
-	char *env = getenv("PATH");
-	char **envp = ft_split_sep_gc(env, ':', &minishell->gc);
+	char *env;
+	char **envp;
 
-	int i = 0;
+	env = getenv("PATH");
+	if (!env)
+		return (NULL);
+	envp = ft_split_sep_gc(env, ':', &minishell->gc);
+	if  (!envp)
+		return (NULL);
+	return (envp);
+}
+
+int ft_test_path(t_minishell *minishell, char **envp, t_token *ele)
+{
+	char *tmp;
+	char *cur_path;
+	int i;
+
+	i = 0;
 	while (envp[i])
 	{
-		if (access(ele->str, X_OK) == 0)
+		tmp = ft_strjoin_gc(envp[i], "/", &minishell->gc);
+		cur_path = ft_strjoin_gc(tmp, ele->str, &minishell->gc);
+		if (cur_path && access(cur_path, X_OK) == 0)
+		{
+			ele->path = cur_path;
 			return (1);
-		char *path = ft_strjoin_gc("/", ele->str, &minishell->gc);
-		char *cur_path = ft_strjoin_gc(envp[i], path, &minishell->gc);
-		printf("envp[%d]= %s\n",i , cur_path);
-		if (access(cur_path, X_OK) == 0)
-			return (1);
+		}
 		i++;
 	}
     return (0);
 }
+
+int ft_check_cmd(t_minishell *minishell, t_token *ele)
+{
+	char **envp;
+	int res;
+
+	if (!ele || !ele->str || !*ele->str)
+		return (0);
+	if (access(ele->str, X_OK) == 0)
+	{
+		ele->path = ele->str;
+		return (1);
+	}
+	envp = ft_get_path(minishell);
+	if  (!envp)
+		return (0);
+	res = ft_test_path(minishell, envp, ele);
+	if (res == 1)
+		return 1;
+    return (0);
+}
+
 int ft_check_expends(t_minishell *minishell, t_token *ele)
 {
     (void)minishell;
