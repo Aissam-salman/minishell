@@ -48,7 +48,9 @@ SRCS_NO_MAIN = src/errors/errors.c \
 				src/parsing/parser.c \
 				src/utils/cmds.c \
 				src/utils/output.c \
-				src/utils/tokens.c
+				src/utils/tokens.c \
+				src/helpers/cntrl.c \
+				src/exec.c
 
 OBJS_NO_MAIN = $(SRCS_NO_MAIN:%.c=$(OBJ_DIR)/%.o)
 
