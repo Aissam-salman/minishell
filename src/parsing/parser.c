@@ -153,11 +153,13 @@ int checker_token(t_minishell *minishell)
 				token->next->type = R_FILE;
 			}
 		}
-		else if (token->type == WORD && ft_strchr(token->str, '\"'))
+		else if (token->type == WORD && (ft_strchr(token->str, '\"') ||
+		   ft_strchr(token->str, '$')))
 		{
+			//NOTE: while find $ parcours jusqu'a pas alnum
+			// 		si rien trouver mettre chaine vide
 			if (ft_check_expends(minishell, token) == 0)
 				return ft_error(1, "Error expension");
-			token->type = EXPEND;
 		}
 		else if (token->type == WORD)
 		{

@@ -22,8 +22,7 @@ typedef enum e_type {
 	NBR_TYPES,
 	CMD,
 	R_FILE,
-	FLAG,
-	EXPEND
+	FLAG
 }	t_types;
 
 // ENUMS ETATS MACHINE STATE
@@ -52,7 +51,6 @@ typedef struct s_token {
 	struct s_token	*next;
 	t_errors	code_error;
 	char 		*path;
-
 }	t_token;
 
 // STRUCTURE GLOBALE POUR LE MINISHELL
