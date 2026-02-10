@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -177,7 +176,6 @@ char *ft_check_expends(t_minishell *minishell, char *str)
 	end++;
 	var_env = ft_substr_gc(str, start, ft_strlen(str) - start + 1,
 			&minishell->gc);
-	ft_printf("var_env: %s\n", var_env);
 	if (!var_env)
 		return (ft_strdup_gc("", &minishell->gc));
 	if (quote_mode == 1)
