@@ -150,11 +150,18 @@ int ft_check_cmd(t_minishell *minishell, t_token *token)
     return (0);
 }
 
-int ft_check_expends(t_minishell *minishell, t_token *token)
+int ft_check_expends(t_minishell *minishell, char *str)
 {
 	// $""HOME
+	// $''HOME 
+	// $TO
+	// $""
+	// $''
+	// $
+	// $"HOME"
+	// $'HOME'
     (void)minishell;
-    (void)token;
+	(void)str;
     return (1);
 }
 
@@ -254,7 +261,7 @@ void checker_token(t_minishell *minishell)
 			//NOTE: while find $ parcours jusqu'a pas alnum
 			// 		si rien trouver mettre chaine vide
 			// 		sinon remplacer
-			if (ft_check_expends(minishell, token) == 0)
+			if (ft_check_expends(minishell, token->str) == 0)
 					token->code_error = 300;
 		}
 		else if (token->type == WORD)
