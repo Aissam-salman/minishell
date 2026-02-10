@@ -1,18 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/09 19:26:19 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/10 15:55:54 by tibras           ###   ########.fr       */
+/*   Created: 2026/02/10 17:17:28 by tibras            #+#    #+#             */
+/*   Updated: 2026/02/10 17:33:42 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	ft_putstr_fd(char *s, int fd)
+void	ft_exec(t_minishell *minishell)
 {
-	write(fd, &s, ft_strlen(s));
+	int pid;
+	// int respipe;
+	// int pipefd[2];
+
+	// respipe = pipe(pipefd);
+	// if (respipe == -1)
+	// 	return;
+	pid = fork();
+	if (pid == 0)
+	{
+
+		execve(minishell->head_cmd->path, minishell->head_cmd->args,minishell->envs );
+		perror("EXEC\n");
+		exit(1);
+	}
+	wait(&pid);
+	// else
+	// {
+	// 	waitpid(-1);
+	// }
 }

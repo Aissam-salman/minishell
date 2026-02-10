@@ -147,7 +147,7 @@ void ft_type_affect(t_minishell *minishell)
 
 // On récupere la ligne, on traite pour avoir des types de mots
 // On les récupere ensuite pour créer des phrases
-void	ft_parse(t_minishell *minishell)
+void	ft_tokenize(t_minishell *minishell)
 {
 	// ON RECUPERE LES TYPES DANS UN PREMIER TEMPS
 	// ft_create_elem_lst(minishell);
@@ -156,7 +156,5 @@ void	ft_parse(t_minishell *minishell)
 	if (ft_token_lst_create(minishell))
 		return ;
 	ft_type_affect(minishell);
-	// ft_tokens_print(minishell->head_token);
-	ft_cmd_lst_create(minishell);
 	// ft_create_cmd_lst(minishell);
 }

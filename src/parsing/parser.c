@@ -160,15 +160,16 @@ int ft_check_cmd(t_minishell *minishell, t_token *ele)
 
 int ft_check_expends(t_minishell *minishell, t_token *ele)
 {
+	// $""HOME
     (void)minishell;
     (void)ele;
-    return (0);
+    return (1);
 }
 int ft_check_pipe(t_minishell *minishell, char *str)
 {
     (void)minishell;
-    (void)ele;
-    return (0);
+    (void)str;
+    return (1);
 }
 
 int is_redirection(t_token *ele)
@@ -181,7 +182,7 @@ int is_redirection(t_token *ele)
     return (0);
 }
 
-int checker_token(t_minishell *minishell)
+void checker_token(t_minishell *minishell)
 {
 	t_token *token;
 	int		cmd_find = 0;
