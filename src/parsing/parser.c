@@ -11,7 +11,9 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <algorithm>
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
 
@@ -78,6 +80,7 @@ int ft_check_file_of_redirection(t_token *ele)
 		if (ft_check_heredoc_end(ele->next->str) == 0)
 			return (0);
 	}
+	//NOTE: open >  and >>
 	return (1);
 }
 
@@ -90,8 +93,21 @@ int ft_check_file(t_token *ele)
 
 int ft_check_cmd(t_minishell *minishell, t_token *ele)
 {
-    (void)minishell;
-    (void)ele;
+	char *env = getenv("PATH");
+	char **envp = ft_split_sep_gc(env, ':', &minishell->gc);
+
+	int i = 0;
+	while (envp[i])
+	{
+		if (access(ele->str, X_OK) == 0)
+			return (1);
+		char *path = ft_strjoin_gc("/", ele->str, &minishell->gc);
+		char *cur_path = ft_strjoin_gc(envp[i], path, &minishell->gc);
+		printf("envp[%d]= %s\n",i , cur_path);
+		if (access(cur_path, X_OK) == 0)
+			return (1);
+		i++;
+	}
     return (0);
 }
 int ft_check_expends(t_minishell *minishell, t_token *ele)
@@ -117,14 +133,7 @@ int is_redirection(t_token *ele)
     return (0);
 }
 
-typedef struct s_checker 
-{
-	int exit_code;
-	char *msg;
-	t_token *token;
-} t_checker;
-
-t_checker *checker_token(t_minishell *minishell)
+int checker_token(t_minishell *minishell)
 {
 	t_token *token;
 	
@@ -134,18 +143,20 @@ t_checker *checker_token(t_minishell *minishell)
 		if (is_redirection(token))
 		{
 			if (ft_check_redirection(token->str) == 0)
-				ft_error();
+				//FIX: stocker code error 
+				return ft_error(2, "Error redirection");
 			if (token->next)
 			{
+				//FIX: recup code error de open
 				if (ft_check_file_of_redirection(token) == 0)
-					error_parsing_files();
+					return ft_error(1, "Error file of redirection");
 				token->next->type = R_FILE;
 			}
 		}
 		else if (token->type == WORD && ft_strchr(token->str, '\"'))
 		{
 			if (ft_check_expends(minishell, token) == 0)
-				error_parsing_expends();
+				return ft_error(1, "Error expension");
 			token->type = EXPEND;
 		}
 		else if (token->type == WORD)
@@ -155,52 +166,20 @@ t_checker *checker_token(t_minishell *minishell)
 				token->type = CMD;
 			if (ft_check_flags(token->str) == 1)
 				token->type = FLAG;
-			if (ft_check_file(token))
+			if (ft_check_file(token) == 1)
 				token->type = R_FILE;
 		}
 		else if (token->type == PIPE)
 		{
 			if (!ft_check_pipe(minishell, token))
-				error_parsing_pipe();
+				return ft_error(1, "Error pipe");
 		}
 		token = token->next;
 	}
-	return (NULL);
+	return (0);
 }
 
 void ft_create_cmd_lst(t_minishell *minishell)
 {
-	t_checker *res;
-
-	res = checker_token(minishell);
-		// if (token->is_taken)
-		// {
-		// 	token = token->next;
-		// 	continue;
-		// }
-			// e = token;
-			// i = 0;
-			// while (e && e->type != PIPE)
-			// {
-			// 	if (is_redirection(e) && e->next && e->next->next)
-			// 	{
-			// 				e->is_taken = 1;
-			// 				e->next->is_taken = 1;
-			// 	}
-			// 	if ((!args[i] || e->type == WORD) && e->is_taken == 0)
-			// 	{
-			// 		args[i] = ft_gc_malloc(ft_strlen(e->str) + 1, &minishell->gc);
-			// 		if (e->type == CMD)
-			// 			args[i] = e->str;
-			// 		else
-			// 		{
-			// 			if (ft_check_flags(e->str) == 0)
-			// 				error_parsing_flags();
-			// 			args[i] = e->str;
-			// 		}
-			// 		e->is_taken = 1;
-			// 		i++;
-			// 	}
-			// 	e = e->next;
-			// }
+	checker_token(minishell);
 }

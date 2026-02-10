@@ -117,3 +117,10 @@ Test(Parser, test_check_file)
 	cr_expect(ft_check_file_of_redirection(ele10) == 1);
 	free_ele(ele10);
 }
+
+Test(Parser, test_check_cmd)
+{
+	t_minishell *mini;
+	t_token *token;
+	cr_expect(ft_check_cmd(mini,token) == 1);
+}

@@ -50,7 +50,9 @@ typedef struct s_token {
 	char				*str;
 	t_types				type;
 	struct s_token	*next;
-	int 			is_taken;
+	t_errors	code_error;
+	char 		*path;
+
 }	t_token;
 
 // STRUCTURE GLOBALE POUR LE MINISHELL
@@ -59,7 +61,8 @@ typedef struct s_minishell {
 	t_cmd		*head_cmd;
 	t_list		*gc;
 	char		*line;
-	t_state			state;
+	t_state		state;
+	char 		**envs;
 }	t_minishell;
 
 
