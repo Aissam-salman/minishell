@@ -118,6 +118,7 @@ void				ft_redirection_handler(t_cmd *cmd, t_token *token);
 
 // UTILS/CMDS.C
 void				ft_cmd_lst_create(t_minishell *minishell);
+int   				ft_cmd_size(t_cmd *cmd_head);
 
 // EXEC.C
 void				ft_exec(t_minishell *minishell);

@@ -81,6 +81,6 @@ int	main(int argc, char **argv, char **envp)
 			minishell.head_cmd = NULL;
 		}
 	}
-
+	ft_gc_free_all(&minishell.gc);
 	ft_exit(&minishell, 0, NULL);
 }
