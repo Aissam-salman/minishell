@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:34:00 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/11 12:31:41 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/11 17:29:38 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,21 +67,15 @@ int	ft_token_word_count(t_token *current)
 	return (count);
 }
 
-void	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token *token,
+void	ft_token_affect(t_cmd *cmd, t_token *token,
 		int *i)
 {
-	if (!minishell || !cmd || !token)
-		return ;
+	// if (!minishell || !cmd || !token)
+	// 	return ;
 	// SI WORD = AJOUTE A ARGS
 	if (token->type == WORD || token->type == FLAG)
 		cmd->args[(*i)++] = token->str;
 	// SI CMD => REMPLIR PATH ET ARGV[0]
-	// else if (token->type == CMD)
-	// {
-	// 	cmd->path = token->path;
-	// 	cmd->args[0] = token->str;
-	// }
-	// SI OUTFILE => REMPLIR OUTFD
 	else if (token->type == CMD)
 	{
 		cmd->path = token->path;
@@ -90,9 +84,9 @@ void	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token *token,
 	else if (token->type == OUT_CHEVRON || token->type == OUT_DCHEVRON
 		|| token->type == IN_CHEVRON)
 	{
-		printf("REDIRECTION HANDLER\n");
 		ft_redirection_handler(cmd, token);
 	}
+	// SI OUTFILE => REMPLIR OUTFD
 	// {
 	// 	cmd->outfd = fopen(token->str,)
 	// }
@@ -121,7 +115,8 @@ void	ft_cmd_lst_create(t_minishell *minishell)
 		while (tok_current && tok_current->type != PIPE)
 		{
 			// AFFEECT LES DIFFERENTES PARTIES DE CMD A CHAQUE TOKEN
-			ft_token_affect(minishell, cmd_new, tok_current, &i);
+			ft_token_affect(cmd_new, tok_current, &i);
+
 			// DOIT SAUTER LE NOEUD D'APRES
 			tok_current = tok_current->next;
 		}
@@ -132,4 +127,5 @@ void	ft_cmd_lst_create(t_minishell *minishell)
 		if (tok_current)
 			tok_current = tok_current->next;
 	}
+	// ft_cmd_print(minishell->head_cmd);
 }

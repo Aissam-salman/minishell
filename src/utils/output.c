@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   output.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:40:37 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/11 12:32:04 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/11 17:04:47 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@ void	ft_cmd_print(t_cmd *head)
 	{
 		i = 0;
 		if (head->path)
-			ft_printf("PATH = %s ||", head->path);
+			ft_printf("|{PATH = %s}|\n", head->path);
 		else
-			ft_printf("NO PATH YET ||");
+			ft_printf("|{NO PATH YET}|");
 		while (head->args[i++])
-			ft_printf("ARGV[%d] = %s\n", i - 1, head->args[i - 1]);
-		ft_printf("OUTFILE = %d || INFILE = %d\n", head->outfd, head->infd);
+			ft_printf("[ARGV[%d] = %s]\n", i - 1, head->args[i - 1]);
+		ft_printf("|[OUTFILE = %d || INFILE]| = %d\n", head->outfd, head->infd);
 		current = current->next;
 	}
 }
