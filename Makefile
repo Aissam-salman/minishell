@@ -4,10 +4,10 @@ SRCS = src/main.c \
 		src/errors/errors.c \
 		src/parsing/lexer.c \
 		src/parsing/parser.c \
-		src/parsing/helper/expander.c \
-		src/parsing/helper/check.c \
-		src/parsing/helper/check2.c \
-		src/parsing/helper/filter.c \
+		src/parsing/support/expander.c \
+		src/parsing/support/check.c \
+		src/parsing/support/check2.c \
+		src/parsing/support/filter.c \
 		src/utils/cmds.c \
 		src/utils/output.c \
 		src/utils/tokens.c \

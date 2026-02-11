@@ -5,3 +5,4 @@ objs/**
 *.swp
 a.out
 .vscode
+unit_tests

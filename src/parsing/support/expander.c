@@ -12,14 +12,14 @@
 
 #include "../../../includes/minishell.h"
 
-//TODO: refacto
-char *ft_check_expands(t_minishell *minishell, char *str)
+// TODO: refacto
+char	*ft_check_expands(t_minishell *minishell, char *str)
 {
-	int start;
-	int end;
-	char *var_env;
-	char *test_env;
-	int quote_mode;
+	int		start;
+	int		end;
+	char	*var_env;
+	char	*test_env;
+	int		quote_mode;
 
 	start = 0;
 	if (str[0] == '$' && !str[1])
