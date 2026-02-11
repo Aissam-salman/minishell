@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 13:04:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/11 19:34:46 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/11 20:02:45 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,36 +42,36 @@ void	ft_quotes_handle(t_minishell *minishell, t_token *token)
 {
 	int 	i;
 	char	usable_str[5000];
-	t_state flag;
+	t_state prev_state;
 
 	i = 0;
-	flag = NORMAL;
 	minishell->state = NORMAL;
 	// ON BOUCLE SUR CHAQUE ELEMENT DE TOKEN->STR
 	ft_bzero(usable_str, 5000);
 	// printf("TOKEN = %s\n", token->str);
 	while (token->str[i])
 	{
-		// ON AFFECTE L'ETAT
-		// flag = ft_state_affect(token->str[i], flag);
+		// ON AFFECTE L'ETAT ET ON GARDE LE PRECEDENT EN MEMOIRE
+		prev_state = minishell->state;
 		ft_state_detect(token->str[i], minishell);
-		// ft_printf("Character treated : %c\n", token->str[i]);
+
 		// SI ON TROUVE UN DOLLAR
 		if (token->str[i] == '$' && minishell->state != IN_QUOTE)
 		{
 			ft_expend(token->str, &i, usable_str);
 			continue ;
 		}
-		// RAJOUTE AU BUFFER CARACTERE PAR CARACTERE SI PAS " OU '
-		if (token->str[i] != '"' && token->str[i] != '\'')
+		// CONDITIONS POUR RAJOUTER MALGRE LES STATES OU LES SEPARATORS
+		else if (token->str[i] == '\'' && minishell->state == IN_DQUOTE)
 			ft_buffer_add(usable_str, token->str[i]);
-		// }
+		else if (token->str[i] == '\"' && minishell->state == IN_QUOTE)
+			ft_buffer_add(usable_str, token->str[i]);
+		else if (token->str[i] != '\'' && token->str[i] != '\"')
+			ft_buffer_add(usable_str, token->str[i]);
 		i++;
 	}
-	// ft_printf("USABLE = %s\n", usable_str);
+	// DUP DU BUFFER POUR REMPLACER STR DU TOKEN AVEC LES EXPENDS SI NECESSAIRE
 	token->str = ft_strdup_gc(usable_str, &minishell->gc);
-	minishell->state = NORMAL;
-	// ft_printf("TOKEN FINAL = [%s]\n", token->str);
 	// if (!token->str)
 		// PROTEGER SI !token->str
 }
