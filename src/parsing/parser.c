@@ -6,7 +6,7 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 18:26:24 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/09 19:12:36 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/10 18:23:21 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-
-void ft_create_cmd_lst(t_minishell *minishell);
-t_token *create_mocks_element();
 
 int ft_check_flags(char *str)
 {
@@ -63,29 +60,24 @@ int ft_check_heredoc_end(char *str)
 	return (1);
 }
 
-int ft_check_file_of_redirection(t_token *ele)
+int ft_check_file_of_redirection(t_token *token)
 {
-	//NOTE: if < try to access R mode
-	//     else if > try to open O_CREAT | O_TRUNCT | O_W
-	//     else if << check_heredoc_end
-	//     else if >> try to open O_W | O_APPEND | O_CREAT if not exist
-	if (ele->type == IN_CHEVRON)
+	if (token->type == IN_CHEVRON)
 	{
-		if (access(ele->next->str, R_OK) == -1)
+		if (access(token->next->str, R_OK) == -1)
 			return (0);
 	}
-	else if (ele->type == IN_DCHEVRON)
+	else if (token->type == IN_DCHEVRON)
 	{
-		if (ft_check_heredoc_end(ele->next->str) == 0)
+		if (ft_check_heredoc_end(token->next->str) == 0)
 			return (0);
 	}
-	//NOTE: open >  and >>
 	return (1);
 }
 
-int ft_check_file(t_token *ele)
+int ft_check_file(t_token *token)
 {
-	if (access(ele->str, R_OK | W_OK) == -1) 
+	if (access(token->str, R_OK | W_OK) == -1)
 		return (0);
 	return (1);
 }
@@ -104,7 +96,7 @@ char **ft_get_path(t_minishell *minishell)
 	return (envp);
 }
 
-int ft_test_path(t_minishell *minishell, char **envp, t_token *ele)
+int ft_test_path(t_minishell *minishell, char **envp, t_token *token)
 {
 	char *tmp;
 	char *cur_path;
@@ -115,13 +107,13 @@ int ft_test_path(t_minishell *minishell, char **envp, t_token *ele)
 	while (envp[i])
 	{
 		tmp = ft_strjoin_gc(envp[i], "/", &minishell->gc);
-		cur_path = ft_strjoin_gc(tmp, ele->str, &minishell->gc);
+		cur_path = ft_strjoin_gc(tmp, token->str, &minishell->gc);
 
 		if (stat(cur_path, &stat_file) == 0 && S_ISREG(stat_file.st_mode))
 		{
 			if (cur_path && access(cur_path, X_OK) == 0)
 			{
-				ele->path = cur_path;
+				token->path = cur_path;
 				return (1);
 			}
 		}
@@ -130,63 +122,121 @@ int ft_test_path(t_minishell *minishell, char **envp, t_token *ele)
     return (0);
 }
 
-int ft_check_cmd(t_minishell *minishell, t_token *ele)
+int ft_check_cmd(t_minishell *minishell, t_token *token)
 {
 	char **envp;
 	int res;
 	struct stat stat_file;
 
-	if (!ele || !ele->str || !*ele->str)
+	if (!token || !token->str || !*token->str)
 		return (0);
-	if (ele->str[0] == '/' && !ele->str[1])
+	if (token->str[0] == '/' && !token->str[1])
 		return (0);
-	//NOTE: check si c'est bien un fichier executable et pas un dossier
-	if (stat(ele->str, &stat_file) == 0 && S_ISREG(stat_file.st_mode))
+	if (stat(token->str, &stat_file) == 0 && S_ISREG(stat_file.st_mode))
 	{
-		if (access(ele->str, X_OK) == 0)
+		if (access(token->str, X_OK) == 0)
 		{
-			ele->path = ele->str;
+			token->path = token->str;
 			return (1);
 		}
 	}
 	envp = ft_get_path(minishell);
 	if  (!envp)
 		return (0);
-	res = ft_test_path(minishell, envp, ele);
+	res = ft_test_path(minishell, envp, token);
 	if (res == 1)
 		return 1;
     return (0);
 }
 
-int ft_check_expends(t_minishell *minishell, t_token *ele)
+char *ft_check_expends(t_minishell *minishell, char *str)
 {
-	// $""HOME
-    (void)minishell;
-    (void)ele;
-    return (1);
-}
-int ft_check_pipe(t_minishell *minishell, char *str)
-{
-    (void)minishell;
-    (void)str;
-    return (1);
+	int start;
+	int end;
+	char *var_env;
+	char *test_env;
+	int quote_mode;
+
+	start = 0;
+	if (str[0] == '$' && !str[1])
+		return (ft_strdup_gc("$", &minishell->gc));
+	while (str[start] && str[start] != '$')
+		start++;
+	//FIX: cas  $""HOME, garder home 
+	if (str[start] == '$')
+		start++;
+	while (str[start] == '\'' || str[start] == '\"')
+	{
+		quote_mode = 1;
+		start++;
+	}
+	end = start;
+	while (str[end] && ft_isalnum(str[end]))
+		end++;
+	end++;
+	var_env = ft_substr_gc(str, start, ft_strlen(str) - start + 1,
+			&minishell->gc);
+	if (!var_env)
+		return (ft_strdup_gc("", &minishell->gc));
+	if (quote_mode == 1)
+		return (var_env);
+	test_env = getenv(var_env);
+	if (!test_env)
+		return (ft_strdup_gc("", &minishell->gc));
+	return (test_env);
 }
 
-int is_redirection(t_token *ele)
+int ft_check_pipe(char *str)
 {
-    if (ele->type == IN_CHEVRON ||
-        ele->type == OUT_CHEVRON ||
-        ele->type == IN_DCHEVRON ||
-        ele->type == OUT_DCHEVRON)
+	if (!str)
+		return (0);
+	if (str[0] == '|' && !str[1])
+		return (1);
+    return (0);
+}
+
+int is_redirection(t_token *token)
+{
+    if (token->type == IN_CHEVRON ||
+        token->type == OUT_CHEVRON ||
+        token->type == IN_DCHEVRON ||
+        token->type == OUT_DCHEVRON)
         return (1);
     return (0);
+}
+
+char *ft_strdup_without(char *str, t_minishell *minishell) {
+	char *clear_word;
+
+	clear_word = ft_gc_malloc(ft_strlen(str) - 2 + 1, &minishell->gc);
+	if (!clear_word)
+		return (NULL);
+	clear_word = ft_substr_gc(str, 1, ft_strlen(str) - 2, &minishell->gc);
+	return (clear_word);
+}
+
+void ft_filter_quote(t_token *token, t_minishell *minishell)
+{
+	char type_quote;
+
+	// printf("filter quote before: %s\n", token->str);
+	if (!token || !*token->str)
+		return;
+	type_quote = '\0';
+	if (token->str[0] == '\"' && token->str[ft_strlen(token->str) - 1] == '\"')
+		type_quote = '\"';
+	else if (token->str[0] == '\'' && token->str[ft_strlen(token->str) - 1] == '\'')
+		type_quote = '\'';
+	if (type_quote != '\0')
+		token->str = ft_strdup_without(token->str, minishell);
+	// printf("filter quote after: %s\n", token->str);
 }
 
 void checker_token(t_minishell *minishell)
 {
 	t_token *token;
 	int		cmd_find = 0;
-	
+
 	token = minishell->head_token;
 	while (token)
 	{
@@ -196,26 +246,20 @@ void checker_token(t_minishell *minishell)
 				token->code_error = SYNTAX_ERROR;
 			if (token->next)
 			{
-				//FIX: recup code error de open
 				if (ft_check_file_of_redirection(token) == 0)
-					token->code_error = NO_SUCH_FILE_O_DIR;
-				else 
+					token->code_error = 299;
+				else
 					token->next->type = R_FILE;
 			}
 		}
-		else if (token->type == WORD && (ft_strchr(token->str, '\"') ||
-		   ft_strchr(token->str, '$')))
+		else if ((token->type == WORD && (ft_strchr(token->str, '$') &&  token->str[0] == '\"')) || (ft_strchr(token->str, '$') && token->str[0] != '\''))
 		{
-			//NOTE: while find $ parcours jusqu'a pas alnum
-			// 		si rien trouver mettre chaine vide
-			// 		sinon remplacer
-			if (ft_check_expends(minishell, token) == 0)
-				return ft_error(1, "Error expension");
+			ft_filter_quote(token, minishell);
+			token->str= ft_check_expends(minishell, token->str);
 		}
 		else if (token->type == WORD)
 		{
-			//NOTE: set type CMD if X_OK
-			//FIX: !!!! une seul cmd par slot de pipe
+			ft_filter_quote(token, minishell);
 			if (ft_check_cmd(minishell, token) == 1 && cmd_find == 0)
 			{
 				token->type = CMD;
@@ -228,16 +272,10 @@ void checker_token(t_minishell *minishell)
 		}
 		else if (token->type == PIPE)
 		{
-			if (!ft_check_pipe(minishell, token))
-				return ft_error(1, "Error pipe");
+			if (!ft_check_pipe(token->str))
+					token->code_error = 301;
 			cmd_find = 0;
 		}
 		token = token->next;
 	}
-	return (0);
-}
-
-void ft_create_cmd_lst(t_minishell *minishell)
-{
-	checker_token(minishell);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
+/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:34:00 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/10 17:27:37 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/10 18:25:42 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	ft_cmd_add(t_minishell *minishell, t_cmd *to_add)
 {
 	t_cmd *last;
 
-	if (!minishell || !to_add)	
+	if (!minishell || !to_add)
 		return (1);
 	if (!minishell->head_cmd)
 	{
@@ -62,7 +62,7 @@ int	ft_token_word_count(t_token *current)
 			return (count);
 		else if (current->type == WORD || current->type == CMD)
 			count++;
-		current = current->next;	
+		current = current->next;
 	}
 	return (count);
 }
@@ -72,19 +72,24 @@ void	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token *token, int *i)
 	if (!minishell || !cmd || !token)
 		return ;
 	// SI WORD = AJOUTE A ARGS
-	if (token->type == WORD)
+	if (token->type == WORD || token->type == FLAG)
 		cmd->args[(*i)++] = token->str;
 	// SI CMD => REMPLIR PATH ET ARGV[0]
-	// else if (token->type == CMD) 
+	// else if (token->type == CMD)
 	// {
 	// 	cmd->path = token->path;
 	// 	cmd->args[0] = token->str;
 	// }
 	// SI OUTFILE => REMPLIR OUTFD
+	else if (token->type == CMD)
+	{
+		cmd->path = token->path;
+		cmd->args[0] = token->str;
+	}
 	else if (token->type == OUT_CHEVRON || token->type == OUT_DCHEVRON || token->type == IN_CHEVRON)
 	{
+		printf("REDIRECTION HANDLER\n");
 		ft_redirection_handler(cmd, token);
-		token->next->type = FLAG;
 	}
 	// {
 	// 	cmd->outfd = fopen(token->str,)
@@ -105,7 +110,7 @@ void ft_cmd_lst_create(t_minishell *minishell)
 	tok_current = minishell->head_token;
 	while (tok_current)
 	{
-		i = 0;
+		i = 1;
 		// INITIALISE LE NOUVEAU NOEUD
 		cmd_new = ft_cmd_new(minishell);
 		count = ft_token_word_count(tok_current);
