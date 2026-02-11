@@ -6,7 +6,7 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:34:00 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/10 18:25:42 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/11 12:31:41 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_cmd	*ft_cmd_new(t_minishell *minishell)
 {
-	t_cmd *new;
+	t_cmd	*new;
 
 	new = ft_calloc_gc(1, sizeof(t_cmd), &minishell->gc);
 	if (!new)
@@ -27,16 +27,16 @@ t_cmd	*ft_cmd_new(t_minishell *minishell)
 
 t_cmd	*ft_cmd_last(t_cmd *cmd_head)
 {
-    if (!cmd_head)
-        return (NULL);
-    while (cmd_head->next)
-        cmd_head = cmd_head->next;
-    return (cmd_head);
+	if (!cmd_head)
+		return (NULL);
+	while (cmd_head->next)
+		cmd_head = cmd_head->next;
+	return (cmd_head);
 }
 
 int	ft_cmd_add(t_minishell *minishell, t_cmd *to_add)
 {
-	t_cmd *last;
+	t_cmd	*last;
 
 	if (!minishell || !to_add)
 		return (1);
@@ -52,7 +52,7 @@ int	ft_cmd_add(t_minishell *minishell, t_cmd *to_add)
 
 int	ft_token_word_count(t_token *current)
 {
-	int count;
+	int	count;
 
 	// COMMENCE A 1 POUR CMD->ARGS[0] == PATH | CMD
 	count = 1;
@@ -67,7 +67,8 @@ int	ft_token_word_count(t_token *current)
 	return (count);
 }
 
-void	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token *token, int *i)
+void	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token *token,
+		int *i)
 {
 	if (!minishell || !cmd || !token)
 		return ;
@@ -86,7 +87,8 @@ void	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token *token, int *i)
 		cmd->path = token->path;
 		cmd->args[0] = token->str;
 	}
-	else if (token->type == OUT_CHEVRON || token->type == OUT_DCHEVRON || token->type == IN_CHEVRON)
+	else if (token->type == OUT_CHEVRON || token->type == OUT_DCHEVRON
+		|| token->type == IN_CHEVRON)
 	{
 		printf("REDIRECTION HANDLER\n");
 		ft_redirection_handler(cmd, token);
@@ -99,12 +101,12 @@ void	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token *token, int *i)
 }
 
 // CREER UNE LISTE DE COMMANDE A PARTIR DES TOKENS
-void ft_cmd_lst_create(t_minishell *minishell)
+void	ft_cmd_lst_create(t_minishell *minishell)
 {
-	t_token *tok_current;
+	t_token	*tok_current;
 	t_cmd	*cmd_new;
-	int i;
-	int count;
+	int		i;
+	int		count;
 
 	// COMMENCE A PARCOURIR LA CHAINE DE TOKENS
 	tok_current = minishell->head_token;
@@ -120,7 +122,6 @@ void ft_cmd_lst_create(t_minishell *minishell)
 		{
 			// AFFEECT LES DIFFERENTES PARTIES DE CMD A CHAQUE TOKEN
 			ft_token_affect(minishell, cmd_new, tok_current, &i);
-
 			// DOIT SAUTER LE NOEUD D'APRES
 			tok_current = tok_current->next;
 		}
@@ -132,4 +133,3 @@ void ft_cmd_lst_create(t_minishell *minishell)
 			tok_current = tok_current->next;
 	}
 }
-

@@ -3,17 +3,17 @@
 // RECUPERE LE DERNIER TOKEN
 t_token	*ft_token_last(t_token *token)
 {
-    if (!token)
-        return (NULL);
-    while (token->next)
-        token = token->next;
-    return (token);
+	if (!token)
+		return (NULL);
+	while (token->next)
+		token = token->next;
+	return (token);
 }
 
 // CREATION DU TOKEN A PARTIR DU BUFFER
-t_token *ft_token_create(t_minishell *minishell, char *buffer)
+t_token	*ft_token_create(t_minishell *minishell, char *buffer)
 {
-	t_token *new_token;
+	t_token	*new_token;
 
 	new_token = ft_calloc_gc(1, sizeof(t_token), &minishell->gc);
 	if (!new_token)

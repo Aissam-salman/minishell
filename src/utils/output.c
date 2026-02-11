@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   output.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
+/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:40:37 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/09 18:23:49 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/11 12:32:04 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	ft_cmd_print(t_cmd *head)
 {
-	t_cmd *current;
-	int	i;
+	t_cmd	*current;
+	int		i;
 
 	current = head;
 	while (current)
@@ -25,7 +25,7 @@ void	ft_cmd_print(t_cmd *head)
 			ft_printf("PATH = %s ||", head->path);
 		else
 			ft_printf("NO PATH YET ||");
-		while(head->args[i++])
+		while (head->args[i++])
 			ft_printf("ARGV[%d] = %s\n", i - 1, head->args[i - 1]);
 		ft_printf("OUTFILE = %d || INFILE = %d\n", head->outfd, head->infd);
 		current = current->next;
@@ -34,12 +34,12 @@ void	ft_cmd_print(t_cmd *head)
 
 void	ft_tokens_print(t_token *head)
 {
-	t_token *current;
+	t_token	*current;
 
 	current = head;
 	while (current)
 	{
-		ft_printf("CONTENT TOKEN = %s\n", current->str)	;
+		ft_printf("CONTENT TOKEN = %s\n", current->str);
 		ft_type_print(current);
 		current = current->next;
 	}
@@ -78,4 +78,4 @@ void	ft_state_print(char c, char *buffer, t_minishell *minishell)
 		ft_printf("IN_DQUOTE\n");
 	if (minishell->state == WAITING)
 		ft_printf("WAITING\n");
-} 
+}

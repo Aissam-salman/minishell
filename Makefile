@@ -4,6 +4,10 @@ SRCS = src/main.c \
 		src/errors/errors.c \
 		src/parsing/lexer.c \
 		src/parsing/parser.c \
+		src/parsing/support/expander.c \
+		src/parsing/support/check.c \
+		src/parsing/support/check2.c \
+		src/parsing/support/filter.c \
 		src/utils/cmds.c \
 		src/utils/output.c \
 		src/utils/tokens.c \
@@ -44,13 +48,16 @@ re: fclean all
 ############## TESTING ########################
 
 SRCS_NO_MAIN = src/errors/errors.c \
-				src/parsing/lexer.c \
-				src/parsing/parser.c \
-				src/utils/cmds.c \
-				src/utils/output.c \
-				src/utils/tokens.c \
-				src/helpers/cntrl.c \
-				src/exec.c
+			src/parsing/lexer.c \
+			src/parsing/parser.c \
+			src/parsing/helper/expander.c \
+			src/parsing/helper/check.c \
+			src/parsing/helper/check2.c \
+			src/utils/cmds.c \
+			src/utils/output.c \
+			src/utils/tokens.c \
+			src/helpers/cntrl.c \
+			src/exec.c
 
 OBJS_NO_MAIN = $(SRCS_NO_MAIN:%.c=$(OBJ_DIR)/%.o)
 
