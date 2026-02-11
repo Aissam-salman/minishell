@@ -2,13 +2,14 @@
 # define MINISHELL_H
 
 #include "../libft/libft.h"
+#include "errors.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <readline/readline.h>
-#include "errors.h"
 #include <signal.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 
 # define OPERATORS "|<>"
@@ -84,6 +85,25 @@ int	ft_token_add(t_minishell *minishell, t_token *to_add);
 
 // PARSING/PARSER.C
 void checker_token(t_minishell *minishell);
+
+// PARSING/HELPER/CHECK.C
+int ft_check_flags(char *str);
+int ft_check_redirection(char *str);
+int ft_check_heredoc_end(char *str);
+int ft_check_file_of_redirection(t_token *token);
+int ft_check_file(t_token *token);
+
+// PARSING/HELPER/CHECK2.C
+int ft_check_cmd(t_minishell *minishell, t_token *token);
+int is_redirection(t_token *token);
+int ft_check_pipe(char *str);
+
+// PARSING/HELPER/EXPANDER.C
+char *ft_check_expands(t_minishell *minishell, char *str);
+
+// PARSING/HELPER/FILTER.C
+void ft_filter_quote(t_token *token, t_minishell *minishell);
+
 // UTILS/ERRORS.C
 int	ft_error(int error, char *str);
 void	ft_exit(t_minishell *minishell, int error, char *str );
