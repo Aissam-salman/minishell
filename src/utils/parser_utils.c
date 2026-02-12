@@ -6,7 +6,7 @@
 /*   By: fardeau <fardeau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 13:04:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/12 18:24:31 by fardeau          ###   ########.fr       */
+/*   Updated: 2026/02/12 18:47:16 by fardeau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 	if (str[*start] == '?')
 	{
 		// A MODIF : RECUPERE LA VARIABLE D'ERREUR GLOBAL
-		err_value = ft_itoa_gc(ERR_CODE, &minishell->gc);
+		err_value = ft_itoa_gc(GENERAL_ERROR, &minishell->gc);
 		if (!err_value)
 			return (ft_error(MALLOC_FAIL, "Error malloc expands\n"));
 
@@ -48,7 +48,7 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 	}
 
 	// ON RECUPERE L'ENV
-	printf("BUFFER = %s\n", buffer);
+	// ft_printf("BUFFER = %s\n", buffer);
 	env = getenv(buffer);
 
 	// ft_printf("ENV = %s\n", env);
@@ -60,11 +60,11 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 	return (0);
 }
 
+// FONCTION PRINCIPALE POUR GERE LES QUOTES
 void	ft_quotes_handle(t_minishell *minishell, t_token *token)
 {
 	int 	i;
 	char	usable_str[BUFFER_SIZE];
-	// t_state prev_state;
 
 	i = 0;
 	minishell->state = NORMAL;
@@ -73,7 +73,6 @@ void	ft_quotes_handle(t_minishell *minishell, t_token *token)
 	while (token->str[i])
 	{
 		// ON AFFECTE L'ETAT ET ON GARDE LE PRECEDENT EN MEMOIRE
-		// prev_state = minishell->state;
 		ft_state_detect(token->str[i], minishell);
 
 		// SI ON TROUVE UN DOLLAR
@@ -103,6 +102,7 @@ void	ft_quotes_handle(t_minishell *minishell, t_token *token)
 		}
 		i++;
 	}
+
 	// DUP DU BUFFER POUR REMPLACER STR DU TOKEN AVEC LES EXPENDS SI NECESSAIRE
 	token->str = ft_strdup_gc(usable_str, &minishell->gc);
 	if (!token->str)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fardeau <fardeau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:34:00 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/12 14:36:01 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/12 19:53:18 by fardeau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,15 @@ int	ft_cmd_add(t_minishell *minishell, t_cmd *to_add)
 	t_cmd	*last;
 
 	if (!minishell || !to_add)
-		return (1);
+		return (GENERAL_ERROR);
 	if (!minishell->head_cmd)
 	{
 		minishell->head_cmd = to_add;
-		return (0);
+		return (SUCCESS);
 	}
 	last = ft_cmd_last(minishell->head_cmd);
 	last->next = to_add;
-	return (0);
+	return (SUCCESS);
 }
 
 int	ft_token_word_count(t_token *current)

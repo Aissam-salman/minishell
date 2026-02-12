@@ -7,9 +7,12 @@ SRCS = src/main.c \
 		src/parsing/support/expander.c \
 		src/parsing/support/check.c \
 		src/parsing/support/check2.c \
+		src/built_in/env.c \
+		src/built_in/export.c \
 		src/utils/cmds.c \
 		src/utils/output.c \
 		src/utils/tokens.c \
+		src/utils/env_setup.c \
 		src/utils/parser_utils.c \
 		src/helpers/cntrl.c \
 		src/exec.c
