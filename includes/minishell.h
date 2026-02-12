@@ -12,6 +12,8 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
+# define BUFFER_SIZE 5000
+# define ERR_CODE 127
 # define OPERATORS "|<>"
 # define SEPARATORS " $\'\"\t"
 
