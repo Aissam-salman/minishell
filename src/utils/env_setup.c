@@ -6,12 +6,13 @@
 /*   By: fardeau <fardeau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 19:32:38 by fardeau           #+#    #+#             */
-/*   Updated: 2026/02/12 20:23:32 by fardeau          ###   ########.fr       */
+/*   Updated: 2026/02/12 21:01:10 by fardeau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// ACCEDE AU DERNIER ENV
 t_env	*ft_env_last(t_env *head_env)
 {
 	if (!head_env)
@@ -21,6 +22,7 @@ t_env	*ft_env_last(t_env *head_env)
 	return (head_env);
 }
 
+// CREER UN NOUVEAU NOEUD T_ENV
 t_env *ft_env_new(t_minishell *minishell, char *str)
 {
 	t_env	*new;
@@ -61,6 +63,7 @@ t_env *ft_env_new(t_minishell *minishell, char *str)
 	return (new);
 }
 
+// AJOUTE LE NOEUD ENV A LA LISTE
 int	ft_env_add(t_minishell *minishell, t_env *new)
 {
 	t_env *last;
@@ -77,6 +80,7 @@ int	ft_env_add(t_minishell *minishell, t_env *new)
 	return (SUCCESS);
 }
 
+// TROUVE UN ENV A PARTIR DU NOM
 t_env	*ft_env_find(t_env	*head_env, char *to_find)
 {
 	while (head_env)
@@ -88,6 +92,7 @@ t_env	*ft_env_find(t_env	*head_env, char *to_find)
 	return (NULL);
 }
 
+// INITIALISE ENV AU DEMARRAGE
 void	ft_env_setup(t_minishell *minishell, char **envp)
 {
 	int i;
