@@ -11,11 +11,15 @@
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+#include "includes/ft_output.h"
+#include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
-t_cmd *ft_pipe_and_fork(t_cmd *cmd,int size_cmd, int pipe_fd[2], int *pids)
+void ft_pipe_and_fork(t_cmd *cmd,int size_cmd, int pipe_fd[2], int *pids)
 {
 	int i;
 	int prev_pipe;
@@ -35,7 +39,8 @@ t_cmd *ft_pipe_and_fork(t_cmd *cmd,int size_cmd, int pipe_fd[2], int *pids)
 		//CHILD
 		if (pids[i] == 0)
 		{
-			// first cmd
+			if (signal(SIGQUIT, SIG_DFL) == SIG_ERR)
+				perror("signal error default SIGQUIT");
 			if (i == 0)
 			{
 				if (cmd->infd != 0)
@@ -67,6 +72,7 @@ t_cmd *ft_pipe_and_fork(t_cmd *cmd,int size_cmd, int pipe_fd[2], int *pids)
 			perror("Execv");
 			exit(1);
 		}
+		//disable signal here
 		close(pipe_fd[1]);
 		if (prev_pipe != -1)
 			close(prev_pipe);
@@ -74,7 +80,6 @@ t_cmd *ft_pipe_and_fork(t_cmd *cmd,int size_cmd, int pipe_fd[2], int *pids)
 		cmd = cmd->next;
 		i++;
 	}
-	return (cmd);
 }
 
 void	ft_exec(t_minishell *minishell)
@@ -94,11 +99,28 @@ void	ft_exec(t_minishell *minishell)
 	pids = ft_gc_malloc(sizeof(int) * size_cmd, &minishell->gc);
 	if (!pids)
 		return;
-	cmd = ft_pipe_and_fork(cmd, size_cmd, pipe_fd, pids);
+	ft_pipe_and_fork(cmd, size_cmd, pipe_fd, pids);
 	int i = 0;
 	while (i < size_cmd)
 	{
 		waitpid(pids[i], &status, 0);
+		if (WIFSIGNALED(status))
+		{
+			int sig = WTERMSIG(status);
+			if (sig == SIGQUIT)
+			{
+				ft_printf("Quit");
+
+				if (WCOREDUMP(status))
+				{
+					ft_printf("\t\t\t\t%s","(core dumped)");
+				}
+				ft_printf(" %s %s\n", cmd->args[0], cmd->args[1]);
+			}
+			if (WIFEXITED(status) > 0)
+				ft_printf("Error: %s\n", strerror(status));
+		}
+		cmd = cmd->next;
 		i++;
 	}
 	// int pid;
