@@ -43,12 +43,11 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	ft_bzero(&minishell, sizeof(t_minishell));
 	minishell.envs = envp;
 	ft_env_setup(&minishell, envp);
 	// ft_printf("RESULT = %s\n", ft_env_find(minishell.head_env, "PATH")->content);
 	// ft_env(minishell.head_env, STDOUT_FILENO);
-	ft_export(&minishell, 1, " ");
-	ft_bzero(&minishell, sizeof(t_minishell));
 	setup_signal();
 	while (1)
 	{
