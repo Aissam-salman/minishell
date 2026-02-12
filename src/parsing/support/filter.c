@@ -12,35 +12,17 @@
 
 #include "../../../includes/minishell.h"
 
-int ft_get_dollar(char *str)
-{
-	int i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '$')
-			return (i);
-		i++;
-	}
-	return (-1);
-}
 
 int	is_need_expands(t_token *token)
 {
-	int start;
-	int end;
-	int index;
-
 	if (token->type == WORD)
 	{
 		if (ft_strchr(token->str, '$'))
 		{
-			start = ft_get_dollar(token->str);
+			return (1);
 		}
- 		token->str[0] == '\"')) || (ft_strchr(token->str, '$') && token->str[0] != '\''))
 	}
-	return (1);
+	return (0);
 }
 
 static char	*ft_strdup_without(char *str, t_minishell *minishell)

@@ -67,6 +67,7 @@ int ft_check_file_of_redirection(t_token *token)
 	{
 		if (ft_check_heredoc_end(token->next->str) == 0)
 			return (0);
+		//TODO: handle heredoc
 	}
 	return (1);
 }

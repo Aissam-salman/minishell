@@ -1,9 +1,12 @@
 #include "../includes/minishell.h"
+#include <signal.h>
 #include <readline/history.h>
 #include <signal.h>
+#include <stdio.h>
 
 void	signal_callback_handler(int sig)
 {
+	//C-C
 	if (sig == SIGINT)
 	{
 		ft_printf("\n");
@@ -11,16 +14,6 @@ void	signal_callback_handler(int sig)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
-	// NOTE: do nothing, but in process child only you need to handle this,
-		// you can disable it for parent
-	// else if (sig == SIGQUIT)
-	// {
-	// 	// set g_signal = sig;
-	// 	ft_printf("SIGQUIT: Ctrl-\\");
-	// 	ft_printf("\n");
-	// 	// Nothing for parent
-	// 	// but in child core dump
-	// }
 }
 
 void	setup_signal(void)
@@ -29,12 +22,15 @@ void	setup_signal(void)
 
 	ft_bzero(&sa, sizeof(sa));
 	sa.sa_handler = &signal_callback_handler;
-	sa.sa_flags = 0;
+	sa.sa_flags = SA_RESTART;
 	sigemptyset(&sa.sa_mask);
 	// C-C
-	sigaction(SIGINT, &sa, NULL);
+	if (sigaction(SIGINT, &sa, NULL) == -1)
+		perror("signal error SIGINT");
 	// C-'\'
-	sigaction(SIGQUIT, &sa, NULL);
+	//NOTE: ignore signal by default for parent process
+	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
+		perror("signal error ignore SIGQUIT");
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -48,13 +44,14 @@ int	main(int argc, char **argv, char **envp)
 	setup_signal();
 	while (1)
 	{
+		setup_signal();
 		minishell.line = readline("foo$> ");
 		// NOTE: CTRL-D
-		// if (minishell.line == NULL)
-		// {
-		// 	ft_gc_free_all(&minishell.gc);
-		// 	exit(0);
-		// }
+		if (minishell.line == NULL)
+		{
+			ft_gc_free_all(&minishell.gc);
+			exit(0);
+		}
 		if (*minishell.line)
 		{
 			if (*minishell.line == EOF)
@@ -84,5 +81,6 @@ int	main(int argc, char **argv, char **envp)
 			minishell.head_cmd = NULL;
 		}
 	}
+	ft_gc_free_all(&minishell.gc);
 	ft_exit(&minishell, 0, NULL);
 }

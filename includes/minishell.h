@@ -3,14 +3,14 @@
 
 # include "../libft/libft.h"
 # include "errors.h"
-# include <fcntl.h>
-# include <readline/readline.h>
-# include <signal.h>
+# include <unistd.h>
 # include <stdio.h>
+# include <fcntl.h>
+# include <signal.h>
+# include <readline/readline.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
-# include <unistd.h>
 
 # define BUFFER_SIZE 5000
 # define ERR_CODE 127
@@ -103,7 +103,7 @@ int					ft_check_file_of_redirection(t_token *token);
 int					ft_check_file(t_token *token);
 
 // PARSING/HELPER/CHECK2.C
-int					ft_check_cmd(t_minishell *minishell, t_token *token);
+void					ft_check_cmd(t_minishell *minishell, t_token *token);
 int					is_redirection(t_token *token);
 int					ft_check_pipe(char *str);
 
@@ -127,6 +127,7 @@ void				ft_redirection_handler(t_cmd *cmd, t_token *token);
 
 // UTILS/CMDS.C
 void				ft_cmd_lst_create(t_minishell *minishell);
+int   				ft_cmd_size(t_cmd *cmd_head);
 
 // EXEC.C
 void				ft_exec(t_minishell *minishell);
