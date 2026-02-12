@@ -3,14 +3,14 @@
 
 # include "../libft/libft.h"
 # include "errors.h"
-# include <fcntl.h>
-# include <readline/readline.h>
-# include <signal.h>
+# include <unistd.h>
 # include <stdio.h>
+# include <fcntl.h>
+# include <signal.h>
+# include <readline/readline.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
-# include <unistd.h>
 
 # define OPERATORS "|<>"
 

@@ -67,7 +67,6 @@ t_cmd *ft_pipe_and_fork(t_cmd *cmd,int size_cmd, int pipe_fd[2], int *pids)
 			perror("Execv");
 			exit(1);
 		}
-		close(pipe_fd[0]);
 		close(pipe_fd[1]);
 		if (prev_pipe != -1)
 			close(prev_pipe);
