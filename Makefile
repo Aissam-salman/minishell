@@ -31,7 +31,9 @@ $(NAME): $(LIBFT) $(OBJS)
 
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
-	$(CC) $(INCS) -c $< -o $@
+	$(CC) -MMD -MP $(INCS) -c $< -o $@
+
+-include $(OBJS:.o=.d)
 
 clean:
 	rm -rf $(OBJ_DIR)

@@ -12,8 +12,9 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-# define BUFFER_SIZE 5000
+# define BUFFER_SIZE 5 
 # define ERR_CODE 127
+
 # define OPERATORS "|<>"
 # define SEPARATORS " $\'\"\t"
 
@@ -77,7 +78,7 @@ typedef struct s_minishell
 
 // PARSING/LEXER.C
 void	ft_state_detect(char c, t_minishell *minishell);
-void				ft_buffer_add(char *buffer, char c);
+int	ft_buffer_add(char *buffer, char c);
 int					ft_tokenize(t_minishell *minishell);
 
 void				ft_create_cmd_lst(t_minishell *minishell);

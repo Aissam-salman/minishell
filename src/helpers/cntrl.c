@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cntrl.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fardeau <fardeau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 15:49:08 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/11 12:31:29 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/12 17:43:46 by fardeau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,13 @@ int	ft_open(char *path, t_types mod)
 	return (-1);
 }
 
+void	ft_heredoc(t_cmd *cmd, t_token *token)
+{
+	(void)cmd;
+	(void)token;
+	ft_printf("HEREDOC\n");
+}
+
 void	ft_redirection_handler(t_cmd *cmd, t_token *token)
 {
 	int fd;
@@ -36,12 +43,14 @@ void	ft_redirection_handler(t_cmd *cmd, t_token *token)
 	fd = -1;
 	if (token->next == NULL)
 		return ;
-	fd = ft_open(token->next->str, token->type);
+	if (token->type != IN_DCHEVRON)
+		fd = ft_open(token->next->str, token->type);
+	else
+		ft_heredoc(cmd, token);
 	if (fd == -1)
 		perror(token->path);
 	if (fd > 2 && token->type == IN_CHEVRON)
 		ft_redirection_exec(fd, &cmd->infd);
-	else if (fd > 2 && (token->type == OUT_CHEVRON
-			|| token->type == OUT_DCHEVRON))
+	else if (fd > 2 && (token->type == OUT_CHEVRON || token->type == OUT_DCHEVRON))
 		ft_redirection_exec(fd, &cmd->outfd);
 }

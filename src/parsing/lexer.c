@@ -19,15 +19,22 @@
 */
 
 // A SECURISER VIA LA TAILLE MAX
-void	ft_buffer_add(char *buffer, char c)
+int	ft_buffer_add(char *buffer, char c)
 {
 	int	i;
 
 	i = 0;
-	while (buffer[i])
+	while (buffer[i] )
 		i++;
-	buffer[i] = c;
-	buffer[i + 1] = '\0';
+	if (i < BUFFER_SIZE)
+	{
+		buffer[i] = c;
+		buffer[i + 1] = '\0';
+		return (0);
+	}
+	else
+		return (ft_error(BUFFER_FAIL, "Insufficient buffer size\n"));
+
 }
 
 // AFFECTE L'ETAT A MINISHELL POUR
@@ -80,7 +87,8 @@ int	ft_state_interpret(char *line, int *index, char *buffer,
 				OPERATORS))
 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
 				return (ft_error(MALLOC_FAIL, "Fail Malloc Interpreter\n"));
-		ft_buffer_add(buffer, line[*index]);
+		if (ft_buffer_add(buffer, line[*index]))
+			return (BUFFER_FAIL);
 	}
 	return (0);
 }
