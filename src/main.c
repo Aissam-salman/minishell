@@ -43,8 +43,8 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	minishell.envs = envp;
 	ft_bzero(&minishell, sizeof(t_minishell));
+	minishell.envs = envp;
 	setup_signal();
 	while (1)
 	{
@@ -64,7 +64,8 @@ int	main(int argc, char **argv, char **envp)
 				ft_exit(&minishell, 0, "See ya!");
 			if (minishell.line[0] != 0)
 				add_history(minishell.line);
-			ft_tokenize(&minishell);
+			if (ft_tokenize(&minishell))
+				continue;
 			// ft_tokens_print(minishell.head_token);
 			// if (ft_parse(minishell, minishell.head_token) == ERROR)
 			// {
@@ -74,13 +75,14 @@ int	main(int argc, char **argv, char **envp)
 			//		continue ;
 			// }
 			checker_token(&minishell);
+			// ft_tokens_print(minishell.head_token);
 			ft_cmd_lst_create(&minishell);
+			// ft_cmd_print(minishell.head_cmd);
 			ft_exec(&minishell);
 			// POUR REMETTRE A ZERO LA LISTE DES TOKENS A CHAQUE EXEC (Free avec garbage collector)
 			minishell.head_token = NULL;
 			minishell.head_cmd = NULL;
 		}
 	}
-
 	ft_exit(&minishell, 0, NULL);
 }

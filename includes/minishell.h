@@ -12,7 +12,10 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
+# define BUFFER_SIZE 5000
+# define ERR_CODE 127
 # define OPERATORS "|<>"
+# define SEPARATORS " $\'\"\t"
 
 // ENUM TYPES ELEMENTS
 typedef enum e_type
@@ -73,7 +76,9 @@ typedef struct s_minishell
 }					t_minishell;
 
 // PARSING/LEXER.C
-void				ft_tokenize(t_minishell *minishell);
+void	ft_state_detect(char c, t_minishell *minishell);
+void				ft_buffer_add(char *buffer, char c);
+int					ft_tokenize(t_minishell *minishell);
 
 void				ft_create_cmd_lst(t_minishell *minishell);
 // UTILS/OUTPUT.C
@@ -112,6 +117,10 @@ int					is_need_expands(t_token *token);
 // UTILS/ERRORS.C
 int					ft_error(int error, char *str);
 void				ft_exit(t_minishell *minishell, int error, char *str);
+
+// UTILS/PARSER_UTILS.C
+// void	ft_quotes_handle(t_minishell *minishell, t_token **token);
+void	ft_quotes_handle(t_minishell *minishell, t_token *token);
 
 // HELPERS/cntrl.C
 void				ft_redirection_handler(t_cmd *cmd, t_token *token);
