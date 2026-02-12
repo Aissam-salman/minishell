@@ -98,7 +98,7 @@ int					ft_check_file_of_redirection(t_token *token);
 int					ft_check_file(t_token *token);
 
 // PARSING/HELPER/CHECK2.C
-int					ft_check_cmd(t_minishell *minishell, t_token *token);
+void					ft_check_cmd(t_minishell *minishell, t_token *token);
 int					is_redirection(t_token *token);
 int					ft_check_pipe(char *str);
 

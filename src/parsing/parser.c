@@ -31,18 +31,19 @@ void	handle_expands(t_token *token, t_minishell *minishell)
 	token->str = ft_check_expands(minishell, token->str);
 }
 
-void	handle_word(t_token *token, t_minishell *minishell, int cmd_find)
+void	handle_word(t_token *token, t_minishell *minishell, int *cmd_find)
 {
 	ft_filter_quote(token, minishell);
-	if (ft_check_cmd(minishell, token) == 1 && cmd_find == 0)
+	if (*cmd_find == 0)
 	{
+		ft_check_cmd(minishell, token);  
 		token->type = CMD;
-		cmd_find = 1;
+		*cmd_find = 1;
 	}
 	if (ft_check_flags(token->str) == 1)
 		token->type = FLAG;
-	if (ft_check_file(token) == 1)
-		token->type = R_FILE;
+	// if (ft_check_file(token) == 1)
+	// 	token->type = R_FILE;
 }
 
 void	handle_pipe(t_token *token, int *cmd_find)
@@ -66,7 +67,7 @@ void	checker_token(t_minishell *minishell)
 		else if (is_need_expands(token))
 			handle_expands(token, minishell);
 		else if (token->type == WORD)
-			handle_word(token, minishell, cmd_find);
+			handle_word(token, minishell, &cmd_find);
 		else if (token->type == PIPE)
 			handle_pipe(token, &cmd_find);
 		token = token->next;

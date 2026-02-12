@@ -41,6 +41,8 @@ void ft_pipe_and_fork(t_cmd *cmd,int size_cmd, int pipe_fd[2], int *pids)
 		{
 			if (signal(SIGQUIT, SIG_DFL) == SIG_ERR)
 				perror("signal error default SIGQUIT");
+			if (signal(SIGINT, SIG_DFL) == SIG_ERR)
+				perror("signal error default SIGQUIT");
 			if (i == 0)
 			{
 				if (cmd->infd != 0)
@@ -72,7 +74,8 @@ void ft_pipe_and_fork(t_cmd *cmd,int size_cmd, int pipe_fd[2], int *pids)
 			perror("Execv");
 			exit(1);
 		}
-		//disable signal here
+		//disable signal ctrl+C
+		signal(SIGINT, SIG_IGN);
 		close(pipe_fd[1]);
 		if (prev_pipe != -1)
 			close(prev_pipe);
@@ -116,6 +119,10 @@ void	ft_exec(t_minishell *minishell)
 					ft_printf("\t\t\t\t%s","(core dumped)");
 				}
 				ft_printf(" %s %s\n", cmd->args[0], cmd->args[1]);
+			}
+			else if (sig == SIGINT)
+			{
+				ft_printf("\n");
 			}
 			if (WIFEXITED(status) > 0)
 				ft_printf("Error: %s\n", strerror(status));
