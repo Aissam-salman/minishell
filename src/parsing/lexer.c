@@ -97,21 +97,26 @@ int	ft_token_lst_create(t_minishell *minishell)
 	line = minishell->line;
 	line_len = ft_strlen(line);
 	minishell->state = NORMAL;
-	buffer = ft_calloc_gc(ft_strlen(line) + 1, sizeof(char), &minishell->gc);
+
+	// INITIALISATION DU TABLEAU ARGS
+	buffer = ft_calloc_gc(line_len + 1, sizeof(char), &minishell->gc);
 	if (!buffer)
 		return (ft_error(MALLOC_FAIL, "Fail Malloc Buffer Interpreter"));
+
 	// BOUCLE POUR TRAITER CHAQUE CHAR DE MINISHELL.LINE
 	i = 0;
-	while (i < line_len)
+	while (i < line_len) 
 	{
 		// ON DETECTE L'ETAT POUR POUVOIR DETERMINER QUOI FAIRE DU CHARACTERE
 		ft_state_detect(line[i], minishell);
+
 		// ON TRAITE line[i] EN FONCTION DE L'ETAT
 		// ON INTERPRETE L'ETAT POUR CREER LA CHAINE DE TOKENS
 		if (ft_state_interpret(line, &i, buffer, minishell))
 			return (1);
 		i++;
 	}
+	line[i] = '\0';
 	if (minishell->state == IN_QUOTE || minishell->state == IN_DQUOTE)
 		return (ft_error(PARSING_FAIL, "Syntax error: unclosed quotes\n"));
 	if (ft_strlen(buffer) > 0)
@@ -145,16 +150,18 @@ void	ft_type_affect(t_minishell *minishell)
 			current->type = WORD;
 		current = current->next;
 	}
+
 }
 
 // On récupere la ligne, on traite pour avoir des types de mots
 // On les récupere ensuite pour créer des phrases
-void	ft_tokenize(t_minishell *minishell)
+int	ft_tokenize(t_minishell *minishell)
 {
 	// ON RECUPERE LES TYPES DANS UN PREMIER TEMPS
 	// ft_create_elem_lst(minishell);
 	if (ft_token_lst_create(minishell))
-		return ;
+		return (1);
 	ft_type_affect(minishell);
+	return (0);
 	// ft_create_cmd_lst(minishell);
 }
