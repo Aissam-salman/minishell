@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:34:00 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/13 17:37:03 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/13 18:33:12 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	ft_token_word_count(t_token *current)
 	return (count);
 }
 
-void	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token *token, int *i)
+int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token *token, int *i)
 {
 	t_token *next;
 	// if (!minishell || !cmd || !token)
@@ -107,11 +107,16 @@ void	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token *token, int *i)
 	else if (token->type == IN_DCHEVRON)
 	{
 		if (!next || !next->str)
-			ft_error(SYNTAX_ERROR, "Syntax error near unexpected token 'newline'", NULL);
+			return (ft_error(SYNTAX_ERROR, "Syntax error near unexpected token 'newline'", NULL));
 		else if (next->type != WORD)
-			ft_error(SYNTAX_ERROR, "Syntax error near unexpected token ", next->str);
-		ft_heredoc_handle(minishell, cmd, token);
+		{
+			// ft_tokens_print(next);
+			return (ft_error(SYNTAX_ERROR, "Syntax error near unexpected token ", next->str));
+		}
+		else 
+			ft_heredoc_handle(minishell, cmd, token);
 	}
+	return (SUCCESS);
 
 	// SI OUTFILE => REMPLIR OUTFD
 	// {
@@ -122,7 +127,7 @@ void	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token *token, int *i)
 }
 
 // CREER UNE LISTE DE COMMANDE A PARTIR DES TOKENS
-void	ft_cmd_lst_create(t_minishell *minishell)
+int	ft_cmd_lst_create(t_minishell *minishell)
 {
 	t_token	*tok_current;
 	t_cmd	*cmd_new;
@@ -143,7 +148,8 @@ void	ft_cmd_lst_create(t_minishell *minishell)
 		while (tok_current && tok_current->type != PIPE)
 		{
 			// AFFEECT LES DIFFERENTES PARTIES DE CMD A CHAQUE TOKEN
-			ft_token_affect(minishell, cmd_new, tok_current, &i);
+			if (ft_token_affect(minishell, cmd_new, tok_current, &i))
+				return (GENERAL_ERROR);
 
 			// DOIT SAUTER LE NOEUD D'APRES
 			tok_current = tok_current->next;
@@ -163,4 +169,6 @@ void	ft_cmd_lst_create(t_minishell *minishell)
 			tok_current = tok_current->next;
 	}
 	ft_cmd_add(minishell, NULL);
+	return (SUCCESS);
 }
+

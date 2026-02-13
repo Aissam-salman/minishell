@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fardeau <fardeau@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 18:26:24 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/12 17:31:51 by fardeau          ###   ########.fr       */
+/*   Updated: 2026/02/13 17:44:08 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	handle_redirection(t_token *token)
 
 void	handle_word(t_token *token, t_minishell *minishell, int *cmd_find)
 {
-	ft_filter_quote(token, minishell);
+	// ft_filter_quote(token, minishell);
 	if (*cmd_find == 0)
 	{
 		ft_check_cmd(minishell, token);  

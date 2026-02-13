@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 15:04:28 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/13 17:34:37 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/13 18:33:39 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,11 @@ void	ft_heredoc(t_minishell *minishell, t_cmd *cmd, t_token *token, int mod)
 	size_t	limiter_len;
 	size_t	line_len;
 
-	ft_printf("HEREDOC\n");
 	limiter_len = ft_strlen(token->str);
-
 	// ON SECURISE L'OUVERTUR DU PIPE
 	if (pipe(pipefd))
 	{
-		ft_error(GENERAL_ERROR, "Heredoc error :", "Pipe creation failed\n");
+		ft_error(GENERAL_ERROR, "Heredoc error :", "Pipe creation failed");
 		return;
 	}
 
@@ -42,21 +40,19 @@ void	ft_heredoc(t_minishell *minishell, t_cmd *cmd, t_token *token, int mod)
 
 		// SI HERE_DOC TROUVÉ
 		if (!ft_strncmp(line, token->str, limiter_len) && line_len == limiter_len)
-		{
-			ft_putstr_fd("HERE_DOC TROUVE\n", 1);
 			break;
-		}
 
 		// IMPRIME LA LINE DANS PIPE
 		ft_putstr_fd(line, pipefd[1]);
 		ft_putchar_fd('\n', pipefd[1]);
 		line = NULL;
 	}
-	close(pipefd[1]);
+	close(pipefd[0]);
+	// SI DERNIER HERE_DOC DE LA CHAINE
 	if (mod == 1)
-		ft_redirection_exec(pipefd[0], &cmd->infd);
+		ft_redirection_exec(pipefd[1], &cmd->infd);
 	else
-		close(pipefd[0]);
+		close(pipefd[1]);
 }
 
 t_token	*ft_heredoc_find_last(t_token *token)
@@ -70,8 +66,8 @@ t_token	*ft_heredoc_find_last(t_token *token)
 			last = token;
 		token = token->next;
 	}
-	if (last)
-		ft_printf("%s\n", last->next->str);
+	// if (last)
+	// 	ft_printf("%s\n", last->next->str);
 	return (last);
 }
 
