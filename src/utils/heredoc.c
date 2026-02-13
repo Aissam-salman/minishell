@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 void	ft_heredoc(t_minishell *minishell, t_cmd *cmd, t_token *token, int mod)
 {

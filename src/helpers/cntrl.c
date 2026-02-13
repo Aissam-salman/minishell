@@ -18,6 +18,7 @@ void	ft_redirection_exec(int new_fd, int *old_fd)
 		close(*old_fd);
 	*old_fd = new_fd;
 }
+
 int	ft_open(char *path, t_types mod)
 {
 	if (mod == IN_CHEVRON)

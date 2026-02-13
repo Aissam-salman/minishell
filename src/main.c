@@ -80,6 +80,7 @@ int	main(int argc, char **argv, char **envp)
 			if (ft_cmd_lst_create(&minishell) != SUCCESS)
 				continue;
 			// ft_cmd_print(minishell.head_cmd);
+			
 			ft_exec(&minishell);
 			// POUR REMETTRE A ZERO LA LISTE DES TOKENS A CHAQUE EXEC (Free avec garbage collector)
 			minishell.head_token = NULL;

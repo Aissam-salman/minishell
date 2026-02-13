@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 int	ft_env_format_check(char *str)
 {
@@ -31,7 +31,7 @@ int	ft_export(t_minishell *minishell, int fd, char *str)
 		ft_env_print(minishell->head_env, fd);
 	// SI STR == ""
 	else if (!str[0])
-	return (ft_error(GENERAL_ERROR, "export:", "`': not a valid identifier"));
+	  return (ft_error(GENERAL_ERROR, "export:", "`': not a valid identifier"));
 	else
 	{
 		// CHECKER SI STR A LE BON FORMAT

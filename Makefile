@@ -16,7 +16,10 @@ SRCS = src/main.c \
 		src/utils/env_setup.c \
 		src/utils/parser_utils.c \
 		src/helpers/cntrl.c \
-		src/exec.c
+		src/execution/exec.c \
+		src/execution/child_exec.c \
+		src/execution/handler.c \
+		src/execution/wait.c 
 
 OBJ_DIR = objs
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
