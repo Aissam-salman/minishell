@@ -1,18 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fardeau <fardeau@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/12 20:22:25 by fardeau           #+#    #+#             */
-/*   Updated: 2026/02/13 20:46:51 by alamjada         ###   ########.fr       */
+/*   Created: 2026/02/13 19:44:40 by alamjada          #+#    #+#             */
+/*   Updated: 2026/02/13 20:54:21 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_env(t_env *head_env, int	outfd)
+void ft_buildin_exit(t_minishell *minishell)
 {
-	ft_env_print(head_env, outfd);
+	ft_gc_free_all(&minishell->gc);
+	rl_clear_history();
+	write(1, "exit\n", 5);
+	exit(0);
 }
