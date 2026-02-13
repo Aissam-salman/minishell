@@ -33,7 +33,8 @@ typedef enum e_type
 	OUT_DCHEVRON,
 	WORD,
 	CMD,
-	R_FILE,
+	LAST_HEREDOC,
+	// R_FILE,
 	FLAG,
 	NBR_TYPES,
 }					t_types;
@@ -55,6 +56,7 @@ typedef struct s_cmd
 	char			**args;
 	int				infd;
 	int				outfd;
+	int				pipefd[2];
 	struct s_cmd	*next;
 }					t_cmd;
 
@@ -147,7 +149,7 @@ int					is_need_expands(t_token *token);
 /////////
 
 // UTILS/ERRORS.C
-int					ft_error(int error, char *str);
+int					ft_error(int error, char *str1, char *str2);
 void				ft_exit(t_minishell *minishell, int error, char *str);
 /////////
 
@@ -156,6 +158,7 @@ void	ft_quotes_handle(t_minishell *minishell, t_token *token);
 /////////
 
 // HELPERS/cntrl.C
+void				ft_heredoc(t_cmd *cmd, t_token *token);
 void				ft_redirection_handler(t_cmd *cmd, t_token *token);
 /////////
 

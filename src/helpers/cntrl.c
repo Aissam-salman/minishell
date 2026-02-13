@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cntrl.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fardeau <fardeau@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 15:49:08 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/12 17:43:46 by fardeau          ###   ########.fr       */
+/*   Updated: 2026/02/13 15:13:38 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,6 @@ int	ft_open(char *path, t_types mod)
 	return (-1);
 }
 
-void	ft_heredoc(t_cmd *cmd, t_token *token)
-{
-	(void)cmd;
-	(void)token;
-	ft_printf("HEREDOC\n");
-}
 
 void	ft_redirection_handler(t_cmd *cmd, t_token *token)
 {
@@ -43,9 +37,9 @@ void	ft_redirection_handler(t_cmd *cmd, t_token *token)
 	fd = -1;
 	if (token->next == NULL)
 		return ;
-	if (token->type != IN_DCHEVRON)
+	if (token->type != IN_DCHEVRON && token->type != LAST_HEREDOC)
 		fd = ft_open(token->next->str, token->type);
-	else
+	else 
 		ft_heredoc(cmd, token);
 	if (fd == -1)
 		perror(token->path);

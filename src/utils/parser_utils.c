@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fardeau <fardeau@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 13:04:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/12 18:47:16 by fardeau          ###   ########.fr       */
+/*   Updated: 2026/02/13 14:32:52 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 		// A MODIF : RECUPERE LA VARIABLE D'ERREUR GLOBAL
 		err_value = ft_itoa_gc(GENERAL_ERROR, &minishell->gc);
 		if (!err_value)
-			return (ft_error(MALLOC_FAIL, "Error malloc expands\n"));
+			return (ft_error(MALLOC_FAIL, "Error malloc expands\n", NULL));
 
 		// SI TAILLE DU BUFFER TROP PETITE
 		if (ft_strlcat(usable_str, err_value, BUFFER_SIZE) > BUFFER_SIZE)
-			return (ft_error(BUFFER_FAIL, "Insufficient buffer size\n"));
+			return (ft_error(BUFFER_FAIL, "Insufficient buffer size\n", NULL));
 		(*start)++;
 		return (0);
 	}
@@ -55,7 +55,7 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 	if (env)
 	{
 		if (ft_strlcat(usable_str, env, BUFFER_SIZE) > BUFFER_SIZE)
-			return (ft_error(BUFFER_FAIL, "Insufficient buffer size\n"));
+			return (ft_error(BUFFER_FAIL, "Insufficient buffer size\n", NULL));
 	}
 	return (0);
 }
@@ -106,5 +106,5 @@ void	ft_quotes_handle(t_minishell *minishell, t_token *token)
 	// DUP DU BUFFER POUR REMPLACER STR DU TOKEN AVEC LES EXPENDS SI NECESSAIRE
 	token->str = ft_strdup_gc(usable_str, &minishell->gc);
 	if (!token->str)
-		ft_error(MALLOC_FAIL, "Error malloc end of quotes handling\n");
+		ft_error(MALLOC_FAIL, "Error malloc end of quotes handling\n", NULL);
 }

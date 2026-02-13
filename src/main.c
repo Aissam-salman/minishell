@@ -69,6 +69,7 @@ int	main(int argc, char **argv, char **envp)
 				add_history(minishell.line);
 			if (ft_tokenize(&minishell))
 				continue;
+
 			// ft_tokens_print(minishell.head_token);
 			// if (ft_parse(minishell, minishell.head_token) == ERROR)
 			// {

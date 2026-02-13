@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_setup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fardeau <fardeau@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 19:32:38 by fardeau           #+#    #+#             */
-/*   Updated: 2026/02/12 21:01:10 by fardeau          ###   ########.fr       */
+/*   Updated: 2026/02/13 14:32:13 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_env *ft_env_new(t_minishell *minishell, char *str)
 	new = ft_calloc_gc(1, sizeof(t_env), &minishell->gc);
 	if (!new)
 	{
-		ft_error(MALLOC_FAIL, "Error malloc setup env");
+		ft_error(MALLOC_FAIL, "Error malloc setup env\n", NULL);
 		return (NULL);
 	}
 	// string_trunc = RECUPERER JUSQU'A =
@@ -44,7 +44,7 @@ t_env *ft_env_new(t_minishell *minishell, char *str)
 		new->content = ft_strdup_gc(string_trunc + 1, &minishell->gc);
 		if (!new->name || !new->content)
 		{
-			ft_error(MALLOC_FAIL, "Error malloc setup env");
+			ft_error(MALLOC_FAIL, "Error malloc setup env\n", NULL);
 			return (NULL);
 		}
 	}
@@ -55,7 +55,7 @@ t_env *ft_env_new(t_minishell *minishell, char *str)
 		new->content = NULL;
 		if (!new->name)
 		{
-			ft_error(MALLOC_FAIL, "Error malloc setup env");
+			ft_error(MALLOC_FAIL, "Error malloc setup env\n", NULL);
 			return (NULL);
 		}
 	}

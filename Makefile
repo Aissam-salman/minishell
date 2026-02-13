@@ -12,6 +12,7 @@ SRCS = src/main.c \
 		src/utils/cmds.c \
 		src/utils/output.c \
 		src/utils/tokens.c \
+		src/utils/heredoc.c \
 		src/utils/env_setup.c \
 		src/utils/parser_utils.c \
 		src/helpers/cntrl.c \
