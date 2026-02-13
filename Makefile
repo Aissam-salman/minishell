@@ -9,6 +9,11 @@ SRCS = src/main.c \
 		src/parsing/support/check2.c \
 		src/built_in/env.c \
 		src/built_in/export.c \
+		src/built_in/pwd.c \
+		src/built_in/echo.c \
+		src/built_in/exit.c \
+		src/built_in/cd.c \
+		src/built_in/unset.c \
 		src/utils/cmds.c \
 		src/utils/output.c \
 		src/utils/tokens.c \

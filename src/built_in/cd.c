@@ -1,0 +1,85 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/13 19:49:15 by alamjada          #+#    #+#             */
+/*   Updated: 2026/02/13 20:25:41 by alamjada         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../includes/minishell.h"
+
+static void update_pwd(t_env *head_env)
+{
+	char *buff;
+	t_env *env_pwd;
+
+	// auto par la function
+	buff = getcwd(NULL, 0);
+	if (buff)
+	{
+		env_pwd = ft_env_find(head_env, "PWD");
+		if (!env_pwd)
+		{
+			free(buff);
+			ft_error(errno,"OLD_PWD not found",NULL);
+			return;
+		}
+		env_pwd->content = buff;
+		free(buff);
+		return;
+	}
+	ft_error(errno,"pwd",NULL);
+}
+
+static void update_old_pwd(t_env *head_env, char *old_pwd)
+{
+	t_env *env_old_pwd;
+
+	env_old_pwd = ft_env_find(head_env, "OLD_PWD");
+	if (!env_old_pwd)
+	{
+		ft_error(errno,"OLD_PWD not found",NULL);
+		return;
+	}
+	env_old_pwd->content = old_pwd;
+}
+
+static char  *save_old_pwd()
+{
+	char *opwd;
+
+	opwd = getcwd(NULL, 0);
+	if (!opwd)
+	{
+		ft_error(errno,"pwd",NULL);
+		return (NULL);
+	}
+	return (opwd);
+}
+
+void ft_cd(t_env *head_env, char *path)
+{
+	char *old_pwd;
+
+	old_pwd = save_old_pwd();
+	if (!old_pwd)
+		return;
+	//stocker l'ancien path et le mettre dans OLD_PWD si chdir reussi
+	// env OLD_PWD a mettre a jours 
+	if (!path || !*path)
+		path = getenv("HOME");
+	if (chdir(path) == -1)
+	{
+		if (old_pwd)
+			free(old_pwd);
+		ft_error(errno,"cd", NULL);
+		return ;
+	}
+	update_old_pwd(head_env, old_pwd);
+	free(old_pwd);
+	update_pwd(head_env);
+}

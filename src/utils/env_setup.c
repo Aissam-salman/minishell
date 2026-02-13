@@ -6,11 +6,11 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 19:32:38 by fardeau           #+#    #+#             */
-/*   Updated: 2026/02/13 18:32:21 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/13 20:45:08 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 // ACCEDE AU DERNIER ENV
 t_env	*ft_env_last(t_env *head_env)
@@ -20,6 +20,44 @@ t_env	*ft_env_last(t_env *head_env)
 	while (head_env->next)
 		head_env = head_env->next;
 	return (head_env);
+}
+
+// DEL ONE NODE
+void ft_env_delone(t_env *head_env, char *target_name)
+{
+	// PATH => HOME => PWD
+	t_env *head;
+	t_env *prev;
+	t_env *nxt;
+
+	prev = NULL;
+	head = head_env;
+	nxt = head->next;
+	while (head)
+	{
+		// if first element is target remove
+		if (head->name == target_name && head->name == head_env->name)
+		{
+			//NOTE: free ?? 
+			head->name = NULL;
+			head->content = NULL;
+			head_env = nxt;
+			head->next = NULL;
+			return;
+		}
+		else if (head->name == target_name)
+		{
+			head->name = NULL;
+			head->content = NULL;
+			head->next = NULL;
+			prev->next = nxt;
+			return;
+		}
+		prev = head;
+		head = head->next;
+		nxt = head->next;
+	}
+	// NOT FOUND do nothing 
 }
 
 // CREER UN NOUVEAU NOEUD T_ENV
