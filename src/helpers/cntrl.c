@@ -6,11 +6,11 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 15:49:08 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/13 17:39:36 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/13 17:41:38 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 void	ft_redirection_exec(int new_fd, int *old_fd)
 {
@@ -41,7 +41,6 @@ void	ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token)
 		fd = ft_open(token->next->str, token->type);
 	else if (token->type == IN_DCHEVRON)
 		ft_heredoc_handle(minishell, cmd, token);
-	else 
 	if (fd == -1)
 		perror(token->path);
 	if (fd > 2 && token->type == IN_CHEVRON)

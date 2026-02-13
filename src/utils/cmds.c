@@ -34,6 +34,19 @@ t_cmd	*ft_cmd_last(t_cmd *cmd_head)
 	return (cmd_head);
 }
 
+int   ft_cmd_size(t_cmd *cmd_head)
+{
+	int len;
+
+	len = 0;
+	while (cmd_head != NULL)
+	{
+		len++;
+		cmd_head = cmd_head->next;
+	}
+	return (len);
+}
+
 int	ft_cmd_add(t_minishell *minishell, t_cmd *to_add)
 {
 	t_cmd	*last;
@@ -149,5 +162,5 @@ void	ft_cmd_lst_create(t_minishell *minishell)
 		if (tok_current)
 			tok_current = tok_current->next;
 	}
-	// ft_cmd_print(minishell->head_cmd);
+	ft_cmd_add(minishell, NULL);
 }

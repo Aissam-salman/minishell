@@ -6,3 +6,4 @@ objs/**
 a.out
 .vscode
 unit_tests
+compile_flags.txt
