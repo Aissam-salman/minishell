@@ -3,15 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   output.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fardeau <fardeau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:40:37 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/11 17:04:47 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/12 20:40:02 by fardeau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+void	ft_env_print(t_env *head, int fd)
+{
+	while (head)
+	{
+		ft_putstr_fd(head->name, fd);
+		ft_putstr_fd("=", fd);
+		ft_putstr_fd(head->content, fd);
+		ft_putstr_fd("\n", fd);
+		head = head->next;
+	}
+}
+
+// IMPRIME TOUTES LES DATAS STRUCT CMD
 void	ft_cmd_print(t_cmd *head)
 {
 	t_cmd	*current;
@@ -27,11 +40,12 @@ void	ft_cmd_print(t_cmd *head)
 			ft_printf("|{NO PATH YET}|");
 		while (head->args[i++])
 			ft_printf("[ARGV[%d] = %s]\n", i - 1, head->args[i - 1]);
-		ft_printf("|[OUTFILE = %d || INFILE]| = %d\n", head->outfd, head->infd);
+		ft_printf("|[OUTFILE = %d || INFILE = %d]|\n", head->outfd, head->infd);
 		current = current->next;
 	}
 }
 
+// IMPRIME TOUTES LES DATAS STRUCT TOKEN
 void	ft_tokens_print(t_token *head)
 {
 	t_token	*current;
@@ -45,6 +59,7 @@ void	ft_tokens_print(t_token *head)
 	}
 }
 
+// IMPRIME LE TYPE EN FONCTION DE L'ENUM
 void	ft_type_print(t_token *token)
 {
 	if (token->type == DEFAULT)

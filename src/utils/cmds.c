@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:34:00 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/12 14:36:01 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/13 15:05:02 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,15 +52,15 @@ int	ft_cmd_add(t_minishell *minishell, t_cmd *to_add)
 	t_cmd	*last;
 
 	if (!minishell || !to_add)
-		return (1);
+		return (GENERAL_ERROR);
 	if (!minishell->head_cmd)
 	{
 		minishell->head_cmd = to_add;
-		return (0);
+		return (SUCCESS);
 	}
 	last = ft_cmd_last(minishell->head_cmd);
 	last->next = to_add;
-	return (0);
+	return (SUCCESS);
 }
 
 int	ft_token_word_count(t_token *current)
@@ -80,12 +80,16 @@ int	ft_token_word_count(t_token *current)
 	return (count);
 }
 
-void	ft_token_affect(t_cmd *cmd, t_token *token,
-		int *i)
+void	ft_token_affect(t_cmd *cmd, t_token *token, int *i)
 {
+	t_token *next;
 	// if (!minishell || !cmd || !token)
 	// 	return ;
 	// SI WORD = AJOUTE A ARGS
+
+	next = NULL;
+	if (token->next)
+		next = token->next;
 	if (token->type == WORD || token->type == FLAG)
 		cmd->args[(*i)++] = token->str;
 	// SI CMD => REMPLIR PATH ET ARGV[0]
@@ -99,6 +103,17 @@ void	ft_token_affect(t_cmd *cmd, t_token *token,
 	{
 		ft_redirection_handler(cmd, token);
 	}
+	// GESTION DES HERE_DOC
+	else if (token->type == IN_DCHEVRON)
+	{
+		if (!next || !next->str)
+			ft_error(SYNTAX_ERROR, "Syntax error near unexpected token 'newline'", NULL);
+		else if (next->type != WORD)
+			ft_error(SYNTAX_ERROR, "Syntax error near unexpected token ", next->str);
+		// else
+			// ft_heredoc(cmd, token->next);
+	}
+
 	// SI OUTFILE => REMPLIR OUTFD
 	// {
 	// 	cmd->outfd = fopen(token->str,)

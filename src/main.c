@@ -41,6 +41,9 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	ft_bzero(&minishell, sizeof(t_minishell));
 	minishell.envs = envp;
+	ft_env_setup(&minishell, envp);
+	// ft_printf("RESULT = %s\n", ft_env_find(minishell.head_env, "PATH")->content);
+	// ft_env(minishell.head_env, STDOUT_FILENO);
 	setup_signal();
 	while (1)
 	{
@@ -63,6 +66,7 @@ int	main(int argc, char **argv, char **envp)
 				add_history(minishell.line);
 			if (ft_tokenize(&minishell))
 				continue;
+
 			// ft_tokens_print(minishell.head_token);
 			// if (ft_parse(minishell, minishell.head_token) == ERROR)
 			// {
