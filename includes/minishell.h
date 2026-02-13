@@ -90,11 +90,6 @@ typedef struct s_minishell
 	int				exit_status;
 }					t_minishell;
 
-// PARSING/LEXER.C
-void	ft_state_detect(char c, t_minishell *minishell);
-int	ft_buffer_add(char *buffer, char c);
-int					ft_tokenize(t_minishell *minishell);
-/////////
 
 // UTILS/CMDS.C
 void				ft_create_cmd_lst(t_minishell *minishell);
@@ -121,11 +116,17 @@ t_token				*ft_token_create(t_minishell *minishell, char *buffer);
 int					ft_token_add(t_minishell *minishell, t_token *to_add);
 /////////
 
+// PARSING/LEXER.C
+void	ft_state_detect(char c, t_minishell *minishell);
+int	ft_buffer_add(char *buffer, char c);
+int					ft_tokenize(t_minishell *minishell);
+/////////
+
 // PARSING/PARSER.C
 void				checker_token(t_minishell *minishell);
 /////////
 
-// PARSING/HELPER/CHECK.C
+// PARSING/SUPPORT/CHECK.C
 int					ft_check_flags(char *str);
 int					ft_check_redirection(char *str);
 int					ft_check_heredoc_end(char *str);
@@ -133,13 +134,13 @@ int					ft_check_file_of_redirection(t_token *token);
 int					ft_check_file(t_token *token);
 /////////
 
-// PARSING/HELPER/CHECK2.C
+// PARSING/SUPPORT/CHECK2.C
 int					ft_check_cmd(t_minishell *minishell, t_token *token);
 int					is_redirection(t_token *token);
 int					ft_check_pipe(char *str);
 /////////
 
-// PARSING/HELPER/EXPANDER.C
+// PARSING/SUPPORT/EXPANDER.C
 char				*ft_check_expands(t_minishell *minishell, char *str);
 /////////
 
@@ -158,8 +159,7 @@ void	ft_quotes_handle(t_minishell *minishell, t_token *token);
 /////////
 
 // HELPERS/cntrl.C
-void				ft_heredoc(t_cmd *cmd, t_token *token);
-void				ft_redirection_handler(t_cmd *cmd, t_token *token);
+void				ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token);
 /////////
 
 // UTILS/CMDS.C
@@ -175,5 +175,14 @@ int	ft_export(t_minishell *minishell, int fd, char *str);
 void	ft_env(t_env *head_env, int	outfd);
 /////////
 
+// SRCS/HELPERS/CNTRL.C
+void	ft_redirection_exec(int new_fd, int *old_fd);
+int	ft_open(char *path, t_types mod);
+/////////
+
+// SRCS/UTILS/HEREDOC.C
+void	ft_heredoc_handle(t_minishell *minishell, t_cmd *cmd, t_token *token);
+void	ft_heredoc(t_minishell *minishell, t_cmd *cmd, t_token *token, int mod);
+/////////
 
 #endif
