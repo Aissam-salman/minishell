@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 15:49:08 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/13 18:54:52 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/13 17:41:38 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,18 @@ int	ft_open(char *path, t_types mod)
 	return (-1);
 }
 
-void	ft_redirection_handler(t_cmd *cmd, t_token *token)
+
+void	ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token)
 {
 	int fd;
 
 	fd = -1;
 	if (token->next == NULL)
 		return ;
-	if (token->type != IN_DCHEVRON && token->type != LAST_HEREDOC)
+	if (token->type != IN_DCHEVRON)
 		fd = ft_open(token->next->str, token->type);
-	else 
-		ft_heredoc(cmd, token);
+	else if (token->type == IN_DCHEVRON)
+		ft_heredoc_handle(minishell, cmd, token);
 	if (fd == -1)
 		perror(token->path);
 	if (fd > 2 && token->type == IN_CHEVRON)

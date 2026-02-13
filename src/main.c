@@ -77,7 +77,8 @@ int	main(int argc, char **argv, char **envp)
 			// }
 			checker_token(&minishell);
 			// ft_tokens_print(minishell.head_token);
-			ft_cmd_lst_create(&minishell);
+			if (ft_cmd_lst_create(&minishell) != SUCCESS)
+				continue;
 			// ft_cmd_print(minishell.head_cmd);
 			
 			ft_exec(&minishell);
