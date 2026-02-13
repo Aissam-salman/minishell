@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 15:49:08 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/13 15:13:38 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/13 18:54:52 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	ft_redirection_exec(int new_fd, int *old_fd)
 		close(*old_fd);
 	*old_fd = new_fd;
 }
+
 int	ft_open(char *path, t_types mod)
 {
 	if (mod == IN_CHEVRON)
@@ -28,7 +29,6 @@ int	ft_open(char *path, t_types mod)
 		return (open(path, O_WRONLY | O_CREAT | O_APPEND, 0644));
 	return (-1);
 }
-
 
 void	ft_redirection_handler(t_cmd *cmd, t_token *token)
 {
