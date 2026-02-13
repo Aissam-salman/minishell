@@ -33,7 +33,7 @@ void	handle_redirection(t_token *token)
 
 void	handle_word(t_token *token, t_minishell *minishell, int *cmd_find)
 {
-	ft_filter_quote(token, minishell);
+	// ft_filter_quote(token, minishell);
 	if (*cmd_find == 0)
 	{
 		ft_check_cmd(minishell, token);  
