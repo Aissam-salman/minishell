@@ -33,6 +33,13 @@ void	setup_signal(void)
 		perror("signal error ignore SIGQUIT");
 }
 
+void	ft_minishell_init(t_minishell *minishell)
+{
+	minishell->head_token = NULL;
+	minishell->head_cmd = NULL;
+	// minishell->line = NULL;
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	minishell;
@@ -48,6 +55,7 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		setup_signal();
+		ft_minishell_init(&minishell);
 		minishell.line = readline("foo$> ");
 		// NOTE: CTRL-D
 		if (minishell.line == NULL)
@@ -83,8 +91,6 @@ int	main(int argc, char **argv, char **envp)
 			// ft_cmd_print(minishell.head_cmd);
 			ft_exec(&minishell);
 			// POUR REMETTRE A ZERO LA LISTE DES TOKENS A CHAQUE EXEC (Free avec garbage collector)
-			minishell.head_token = NULL;
-			minishell.head_cmd = NULL;
 		}
 	}
 	ft_gc_free_all(&minishell.gc);

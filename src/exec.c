@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 17:17:28 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/11 19:46:23 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/14 18:29:07 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,8 @@ void ft_pipe_and_fork(t_cmd *cmd,int size_cmd, int pipe_fd[2], int *pids)
 			}
 			close(pipe_fd[0]);
 			close(pipe_fd[1]);
-			if (cmd->path)
-			{
-				execv(cmd->path, cmd->args);
-				perror("Execv");
-			}
+			execv(cmd->path, cmd->args);
+			perror("Execv");
 			exit(1);
 		}
 		//disable signal ctrl+C

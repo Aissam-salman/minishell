@@ -159,7 +159,7 @@ void	ft_quotes_handle(t_minishell *minishell, t_token *token);
 /////////
 
 // HELPERS/cntrl.C
-void				ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token);
+int				ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token);
 /////////
 
 // UTILS/CMDS.C
