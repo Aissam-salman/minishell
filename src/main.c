@@ -46,15 +46,12 @@ int	main(int argc, char **argv, char **envp)
 		minishell.line = readline("foo$> ");
 		// NOTE: CTRL-D
 		if (!minishell.line)
-				ft_buildin_exit(&minishell);
+				ft_buildin_exit(&minishell, 0);
 		if (*minishell.line)
 		{
 			if (*minishell.line == EOF)
 				ft_printf("\n");
 			ft_gc_add_node(&minishell.gc, minishell.line);
-			if (ft_strncmp(minishell.line, "exit", 4) == 0 &&
-				(!minishell.line[5] || minishell.line[5] == ' '))
-				ft_buildin_exit(&minishell);
 			if (minishell.line[0] != 0)
 				add_history(minishell.line);
 			if (ft_tokenize(&minishell))

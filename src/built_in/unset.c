@@ -12,7 +12,9 @@
 
 #include "../../includes/minishell.h"
 
-void ft_unset(t_env *head_env, char *target_name)
+void ft_unset(t_env **head_env, char *target_name)
 {
-	ft_env_delone(head_env,target_name);
+	if (!target_name)
+		return;
+	ft_env_delone(head_env, target_name);
 }

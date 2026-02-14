@@ -23,7 +23,7 @@ t_env	*ft_env_last(t_env *head_env)
 }
 
 // DEL ONE NODE
-void ft_env_delone(t_env *head_env, char *target_name)
+void ft_env_delone(t_env **head_env, char *target_name)
 {
 	// PATH => HOME => PWD
 	t_env *head;
@@ -31,18 +31,18 @@ void ft_env_delone(t_env *head_env, char *target_name)
 	t_env *nxt;
 
 	prev = NULL;
-	head = head_env;
+	head = *head_env;
 	nxt = head->next;
 	while (head)
 	{
 		// if first element is target remove
 		if (ft_strcmp(head->name, target_name) == 0 &&
-			ft_strcmp(head->name, head_env->name))
+			ft_strcmp(head->name, (*head_env)->name))
 		{
 			//NOTE: free ?? 
 			head->name = NULL;
 			head->content = NULL;
-			head_env = nxt;
+			*head_env = nxt;
 			head->next = NULL;
 			return;
 		}

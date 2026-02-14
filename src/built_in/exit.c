@@ -16,9 +16,9 @@
 void ft_buildin_exit(t_minishell *minishell, char *code_exit)
 {
 	int code;
-	if (!code_exit)
-		code = 0;
-	else 
+
+	code = 0;
+	if (code_exit)
 		code = ft_atoi(code_exit);
 	ft_gc_free_all(&minishell->gc);
 	rl_clear_history();

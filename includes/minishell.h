@@ -114,7 +114,7 @@ t_env				*ft_env_new(t_minishell *minishell, char *str);
 int					ft_env_add(t_minishell *minishell, t_env *new);
 t_env				*ft_env_find(t_env	*head_env, char *to_find);
 void				ft_env_setup(t_minishell *minishell, char **envp);
-void				ft_env_delone(t_env *head_env, char *target_name);
+void				ft_env_delone(t_env **head_env, char *target_name);
 /////////
 
 // UTILS/OUTPUT.C
@@ -228,9 +228,10 @@ void				ft_echo(char **args, int have_flag);
 void				ft_pwd();
 void				ft_buildin_exit(t_minishell *minishell, char *code_exit);
 void 				ft_cd(t_minishell *minishell, char *path);
-void				ft_unset(t_env *head_env, char *target_name);
+void				ft_unset(t_env **head_env, char *target_name);
 int					is_built_in(t_cmd *cmd);
 void				run_built_in(t_cmd *cmd, t_minishell *minishell);
+void 				run_built_in_piped(t_cmd *cmd, t_minishell *minishell);
 /////////
 
 #endif

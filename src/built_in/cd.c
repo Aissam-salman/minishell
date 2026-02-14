@@ -61,7 +61,7 @@ static char  *save_old_pwd()
 	return (opwd);
 }
 
-void ft_cd(t_minishell *minishell, char *path, t_minishell *minishell)
+void ft_cd(t_minishell *minishell, char *path)
 {
 	char *old_pwd;
 
@@ -71,7 +71,7 @@ void ft_cd(t_minishell *minishell, char *path, t_minishell *minishell)
 	//stocker l'ancien path et le mettre dans OLD_PWD si chdir reussi
 	// env OLD_PWD a mettre a jours 
 	if (!path || !*path)
-		path = ft_env_find(head_env, "HOME")->content;
+		path = ft_env_find(minishell->head_env, "HOME")->content;
 	if (chdir(path) == -1)
 	{
 		if (old_pwd)
@@ -79,8 +79,8 @@ void ft_cd(t_minishell *minishell, char *path, t_minishell *minishell)
 		ft_error(errno,"cd", NULL);
 		return ;
 	}
-	update_old_pwd(&head_env, old_pwd, minishell);
+	update_old_pwd(&minishell->head_env, old_pwd, minishell);
 	free(old_pwd);
-	update_pwd(&head_env, minishell);
+	update_pwd(&minishell->head_env, minishell);
 }
 
