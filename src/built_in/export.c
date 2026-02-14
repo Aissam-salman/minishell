@@ -14,10 +14,11 @@
 
 int	ft_env_format_check(char *str)
 {
-	if (!ft_isalpha(str[0]) || str[0] != '_')
+	ft_printf("format: %s\n", str);
+	if (!ft_isalpha(str[0]) || str[0] == '-')
 	{
 		// A MODIFIER : TRAITER LES MESSAGES D'ERREUR
-		ft_printf("First char not conform");
+		ft_printf("First char not conform\n");
 		return (GENERAL_ERROR);
 	}
 	return (SUCCESS);

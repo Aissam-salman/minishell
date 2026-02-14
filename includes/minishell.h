@@ -225,7 +225,7 @@ void	ft_heredoc(t_minishell *minishell, t_cmd *cmd, t_token *token, int mod);
 int					ft_export(t_minishell *minishell, int fd, char *str);
 void				ft_env(t_env *head_env, int	outfd);
 void				ft_echo(char **args, int have_flag);
-void				ft_pwd();
+int					ft_pwd();
 void				ft_buildin_exit(t_minishell *minishell, char *code_exit);
 void 				ft_cd(t_minishell *minishell, char *path);
 void				ft_unset(t_env **head_env, char *target_name);

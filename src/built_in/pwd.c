@@ -12,17 +12,16 @@
 
 #include "../../includes/minishell.h"
 
-void ft_pwd()
+int ft_pwd()
 {
 	char *buff;
 
-	// Alloc auto par la function
 	buff = getcwd(NULL, 0);
 	if (buff)
 	{
 		printf("%s\n", buff);
 		free(buff);
-		return;
+		return (SUCCESS);
 	}
-	ft_error(errno,"pwd",NULL);
+	return (errno);
 }
