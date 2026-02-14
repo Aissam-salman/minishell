@@ -44,6 +44,8 @@ void run_built_in_piped(t_cmd *cmd, t_minishell *minishell)
 		ft_pwd();
 	else if(ft_strcmp(str, "cd") == 0)
 		ft_cd(minishell, cmd->args[1]);
+	else if (ft_strcmp(str, "env") == 0)
+		ft_env(minishell->head_env, 1);
 }
 
 void run_built_in(t_cmd *cmd, t_minishell *minishell)
@@ -59,4 +61,10 @@ void run_built_in(t_cmd *cmd, t_minishell *minishell)
 		ft_unset(&minishell->head_env, cmd->args[1]);
 	else if (ft_strcmp(str, "env") == 0)
 		ft_env(minishell->head_env, 1);
+	else if (ft_strcmp(str, "echo") == 0)
+		ft_echo(cmd->args, ft_strcmp(cmd->args[1], "-n") == 0);
+	else if (ft_strcmp(str, "pwd") == 0)
+		ft_pwd();
+	else if(ft_strcmp(str, "cd") == 0)
+		ft_cd(minishell, cmd->args[1]);
 }

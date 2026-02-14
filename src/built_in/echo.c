@@ -36,6 +36,7 @@ void ft_echo(char **args, int have_flag)
 				ft_error(errno, "write",NULL);
 			if (write(1, "\n", 1) == -1)
 				ft_error(errno, "write",NULL);
+			i++;
 		}
 
 	}
