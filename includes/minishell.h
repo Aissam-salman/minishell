@@ -6,11 +6,12 @@
 # include "errors.h"
 
 // PRODUITS IMPORTES
+#include <signal.h>
 # include <errno.h>
 # include <unistd.h>
 # include <stdio.h>
 # include <fcntl.h>
-# include <signal.h>
+#include <readline/history.h>
 # include <readline/readline.h>
 # include <stdlib.h>
 # include <sys/stat.h>
@@ -101,7 +102,7 @@ typedef struct s_child
 // PARSING/LEXER.C
 void				ft_state_detect(char c, t_minishell *minishell);
 int					ft_buffer_add(char *buffer, char c);
-int					ft_tokenize(t_minishell *minishell);
+int					_tokenize(t_minishell *minishell);
 /////////
 
 // UTILS/CMDS.C
@@ -138,7 +139,7 @@ int					ft_tokenize(t_minishell *minishell);
 
 // PARSING/PARSER.C
 void				checker_token(t_minishell *minishell);
-/////////
+////////ft_checker_token
 
 // PARSING/SUPPORT/CHECK.C
 int					ft_check_flags(char *str);
@@ -221,14 +222,15 @@ void	ft_heredoc(t_minishell *minishell, t_cmd *cmd, t_token *token, int mod);
 /////////
 
 // BUILT-INS
-// void dispatch_built_in(char *str)
 int					ft_export(t_minishell *minishell, int fd, char *str);
 void				ft_env(t_env *head_env, int	outfd);
-void				ft_echo(char *txt, int have_flag);
+void				ft_echo(char **args, int have_flag);
 void				ft_pwd();
-void				ft_buildin_exit(t_minishell *minishell);
-void				ft_cd(t_env *head_env, char *path, t_minishell *minishell);
+void				ft_buildin_exit(t_minishell *minishell, char *code_exit);
+void 				ft_cd(t_minishell *minishell, char *path);
 void				ft_unset(t_env *head_env, char *target_name);
+int					is_built_in(t_cmd *cmd);
+void				run_built_in(t_cmd *cmd, t_minishell *minishell);
 /////////
 
 #endif

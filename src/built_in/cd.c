@@ -6,7 +6,7 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 19:49:15 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/13 20:25:41 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/14 15:02:36 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static char  *save_old_pwd()
 	return (opwd);
 }
 
-void ft_cd(t_env *head_env, char *path, t_minishell *minishell)
+void ft_cd(t_minishell *minishell, char *path, t_minishell *minishell)
 {
 	char *old_pwd;
 
