@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fardeau <fardeau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 12:00:44 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/11 12:30:30 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/12 17:42:53 by fardeau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,31 +51,30 @@ static int	ft_test_path(t_minishell *minishell, char **envp, t_token *token)
 	return (0);
 }
 
-int	ft_check_cmd(t_minishell *minishell, t_token *token)
+void	ft_check_cmd(t_minishell *minishell, t_token *token)
 {
 	char		**envp;
 	int			res;
 	struct stat	stat_file;
 
 	if (!token || !token->str || !*token->str)
-		return (0);
+		return;
 	if (token->str[0] == '/' && !token->str[1])
-		return (0);
+		return;
 	if (stat(token->str, &stat_file) == 0 && S_ISREG(stat_file.st_mode))
 	{
 		if (access(token->str, X_OK) == 0)
 		{
 			token->path = token->str;
-			return (1);
+			return;
 		}
 	}
 	envp = ft_get_path(minishell);
 	if (!envp)
-		return (0);
+		return;
 	res = ft_test_path(minishell, envp, token);
 	if (res == 1)
-		return (1);
-	return (0);
+		return;
 }
 
 int	ft_check_pipe(char *str)

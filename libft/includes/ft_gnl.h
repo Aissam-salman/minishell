@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_gnl.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fardeau <fardeau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 12:00:00 by tibras            #+#    #+#             */
-/*   Updated: 2025/12/19 12:00:00 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/12 17:29:33 by fardeau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 # include <stdlib.h>
 
 // Get Next Line configuration
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+# ifndef BUFFER_SIZE_GNL
+#  define BUFFER_SIZE_GNL 100
 # endif
 
 // Get Next Line main function

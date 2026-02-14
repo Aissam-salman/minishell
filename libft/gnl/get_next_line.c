@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fardeau <fardeau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 14:01:23 by tibras            #+#    #+#             */
-/*   Updated: 2025/11/29 18:27:50 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/12 17:30:13 by fardeau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,10 @@ static char	*ft_theline(char *arr, int fd)
 	n_read = 1;
 	while (ft_gnl_strchr(arr, '\n') < 0)
 	{
-		buf = malloc(sizeof(char) * BUFFER_SIZE + 1);
+		buf = malloc(sizeof(char) * BUFFER_SIZE_GNL + 1);
 		if (!buf)
 			return (ft_read_check(n_read, arr, &buf));
-		n_read = read(fd, buf, BUFFER_SIZE);
+		n_read = read(fd, buf, BUFFER_SIZE_GNL);
 		if (n_read <= 0)
 			return (ft_read_check(n_read, arr, &buf));
 		buf[n_read] = '\0';
@@ -84,7 +84,7 @@ char	*get_next_line(int fd)
 	char			buf[1];
 	char			*tmp;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, buf, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE_GNL <= 0 || read(fd, buf, 0) < 0)
 	{
 		if (arr_s[fd])
 			ft_arr_clean(&arr_s[fd], NULL, 0);
