@@ -47,7 +47,7 @@ void run_built_in(t_cmd *cmd, t_minishell *minishell)
 	else if(ft_strcmp(str, "cd") == 0)
 		ft_cd(minishell, cmd->args[1]);
 	else if (ft_strcmp(str, "export") == 0)
-		return;
+		ft_export(minishell, cmd->infd, cmd->args[1]);
 	else if (ft_strcmp(str, "unset") == 0)
 		return;
 	else if (ft_strcmp(str, "env") == 0)
