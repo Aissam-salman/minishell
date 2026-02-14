@@ -38,14 +38,19 @@ void ft_pipe_and_fork(t_minishell *minishell,int size_cmd, int pipe_fd[2], int *
 	while (i < size_cmd)
 	{
 		child_set(child, i, prev_pipe, size_cmd);
-		if (pipe(pipe_fd) == -1)
-			perror("Pipe");
-		pids[i] = fork();
-		if (pids[i] < 0)
-			ft_exit(minishell, errno, "FORK");
-		if (pids[i] == 0)
-			child_process(minishell, cmd, child,  pipe_fd);
-		parent_process(&prev_pipe, pipe_fd);
+		if (is_built_in(cmd) && size_cmd == 1)
+			run_built_in(cmd, minishell);
+		else 
+		{
+			if (pipe(pipe_fd) == -1)
+				perror("Pipe");
+			pids[i] = fork();
+			if (pids[i] < 0)
+				ft_exit(minishell, errno, "FORK");
+			if (pids[i] == 0)
+				child_process(minishell, cmd, child,  pipe_fd);
+			parent_process(&prev_pipe, pipe_fd);
+		}
 		cmd = cmd->next;
 		i++;
 	}

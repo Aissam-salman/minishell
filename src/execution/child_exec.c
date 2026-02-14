@@ -38,8 +38,8 @@ void close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2])
 	close(pipe_fd[0]);
 	close(pipe_fd[1]);
 	if (is_built_in(cmd))
-		run_built_in(cmd, minishell);
-	else 
+		run_built_in_piped(cmd, minishell);
+	else
 		if (execv(cmd->path, cmd->args) == -1)
 			ft_exit(minishell, errno, "EXECV");
 }

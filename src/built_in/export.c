@@ -26,7 +26,9 @@ int	ft_env_format_check(char *str)
 int	ft_export(t_minishell *minishell, int fd, char *str)
 {
 	t_env	*new;
-	// SI !STR
+	// SI !STR  print env avec export devant chaque 
+	// -> export KEY=foo
+	// -> export KEY=boo
 	if (!str)
 		ft_env_print(minishell->head_env, fd);
 	// SI STR == ""

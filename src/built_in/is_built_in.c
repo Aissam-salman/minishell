@@ -33,6 +33,19 @@ int is_built_in(t_cmd *cmd)
 	return (0);
 }
 
+void run_built_in_piped(t_cmd *cmd, t_minishell *minishell)
+{
+	char *str;
+
+	str = cmd->args[0];
+	if (ft_strcmp(str, "echo") == 0)
+		ft_echo(cmd->args, ft_strcmp(cmd->args[1], "-n") == 0);
+	else if (ft_strcmp(str, "pwd") == 0)
+		ft_pwd();
+	else if(ft_strcmp(str, "cd") == 0)
+		ft_cd(minishell, cmd->args[1]);
+}
+
 void run_built_in(t_cmd *cmd, t_minishell *minishell)
 {
 	char *str;
@@ -40,16 +53,10 @@ void run_built_in(t_cmd *cmd, t_minishell *minishell)
 	str = cmd->args[0];
 	if (ft_strcmp(str, "exit") == 0)
 		ft_buildin_exit(minishell, cmd->args[1]);
-	else if (ft_strcmp(str, "echo") == 0)
-		ft_echo(cmd->args, ft_strcmp(cmd->args[1], "-n") == 0);
-	else if (ft_strcmp(str, "pwd") == 0)
-		ft_pwd();
-	else if(ft_strcmp(str, "cd") == 0)
-		ft_cd(minishell, cmd->args[1]);
 	else if (ft_strcmp(str, "export") == 0)
-		ft_export(minishell, cmd->infd, cmd->args[1]);
+		ft_export(minishell, 2, cmd->args[1]);
 	else if (ft_strcmp(str, "unset") == 0)
-		return;
+		ft_unset(&minishell->head_env, cmd->args[1]);
 	else if (ft_strcmp(str, "env") == 0)
-		return;
+		ft_env(minishell->head_env, 1);
 }
