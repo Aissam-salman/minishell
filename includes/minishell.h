@@ -227,7 +227,7 @@ void				ft_env(t_env *head_env, int	outfd);
 void				ft_echo(char *txt, int have_flag);
 void				ft_pwd();
 void				ft_buildin_exit(t_minishell *minishell);
-void				ft_cd(t_env *head_env, char *path);
+void				ft_cd(t_env *head_env, char *path, t_minishell *minishell);
 void				ft_unset(t_env *head_env, char *target_name);
 /////////
 
