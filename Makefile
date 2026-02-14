@@ -14,6 +14,7 @@ SRCS = src/main.c \
 		src/built_in/exit.c \
 		src/built_in/cd.c \
 		src/built_in/unset.c \
+		src/built_in/is_built_in.c \
 		src/utils/cmds.c \
 		src/utils/output.c \
 		src/utils/tokens.c \
@@ -28,7 +29,7 @@ SRCS = src/main.c \
 
 OBJ_DIR = objs
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
-CC = cc -Wall -Wextra -Werror -g
+CC = cc -Wall -Wextra -Werror -fsanitize=address -g
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 INCS = -I. -Iincludes -I$(LIBFT_DIR)
@@ -39,11 +40,13 @@ $(LIBFT):
 	make -C $(LIBFT_DIR)
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(OBJS) $(LIBFT) $(INCS) -lreadline -o $(NAME)
+	@echo "Compiling Minishell..."
+	@$(CC) $(OBJS) $(LIBFT) $(INCS) -lreadline -o $(NAME)
+	@echo "Build finished: ./minishell created."
 
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
-	$(CC) -MMD -MP $(INCS) -c $< -o $@
+	@$(CC) -MMD -MP $(INCS) -c $< -o $@
 
 -include $(OBJS:.o=.d)
 
