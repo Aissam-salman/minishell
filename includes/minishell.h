@@ -82,8 +82,8 @@ typedef struct s_minishell
 {
 	t_token			*head_token;
 	t_cmd			*head_cmd;
-	t_list			*gc;
 	t_env			*head_env;
+	t_list			*gc;
 	char			*line;
 	char			**envs;
 	t_state			state;

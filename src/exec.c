@@ -70,8 +70,11 @@ void ft_pipe_and_fork(t_cmd *cmd,int size_cmd, int pipe_fd[2], int *pids)
 			}
 			close(pipe_fd[0]);
 			close(pipe_fd[1]);
-			execv(cmd->path, cmd->args);
-			perror("Execv");
+			if (cmd->path)
+			{
+				execv(cmd->path, cmd->args);
+				perror("Execv");
+			}
 			exit(1);
 		}
 		//disable signal ctrl+C

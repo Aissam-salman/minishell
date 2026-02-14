@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:34:00 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/14 14:13:19 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/14 15:43:19 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ int	ft_token_word_count(t_token *current)
 	return (count);
 }
 
+// A MODIFIER : REVOIR PK SI < AVEC RIEN BUG 1 FOIS SUR 2
 int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr, int *i)
 {
 	t_token *next;
@@ -104,6 +105,8 @@ int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr, int
 	else if (token->type == OUT_CHEVRON || token->type == OUT_DCHEVRON
 		|| token->type == IN_CHEVRON)
 	{
+		if (!next || !next->str || !next->str[0])
+			return (ft_error(SYNTAX_ERROR, "Syntax error near unexpected token 'newline'", NULL));
 		ft_redirection_handler(minishell, cmd, token);
 		if (token->next)
 			*token_ptr = token->next;
@@ -111,11 +114,12 @@ int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr, int
 	// GESTION DES HERE_DOC
 	else if (token->type == IN_DCHEVRON)
 	{
-		if (!next || !next->str)
+		if (!next || !next->str || !next->str[0])
 			return (ft_error(SYNTAX_ERROR, "Syntax error near unexpected token 'newline'", NULL));
 		else if (next->type != WORD)
 		{
 			// ft_tokens_print(next);
+			ft_tokens_print(minishell->head_token);
 			return (ft_error(SYNTAX_ERROR, "Syntax error near unexpected token ", next->str));
 		}
 		else 

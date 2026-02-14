@@ -59,6 +59,7 @@ int	main(int argc, char **argv, char **envp)
 		{
 			if (*minishell.line == EOF)
 				ft_printf("\n");
+			minishell.state = NORMAL;
 			ft_gc_add_node(&minishell.gc, minishell.line);
 			if (ft_strncmp(minishell.line, "exit", 4) == 0)
 				ft_exit(&minishell, 0, "See ya!");
