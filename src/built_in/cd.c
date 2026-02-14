@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-static void update_pwd(t_env *head_env)
+static void update_pwd(t_env **head_env, t_minishell *minishell)
 {
 	char *buff;
 	t_env *env_pwd;
@@ -21,31 +21,31 @@ static void update_pwd(t_env *head_env)
 	buff = getcwd(NULL, 0);
 	if (buff)
 	{
-		env_pwd = ft_env_find(head_env, "PWD");
+		env_pwd = ft_env_find(*head_env, "PWD");
 		if (!env_pwd)
 		{
 			free(buff);
-			ft_error(errno,"OLD_PWD not found",NULL);
+			ft_error(errno,"PWD not found",NULL);
 			return;
 		}
-		env_pwd->content = buff;
+		env_pwd->content = ft_strdup_gc(buff, &minishell->gc);
 		free(buff);
 		return;
 	}
 	ft_error(errno,"pwd",NULL);
 }
 
-static void update_old_pwd(t_env *head_env, char *old_pwd)
+static void update_old_pwd(t_env **head_env, char *old_pwd, t_minishell *minishell)
 {
 	t_env *env_old_pwd;
 
-	env_old_pwd = ft_env_find(head_env, "OLD_PWD");
+	env_old_pwd = ft_env_find(*head_env, "OLD_PWD");
 	if (!env_old_pwd)
 	{
 		ft_error(errno,"OLD_PWD not found",NULL);
 		return;
 	}
-	env_old_pwd->content = old_pwd;
+	env_old_pwd->content = ft_strdup_gc(old_pwd, &minishell->gc);
 }
 
 static char  *save_old_pwd()
@@ -61,7 +61,7 @@ static char  *save_old_pwd()
 	return (opwd);
 }
 
-void ft_cd(t_env *head_env, char *path)
+void ft_cd(t_env *head_env, char *path, t_minishell *minishell)
 {
 	char *old_pwd;
 
@@ -71,7 +71,7 @@ void ft_cd(t_env *head_env, char *path)
 	//stocker l'ancien path et le mettre dans OLD_PWD si chdir reussi
 	// env OLD_PWD a mettre a jours 
 	if (!path || !*path)
-		path = getenv("HOME");
+		path = ft_env_find(head_env, "HOME")->content;
 	if (chdir(path) == -1)
 	{
 		if (old_pwd)
@@ -79,7 +79,8 @@ void ft_cd(t_env *head_env, char *path)
 		ft_error(errno,"cd", NULL);
 		return ;
 	}
-	update_old_pwd(head_env, old_pwd);
+	update_old_pwd(&head_env, old_pwd, minishell);
 	free(old_pwd);
-	update_pwd(head_env);
+	update_pwd(&head_env, minishell);
 }
+

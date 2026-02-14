@@ -36,7 +36,8 @@ void ft_env_delone(t_env *head_env, char *target_name)
 	while (head)
 	{
 		// if first element is target remove
-		if (head->name == target_name && head->name == head_env->name)
+		if (ft_strcmp(head->name, target_name) == 0 &&
+			ft_strcmp(head->name, head_env->name))
 		{
 			//NOTE: free ?? 
 			head->name = NULL;
@@ -47,6 +48,7 @@ void ft_env_delone(t_env *head_env, char *target_name)
 		}
 		else if (head->name == target_name)
 		{
+			//NOTE: free ?? 
 			head->name = NULL;
 			head->content = NULL;
 			head->next = NULL;
@@ -55,7 +57,10 @@ void ft_env_delone(t_env *head_env, char *target_name)
 		}
 		prev = head;
 		head = head->next;
-		nxt = head->next;
+		if (head->next)
+			nxt = head->next;
+		else 
+			nxt = NULL;
 	}
 	// NOT FOUND do nothing 
 }

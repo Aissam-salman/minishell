@@ -2,8 +2,12 @@
 minishell
 *.a
 objs/**
+objs
 *.swp
 a.out
 .vscode
+out
 unit_tests
 compile_flags.txt
+compile_commands.json
+.cache
