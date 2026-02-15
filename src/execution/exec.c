@@ -79,6 +79,7 @@ void	ft_exec(t_minishell *minishell)
 	//NOTE: if size == 1 and build in qui touche a l'env separer le bordel
 	// handle if only export KEY=VALUE  ft_export, 
 	ft_pipe_and_fork(minishell, size_cmd, pipe_fd, pids);
-	ft_wait_subprocess(minishell, size_cmd, pids);
+	if (!is_built_in(minishell->head_cmd) && size_cmd > 1)
+		ft_wait_subprocess(minishell, size_cmd, pids);
 }
 

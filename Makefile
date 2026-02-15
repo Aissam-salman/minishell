@@ -1,6 +1,7 @@
 NAME= minishell
 
 SRCS = src/main.c \
+       src/signal/signal_core.c \
 		src/errors/errors.c \
 		src/parsing/lexer.c \
 		src/parsing/parser.c \

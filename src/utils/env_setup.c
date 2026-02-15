@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 19:32:38 by fardeau           #+#    #+#             */
-/*   Updated: 2026/02/13 20:45:08 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/15 14:12:07 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,19 +107,19 @@ t_env *ft_env_new(t_minishell *minishell, char *str)
 }
 
 // AJOUTE LE NOEUD ENV A LA LISTE
-int	ft_env_add(t_minishell *minishell, t_env *new)
+int	ft_env_add(t_minishell *minishell, t_env *new_env)
 {
 	t_env *last;
 
-	if (!minishell || !new)
+	if (!minishell || !new_env)
 		return (GENERAL_ERROR);
 	if (!minishell->head_env)
 	{
-		minishell->head_env = new;
+		minishell->head_env = new_env;
 		return (SUCCESS);
 	}
 	last = ft_env_last(minishell->head_env);
-	last->next = new;
+	last->next = new_env;
 	return (SUCCESS);
 }
 

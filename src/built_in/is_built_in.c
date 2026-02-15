@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-#include "includes/ft_strings.h"
 
 int is_built_in(t_cmd *cmd)
 {

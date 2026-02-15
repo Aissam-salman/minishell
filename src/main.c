@@ -1,34 +1,5 @@
 #include "../includes/minishell.h"
 
-void	signal_callback_handler(int sig)
-{
-	//C-C
-	if (sig == SIGINT)
-	{
-		ft_printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-}
-
-void	setup_signal(void)
-{
-	struct sigaction	sa;
-
-	ft_bzero(&sa, sizeof(sa));
-	sa.sa_handler = &signal_callback_handler;
-	sa.sa_flags = SA_RESTART;
-	sigemptyset(&sa.sa_mask);
-	// C-C
-	if (sigaction(SIGINT, &sa, NULL) == -1)
-		perror("signal error SIGINT");
-	// C-'\'
-	//NOTE: ignore signal by default for parent process
-	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
-		perror("signal error ignore SIGQUIT");
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	minishell;
@@ -43,7 +14,7 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		setup_signal();
-		minishell.line = readline("foo$> ");
+		minishell.line = readline("minishell $> ");
 		// NOTE: CTRL-D
 		if (!minishell.line)
 				ft_buildin_exit(&minishell, 0);

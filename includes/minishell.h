@@ -99,6 +99,10 @@ typedef struct s_child
 	int size_cmd;
 } t_child;
 
+// SIGNAL/SIGNAL_CORE.C
+void	signal_callback_handler(int sig);
+void	setup_signal(void);
+
 // PARSING/LEXER.C
 void				ft_state_detect(char c, t_minishell *minishell);
 int					ft_buffer_add(char *buffer, char c);
@@ -111,7 +115,7 @@ void				ft_create_cmd_lst(t_minishell *minishell);
 
 // UTILS/ENV_SETUP.C
 t_env				*ft_env_new(t_minishell *minishell, char *str);
-int					ft_env_add(t_minishell *minishell, t_env *new);
+int					ft_env_add(t_minishell *minishell, t_env *new_env);
 t_env				*ft_env_find(t_env	*head_env, char *to_find);
 void				ft_env_setup(t_minishell *minishell, char **envp);
 void				ft_env_delone(t_env **head_env, char *target_name);
