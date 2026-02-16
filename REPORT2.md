@@ -260,7 +260,7 @@ i = 0;
 while (buffer[i])
     i++;
 ```
-This is literally `ft_strlen(buffer)`. Replace with:
+This is literally `ft_strlen(buffer)`. Replace with: [x]
 ```c
 int len = ft_strlen(buffer);
 ```
@@ -282,10 +282,10 @@ while (i < line_len)
     i++;
 line[i] = '\0';  // i == line_len, but line[line_len] is already '\0'
 ```
-`line` is a null-terminated string — `line[line_len]` is already `'\0'`. **Remove this line.**
+`line` is a null-terminated string — `line[line_len]` is already `'\0'`. **Remove this line.** [x]
 
 ### `ft_type_affect`: can be simplified with a lookup approach
-The if/else chain checks `str[0]` then `str[1]`. This is fine for 3 operators, but ensure that invalid combos like `<>` or `|>` are caught. Currently they are not.
+The if/else chain checks `str[0]` then `str[1]`. This is fine for 3 operators, but ensure that invalid combos like `<>` or `|>` are caught. Currently they are not. [ ] ???  |> exit 0
 
 ### Tips
 - The lexer is the core of correctness. Consider adding a dedicated flush function instead of repeating the `ft_token_add(minishell, ft_token_create(minishell, buffer))` pattern 5 times.
@@ -297,7 +297,7 @@ The if/else chain checks `str[0]` then `str[1]`. This is fine for 3 operators, b
 ### Clean file, well-structured
 
 ### Minor: return values inconsistency
-`ft_token_add` returns `0` on success and `1` on error. The rest of the codebase uses `SUCCESS` (0) and `GENERAL_ERROR` (1). Use the enums for consistency.
+`ft_token_add` returns `0` on success and `1` on error. The rest of the codebase uses `SUCCESS` (0) and `GENERAL_ERROR` (1). Use the enums for consistency. [x]
 
 ### `ft_token_create`: buffer cleared inside creator
 ```c
