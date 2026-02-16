@@ -10,14 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 int	ft_env_format_check(char *str)
 {
-	if (!ft_isalpha(str[0]) || str[0] != '_')
+	ft_printf("format: %s\n", str);
+	if (!ft_isalpha(str[0]) || str[0] == '-')
 	{
 		// A MODIFIER : TRAITER LES MESSAGES D'ERREUR
-		ft_printf("First char not conform");
+		ft_printf("First char not conform\n");
 		return (GENERAL_ERROR);
 	}
 	return (SUCCESS);
@@ -26,12 +27,14 @@ int	ft_env_format_check(char *str)
 int	ft_export(t_minishell *minishell, int fd, char *str)
 {
 	t_env	*new;
-	// SI !STR
+	// SI !STR  print env avec export devant chaque 
+	// -> export KEY=foo
+	// -> export KEY=boo
 	if (!str)
 		ft_env_print(minishell->head_env, fd);
 	// SI STR == ""
 	else if (!str[0])
-	return (ft_error(GENERAL_ERROR, "export:", "`': not a valid identifier"));
+	  return (ft_error(GENERAL_ERROR, "export:", "`': not a valid identifier"));
 	else
 	{
 		// CHECKER SI STR A LE BON FORMAT
