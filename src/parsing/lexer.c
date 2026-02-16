@@ -8,8 +8,6 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 // TRAITER LES CHANGEMENTS D'ETAT
 /*
@@ -21,15 +19,13 @@
 // A SECURISER VIA LA TAILLE MAX
 int	ft_buffer_add(char *buffer, char c)
 {
-	int	i;
+	int	len;
 
-	i = 0;
-	while (buffer[i] )
-		i++;
-	if (i < BUFFER_SIZE)
+	len = ft_strlen(buffer);
+	if (len < BUFFER_SIZE)
 	{
-		buffer[i] = c;
-		buffer[i + 1] = '\0';
+		buffer[len] = c;
+		buffer[len + 1] = '\0';
 		return (0);
 	}
 	else
@@ -77,14 +73,14 @@ int	ft_state_interpret(char *line, int *index, char *buffer,
 		minishell->state = WAITING;
 	}
 	// SI OPERATORS
-	if (ft_ischarset(line[*index], OPERATORS) && minishell->state == NORMAL)
+	else if (ft_ischarset(line[*index], OPERATORS) && minishell->state == NORMAL)
 	{
 		if (len_buffer > 0 && (buffer[0] != line[*index] || len_buffer >= 2))
 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
 				return (ft_error(MALLOC_FAIL, "Fail Malloc Interpreter", NULL));
 	}
 	// SI STATE != WAITING
-	if (minishell->state != WAITING)
+	else if (minishell->state != WAITING)
 	{
 		if (!ft_ischarset(line[*index], OPERATORS) && ft_ischarset(buffer[0],
 				OPERATORS))
@@ -148,12 +144,14 @@ void	ft_type_affect(t_minishell *minishell)
 		else if (current->str[0] == '<')
 		{
 			current->type = IN_CHEVRON;
+			//FIX: handle case if str[i] != <
 			if (current->str[1])
 				current->type = IN_DCHEVRON;
 		}
 		else if (current->str[0] == '>')
 		{
 			current->type = OUT_CHEVRON;
+			//FIX: handle case if str[i] != >
 			if (current->str[1])
 				current->type = OUT_DCHEVRON;
 		}
@@ -168,10 +166,8 @@ void	ft_type_affect(t_minishell *minishell)
 int	ft_tokenize(t_minishell *minishell)
 {
 	// ON RECUPERE LES TYPES DANS UN PREMIER TEMPS
-	// ft_create_elem_lst(minishell);
 	if (ft_token_lst_create(minishell))
 		return (1);
 	ft_type_affect(minishell);
 	return (0);
-	// ft_create_cmd_lst(minishell);
 }

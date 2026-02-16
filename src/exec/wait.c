@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 #include <stdlib.h>
 
 void handler_status(int status, t_cmd *cmd, t_minishell *minishell)
@@ -53,8 +53,7 @@ void ft_wait_subprocess(t_minishell *minishell, int size_cmd, int *pids)
 		waitpid(pids[i], &status, 0);
 		handler_status(status, cmd, minishell);
 		if (WIFEXITED(status))
-			minishell->exit_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
+			minishell->exit_status = WEXITSTATUS(status); else if (WIFSIGNALED(status))
 			minishell->exit_status = 128 + WTERMSIG(status);
 		cmd = cmd->next;
 		i++;

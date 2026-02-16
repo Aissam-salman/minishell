@@ -50,7 +50,7 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 	path_env = ft_env_find(minishell->head_env, buffer);
 
 	// ft_printf("ENV = %s\n", env);
-	if (path_env->content)
+	if (path_env && path_env->content)
 	{
 		if (ft_strlcat(usable_str, path_env->content, BUFFER_SIZE) > BUFFER_SIZE)
 			return (ft_error(BUFFER_FAIL, "Insufficient buffer size", NULL));
@@ -80,7 +80,6 @@ void	ft_quotes_handle(t_minishell *minishell, t_token *token)
 				return ;
 			continue ;
 		}
-
 		// CONDITIONS POUR RAJOUTER MALGRE LES STATES OU LES SEPARATORS (A JOLIFIER)
 		// A MODIFIER : REVOIR VU QUE C'EST PAS BEAU
 		else if (token->str[i] == '\'' && minishell->state == IN_DQUOTE)

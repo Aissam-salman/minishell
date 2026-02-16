@@ -33,8 +33,9 @@ void	ft_heredoc(t_minishell *minishell, t_cmd *cmd, t_token *token, int mod)
 	{
 		// RECUPERE LA LINE
 		line = readline("> ");
+		// ctrl-D
 		if (!line)
-			continue;
+			break;
 		else
 			ft_gc_add_node(&minishell->gc, line);
 		line_len = ft_strlen(line);

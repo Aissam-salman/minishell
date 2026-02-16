@@ -252,7 +252,7 @@ This is in `handler.c`, not here, but the pattern shows up. In this file, all is
 #include <stdio.h>
 #include <stdlib.h>
 ```
-Both are already included via `minishell.h`. **Remove.**
+Both are already included via `minishell.h`. **Remove.** [x]
 
 ### `ft_buffer_add`: re-inventing `ft_strlen` every call
 ```c
@@ -260,7 +260,7 @@ i = 0;
 while (buffer[i])
     i++;
 ```
-This is literally `ft_strlen(buffer)`. Replace with:
+This is literally `ft_strlen(buffer)`. Replace with: [x]
 ```c
 int len = ft_strlen(buffer);
 ```
@@ -282,10 +282,10 @@ while (i < line_len)
     i++;
 line[i] = '\0';  // i == line_len, but line[line_len] is already '\0'
 ```
-`line` is a null-terminated string — `line[line_len]` is already `'\0'`. **Remove this line.**
+`line` is a null-terminated string — `line[line_len]` is already `'\0'`. **Remove this line.** [x]
 
 ### `ft_type_affect`: can be simplified with a lookup approach
-The if/else chain checks `str[0]` then `str[1]`. This is fine for 3 operators, but ensure that invalid combos like `<>` or `|>` are caught. Currently they are not.
+The if/else chain checks `str[0]` then `str[1]`. This is fine for 3 operators, but ensure that invalid combos like `<>` or `|>` are caught. Currently they are not. [ ] ???  |> exit 0
 
 ### Tips
 - The lexer is the core of correctness. Consider adding a dedicated flush function instead of repeating the `ft_token_add(minishell, ft_token_create(minishell, buffer))` pattern 5 times.
@@ -297,16 +297,16 @@ The if/else chain checks `str[0]` then `str[1]`. This is fine for 3 operators, b
 ### Clean file, well-structured
 
 ### Minor: return values inconsistency
-`ft_token_add` returns `0` on success and `1` on error. The rest of the codebase uses `SUCCESS` (0) and `GENERAL_ERROR` (1). Use the enums for consistency.
+`ft_token_add` returns `0` on success and `1` on error. The rest of the codebase uses `SUCCESS` (0) and `GENERAL_ERROR` (1). Use the enums for consistency. [x]
 
 ### `ft_token_create`: buffer cleared inside creator
 ```c
 ft_bzero(buffer, ft_strlen(buffer));
 ```
-Side-effecting the caller's buffer inside a "create" function is surprising. Consider clearing the buffer in the caller instead, or document this behavior clearly.
+Side-effecting the caller's buffer inside a "create" function is surprising. Consider clearing the buffer in the caller instead, or document this behavior clearly. [x]
 
 ### Tips
-- `ft_token_last` is a utility that could be shared with `ft_cmd_last` and `ft_env_last` via a generic pattern, since all three linked lists follow the same structure.
+- `ft_token_last` is a utility that could be shared with `ft_cmd_last` and `ft_env_last` via a generic pattern, since all three linked lists follow the same structure. [x]
 
 ---
 
@@ -321,7 +321,7 @@ Side-effecting the caller's buffer inside a "create" function is surprising. Con
 // void handle_expands(t_token *token, t_minishell *minishell)
 // { ... }
 ```
-**Remove entirely.** Quote/expand handling is now in `parser_utils.c`.
+**Remove entirely.** Quote/expand handling is now in `parser_utils.c`. [x]
 
 ### Dead code: commented-out lines inside `handle_word`
 ```c
@@ -329,9 +329,9 @@ Side-effecting the caller's buffer inside a "create" function is surprising. Con
 // if (ft_check_file(token) == 1)
 //     token->type = R_FILE;
 ```
-**Remove.**
+**Remove.** [x]
 
-### `handle_word` promotes to FLAG after CMD
+### `handle_word` promotes to FLAG after CMD 
 ```c
 if (*cmd_find == 0)
 {
@@ -342,16 +342,16 @@ if (*cmd_find == 0)
 if (ft_check_flags(token->str) == 1)
     token->type = FLAG;
 ```
-If the **first word** is a flag-like string (e.g., `-l`), it gets set to `CMD` then immediately overwritten to `FLAG`. The second `if` should be `else if` so that the command itself is never re-typed.
+If the **first word** is a flag-like string (e.g., `-l`), it gets set to `CMD` then immediately overwritten to `FLAG`. The second `if` should be `else if` so that the command itself is never re-typed. [x]
 
 ### Magic number `301`
 ```c
 token->code_error = 301;
 ```
-No corresponding enum value. Use a named constant.
+No corresponding enum value. Use a named constant. [x]
 
 ### Tips
-- `checker_token` should return an `int` (error code) so `main.c` can check it directly instead of scanning all tokens for `code_error`.
+- `checker_token` should return an `int` (error code) so `main.c` can check it directly instead of scanning all tokens for `code_error`. [x]
 
 ---
 
@@ -365,7 +365,7 @@ int ft_check_redirection(char *str)
     // ... entire body is commented out
 }
 ```
-Missing semicolon after `int i`, and the entire function body is commented out. This **will not compile**. Either restore the function body or provide a new implementation.
+Missing semicolon after `int i`, and the entire function body is commented out. This **will not compile**. Either restore the function body or provide a new implementation. [x]
 
 ### `ft_check_flags`: logic bug on first line
 ```c
@@ -377,7 +377,7 @@ if (str[i] != '-' || !str[i])
 if (!str[0] || str[0] != '-')
     return (0);
 ```
-Check for empty **first**, then check the character. Clearer and safer.
+Check for empty **first**, then check the character. Clearer and safer. [x]
 
 ### `ft_check_heredoc_end`: does nothing useful
 ```c
@@ -388,16 +388,16 @@ int ft_check_heredoc_end(char *str)
     return (1);
 }
 ```
-This function only checks if `str` is NULL. It's called from `ft_check_file_of_redirection`. This is essentially a NULL check — either inline it or give it a meaningful name.
+This function only checks if `str` is NULL. It's called from `ft_check_file_of_redirection`. This is essentially a NULL check — either inline it or give it a meaningful name. [x] remove
 
 ### `ft_check_file`: **never called**
 ```c
 int ft_check_file(t_token *token)
 ```
-All references to `ft_check_file` in the codebase are **commented out**. **Remove this function.**
+All references to `ft_check_file` in the codebase are **commented out**. **Remove this function.** [x]
 
 ### `ft_check_file_of_redirection`: incomplete logic
-Only handles `IN_CHEVRON` and `IN_DCHEVRON`. Does not handle `OUT_CHEVRON` or `OUT_DCHEVRON`. For output redirections, it silently returns 1 (OK) without any check.
+Only handles `IN_CHEVRON` and `IN_DCHEVRON`. Does not handle `OUT_CHEVRON` or `OUT_DCHEVRON`. For output redirections, it silently returns 1 (OK) without any check. [x] remove unused
 
 ### Tips
 - This file needs the most work. Fix the compilation error first.
@@ -411,13 +411,13 @@ Only handles `IN_CHEVRON` and `IN_DCHEVRON`. Does not handle `OUT_CHEVRON` or `O
 ```c
 env = getenv("PATH");
 ```
-Your shell has its own env list (`minishell->head_env`). If the user does `export PATH=/new/path`, the internal list is updated but `getenv()` still returns the **original** system PATH. Use `ft_env_find(minishell->head_env, "PATH")` instead.
+Your shell has its own env list (`minishell->head_env`). If the user does `export PATH=/new/path`, the internal list is updated but `getenv()` still returns the **original** system PATH. Use `ft_env_find(minishell->head_env, "PATH")` instead. [x]
 
 ### `ft_test_path`: redundant NULL check
 ```c
 if (cur_path && access(cur_path, X_OK) == 0)
 ```
-`cur_path` is the return value of `ft_strjoin_gc`. If `ft_strjoin_gc` returns NULL, you have bigger problems (malloc fail). The `access` call will just fail on NULL anyway. Not harmful, but unnecessary.
+`cur_path` is the return value of `ft_strjoin_gc`. If `ft_strjoin_gc` returns NULL, you have bigger problems (malloc fail). The `access` call will just fail on NULL anyway. Not harmful, but unnecessary. [x]
 
 ### `ft_check_cmd`: unused variable `res`
 ```c
@@ -430,7 +430,7 @@ Can be simplified to:
 if (ft_test_path(minishell, envp, token))
     return;
 ```
-Or remove `res` entirely.
+Or remove `res` entirely. [x]
 
 ### `ft_check_pipe`: trivially simplifiable
 ```c
@@ -443,7 +443,7 @@ int ft_check_pipe(char *str)
     return (0);
 }
 ```
-Could be:
+Could be: [x]
 ```c
 int ft_check_pipe(char *str)
 {
@@ -463,9 +463,9 @@ int ft_check_pipe(char *str)
 path_env = ft_env_find(minishell->head_env, buffer);
 if (path_env->content)  // CRASH: path_env can be NULL
 ```
-`ft_env_find` returns NULL if the variable doesn't exist. Dereferencing NULL → **SEGV**.
+`ft_env_find` returns NULL if the variable doesn't exist. Dereferencing NULL → **SEGV**. [x]
 
-**Fix:**
+**Fix:** 
 ```c
 path_env = ft_env_find(minishell->head_env, buffer);
 if (path_env && path_env->content)
@@ -473,7 +473,7 @@ if (path_env && path_env->content)
 
 ### `ft_expend`: `$?` uses hardcoded `GENERAL_ERROR` instead of actual exit status
 ```c
-err_value = ft_itoa_gc(GENERAL_ERROR, &minishell->gc);
+err_value = ft_itoa_gc(GENERAL_ERROR, &minishell->gc); [x]
 ```
 This always returns `"1"`. Should use `minishell->exit_status` (which itself needs to be wired up — see minishell.h section).
 
@@ -491,7 +491,7 @@ Typo in the function name.
 ## 13. `src/parsing/support/expander.c`
 
 ### **Entirely dead code**: `ft_check_expands` is never called
-All calls to `ft_check_expands` in the codebase are **commented out** (in `parser.c`'s `handle_expands`). The expansion logic has been moved to `parser_utils.c` (`ft_quotes_handle` / `ft_expend`).
+All calls to `ft_check_expands` in the codebase are **commented out** (in `parser.c`'s `handle_expands`). The expansion logic has been moved to `parser_utils.c` (`ft_quotes_handle` / `ft_expend`). [x]
 
 **Action:** Delete this entire file and remove it from the Makefile.
 
@@ -508,9 +508,9 @@ All calls to `ft_check_expands` in the codebase are **commented out** (in `parse
 
 ### **Entirely dead code**: both functions are never called
 - `is_need_expands()` — never called from any active code.
-- `ft_filter_quote()` — all call sites are commented out in `parser.c`.
+- `ft_filter_quote()` — all call sites are commented out in `parser.c`. 
 
-**Action:** Delete this entire file and remove it from the Makefile.
+**Action:** Delete this entire file and remove it from the Makefile. [x]
 
 ### `ft_strdup_without`: double allocation waste
 ```c
@@ -548,17 +548,17 @@ return (SUCCESS);
 // SI INFILE => REMPLIR INFD
 // else if (token->type == INFILE)
 ```
-Everything after `return` is dead. **Remove.**
+Everything after `return` is dead. **Remove.** [ ] ??
 
 ### `ft_token_word_count`: counts from 1 without clarity
 ```c
 count = 1;  // "COMMENCE A 1 POUR CMD->ARGS[0]"
 ```
-This is correct (args[0] is the command name) but fragile. If the loop also counts `CMD` tokens, you're double-counting. Currently `CMD` type is set *after* this function runs, so it works — but it's a time bomb.
+This is correct (args[0] is the command name) but fragile. If the loop also counts `CMD` tokens, you're double-counting. Currently `CMD` type is set *after* this function runs, so it works — but it's a time bomb. [ ] ??
 
 ### Tips
 - `ft_token_affect` is too long (60+ lines). Split into helper functions: `ft_affect_word`, `ft_affect_cmd`, `ft_affect_redir`, `ft_affect_heredoc`.
-- Use `else if` chains consistently instead of independent `if` blocks.
+- Use `else if` chains consistently instead of independent `if` blocks. [ ]
 
 ---
 
@@ -570,7 +570,7 @@ line = readline("> ");
 if (!line)
     continue;  // CTRL-D → NULL → loops forever
 ```
-Bash exits the heredoc on CTRL-D with a warning. **Fix:**
+Bash exits the heredoc on CTRL-D with a warning. **Fix:** [x]
 ```c
 if (!line)
     break;
@@ -580,10 +580,10 @@ if (!line)
 ```c
 ft_printf("TEST HEREDOC : %s\n", token->next->str);
 ```
-**Remove** — this prints to stdout and corrupts command output.
+**Remove** — this prints to stdout and corrupts command output. [ ]
 
 ### Tips
-- Heredoc should be handled **before** execution (during parsing), not during cmd list creation. In your current flow, the heredoc `readline` call blocks inside `ft_cmd_lst_create`, which means signals during heredoc input are not properly handled.
+- Heredoc should be handled **before** execution (during parsing), not during cmd list creation. In your current flow, the heredoc `readline` call blocks inside `ft_cmd_lst_create`, which means signals during heredoc input are not properly handled. [ ]
 
 ---
 
@@ -605,12 +605,12 @@ if (fd == -1)                    // fd is still -1 after heredoc!
     return (GENERAL_ERROR);
 }
 ```
-After the heredoc branch, `fd` is still `-1` (its initial value), so the `if (fd == -1)` check fires and returns an error **even though the heredoc succeeded**.
+After the heredoc branch, `fd` is still `-1` (its initial value), so the `if (fd == -1)` check fires and returns an error **even though the heredoc succeeded**. [ ] ??
 
-But `ft_token_affect` in `cmds.c` handles `IN_DCHEVRON` separately and never calls `ft_redirection_handler` for heredocs. So this branch is **dead code** inside `ft_redirection_handler`. **Remove the heredoc branch** from this function.
+But `ft_token_affect` in `cmds.c` handles `IN_DCHEVRON` separately and never calls `ft_redirection_handler` for heredocs. So this branch is **dead code** inside `ft_redirection_handler`. **Remove the heredoc branch** from this function. [ ] ??
 
 ### `perror(token->path)` — wrong field
-For redirections, `token->path` is NULL (path is only set for commands). Should be `token->next->str` (the filename).
+For redirections, `token->path` is NULL (path is only set for commands). Should be `token->next->str` (the filename). [x]
 
 ### Tips
 - `ft_open` is clean and simple. Keep it.
@@ -627,20 +627,20 @@ static void pipefd_set(int pipe_fd[2])
     pipe_fd[1] = -1;
 }
 ```
-This can be done inline: `int pipe_fd[2] = {-1, -1};`. **Remove the function.**
+This can be done inline: `int pipe_fd[2] = {-1, -1};`. **Remove the function.** [x]
 
 ### `ft_pipe_and_fork`: pipe created even for single external commands
 When `size_cmd == 1`, a pipe is created but both ends are closed in the child. Wasteful. Add `if (size_cmd > 1 || i < size_cmd - 1)` guard around `pipe()`.
 
 ### `ft_pipe_and_fork`: leaks `prev_pipe` after loop
-After the while loop, `prev_pipe` holds the read-end of the last pipe. It's never closed in the parent. **Add:**
+After the while loop, `prev_pipe` holds the read-end of the last pipe. It's never closed in the parent. **Add:** [x]
 ```c
 if (prev_pipe != -1)
     close(prev_pipe);
 ```
 
 ### Tips
-- The `signal(SIGINT, SIG_IGN)` in `parent_process` is correct — parent should ignore SIGINT while child runs. But `setup_signal` should be re-called after `ft_wait_subprocess` to restore readline handling. Currently this happens at the top of the next loop iteration, which works.
+- The `signal(SIGINT, SIG_IGN)` in `parent_process` is correct — parent should ignore SIGINT while child runs. But `setup_signal` should be re-called after `ft_wait_subprocess` to restore readline handling. Currently this happens at the top of the next loop iteration, which works. [x]
 
 ---
 
@@ -651,10 +651,10 @@ if (prev_pipe != -1)
 run_built_in_piped(cmd, minishell);
 exit(1);
 ```
-Should be `exit(0)` on success. (Already noted in REPORT1.)
+Should be `exit(0)` on success. (Already noted in REPORT1.) [x]
 
 ### `ft_child_new`: uses `sizeof(struct s_child)` instead of `sizeof(t_child)`
-Both work, but `sizeof(t_child)` is more idiomatic and consistent with the rest of the codebase.
+Both work, but `sizeof(t_child)` is more idiomatic and consistent with the rest of the codebase. [x]
 
 ### Tips
 - `child` struct is allocated via gc but only one instance exists (reused across iterations via `child_set`). This is fine, but the gc allocation is slightly wasteful for a single small struct — a stack variable would suffice.
@@ -663,11 +663,11 @@ Both work, but `sizeof(t_child)` is more idiomatic and consistent with the rest 
 
 ## 20. `src/execution/handler.c`
 
-### `handler_signal_child`: perror message says SIGQUIT for SIGINT
+### `handler_signal_child`: perror message says SIGQUIT for SIGINT [x]
+
 ```c
 if (signal(SIGINT, SIG_DFL) == SIG_ERR)
-    perror("signal error default SIGQUIT");  // Should say SIGINT
-```
+    perror("signal error default SIGQUIT");  // Should say SIGINT ```
 
 ### `handler_last_cmd`: only closes `prev_pipe` inside the `outfd != 1` branch
 ```c
@@ -678,7 +678,7 @@ if (outfd != 1)
     close(outfd);
 }
 ```
-If `outfd == 1` (no redirection), `prev_pipe` is **never closed**. Move `close(prev_pipe)` **before** the if block.
+If `outfd == 1` (no redirection), `prev_pipe` is **never closed**. Move `close(prev_pipe)` **before** the if block. [x]
 
 ### Tips
 - All handler functions are small and focused — good. Just fix the fd leak.
@@ -1047,78 +1047,6 @@ These are the exit codes that bash uses and that your minishell should match for
 | `src/main.c` | `if (*minishell.line == EOF)` block | Dead condition |
 | `src/main.c` | Code after `while(1)` | Unreachable |
 | All files | Commented-out code blocks | ~50 lines total |
-
----
-
-## 33. Recommended `e_errors` Enum (No Bonus)
-
-Copy-paste ready enum for `errors.h` covering every exit code needed by minishell mandatory part.
-
-The key rules:
-- **Bash-visible codes** (the ones that can become `$?`) must match bash exactly.
-- **Internal-only codes** use negative values so they can never accidentally leak as an exit status.
-- `NO_SUCH_FILE_O_DIR` is removed — it's not a single exit code. Use `CMD_NOT_FOUND` (127) when a command isn't found, and `GENERAL_ERROR` (1) when a file argument doesn't exist.
-
-```c
-typedef enum e_errors
-{
-	/* ── Internal-only (never leak as $?) ── */
-	PARSING_FAIL = -3,
-	BUFFER_FAIL  = -2,
-	MALLOC_FAIL  = -1,
-
-	/* ── Bash-compatible exit codes ──────── */
-	SUCCESS            = 0,    // Command succeeded
-	GENERAL_ERROR      = 1,    // Catchall: bad flag, cd fail, export invalid id, etc.
-	SYNTAX_ERROR       = 2,    // bash: syntax error near unexpected token
-	                           //   also: exit with non-numeric arg
-	PERMISSION_DENIED  = 126,  // Command found but not executable (chmod -x)
-	CMD_NOT_FOUND      = 127,  // Command not found in PATH
-	SIGNAL_BASE        = 128,  // Base for signal exits (128 + signum)
-	SIGINT_EXIT        = 130,  // 128 + 2  — CTRL-C
-	SIGQUIT_EXIT       = 131,  // 128 + 3  — CTRL-\ (core dump)
-}	t_errors;
-```
-
-### How each code is used
-
-| Code | Name | Where it's set |
-|------|------|----------------|
-| `-3` | `PARSING_FAIL` | `ft_tokenize` / `ft_cmd_lst_create` on internal parse failure. Caught in `main.c` loop → `continue`, never reaches `$?`. |
-| `-2` | `BUFFER_FAIL` | `ft_buffer_add` if buffer is full. Same handling as above. |
-| `-1` | `MALLOC_FAIL` | Any `ft_gc_malloc` / `ft_calloc_gc` failure. Call `ft_exit(minishell, 1, "malloc fail")`. |
-| `0` | `SUCCESS` | Default on success. Built-ins return this. `WEXITSTATUS(status)` gives this when child exits normally. |
-| `1` | `GENERAL_ERROR` | `cd` to non-existent dir, `export` with bad identifier, `exit` with too many args (does NOT exit), write errors in `echo`, `pwd` if `getcwd` fails. |
-| `2` | `SYNTAX_ERROR` | Unclosed quotes, `| |`, `> >`, `< <newline>`, or `exit abc` (non-numeric arg → print error, exit with 2). |
-| `126` | `PERMISSION_DENIED` | `access(path, X_OK)` fails but `access(path, F_OK)` succeeds → command exists but can't execute. |
-| `127` | `CMD_NOT_FOUND` | Command not found in PATH and not a built-in. Also: empty command name. |
-| `128` | `SIGNAL_BASE` | Not used directly. Base value for computing `128 + WTERMSIG(status)`. |
-| `130` | `SIGINT_EXIT` | Child killed by SIGINT (CTRL-C). Set via `128 + WTERMSIG(status)` in `ft_wait_subprocess`. |
-| `131` | `SIGQUIT_EXIT` | Child killed by SIGQUIT (CTRL-\\). Same mechanism. |
-
-### Quick reference: setting `$?` in `ft_wait_subprocess`
-
-```c
-if (WIFEXITED(status))
-    minishell->exit_status = WEXITSTATUS(status);
-else if (WIFSIGNALED(status))
-    minishell->exit_status = SIGNAL_BASE + WTERMSIG(status);
-```
-
-### Quick reference: setting `$?` in built-ins
-
-```c
-// In run_built_in(), after each call:
-minishell->exit_status = ret;  // where ret is 0 or 1
-
-// Special case — exit with non-numeric arg:
-minishell->exit_status = SYNTAX_ERROR;  // 2
-ft_exit(minishell, SYNTAX_ERROR, "numeric argument required");
-
-// Special case — exit with too many args:
-ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
-minishell->exit_status = GENERAL_ERROR;  // 1, and do NOT exit
-```
 
 ---
 

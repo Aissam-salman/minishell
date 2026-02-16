@@ -169,6 +169,7 @@ int	ft_cmd_lst_create(t_minishell *minishell)
 		
 		// ON AJOUTE LA STRUCT COMMAND A LA LISTE
 		ft_cmd_add(minishell, cmd_new);
+		//WARN: no use the return value
 
 		// PASSER AU NOEUD SUIVANT TOKEN
 		if (tok_current)
