@@ -34,10 +34,10 @@ void	handler_first_cmd(int infd, int size_cmd, int pipe_fd)
 void handler_last_cmd(int prev_pipe, int outfd)
 {
 	dup2(prev_pipe, STDIN_FILENO);
+	close(prev_pipe);
 	if (outfd != 1)
 	{
 		dup2(outfd, STDOUT_FILENO);
-		close(prev_pipe);
 		close(outfd);
 	}
 }

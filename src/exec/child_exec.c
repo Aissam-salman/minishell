@@ -24,7 +24,7 @@ t_child *ft_child_new(t_minishell *minishell)
 {
 	t_child *child;
 
-	child = ft_gc_malloc(sizeof(struct s_child), &minishell->gc);
+	child = ft_gc_malloc(sizeof(t_child), &minishell->gc);
 	if (!child)
 		return (NULL);
 	child->index = 0;
@@ -41,7 +41,7 @@ void close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2])
 	if (is_built_in(cmd) == 1)
 	{
 		run_built_in_piped(cmd, minishell);
-		exit(1);
+		exit(0);
 	}
 	if (!cmd->path || access(cmd->path, X_OK) != 0)
 	{

@@ -548,17 +548,17 @@ return (SUCCESS);
 // SI INFILE => REMPLIR INFD
 // else if (token->type == INFILE)
 ```
-Everything after `return` is dead. **Remove.**
+Everything after `return` is dead. **Remove.** [ ] ??
 
 ### `ft_token_word_count`: counts from 1 without clarity
 ```c
 count = 1;  // "COMMENCE A 1 POUR CMD->ARGS[0]"
 ```
-This is correct (args[0] is the command name) but fragile. If the loop also counts `CMD` tokens, you're double-counting. Currently `CMD` type is set *after* this function runs, so it works — but it's a time bomb.
+This is correct (args[0] is the command name) but fragile. If the loop also counts `CMD` tokens, you're double-counting. Currently `CMD` type is set *after* this function runs, so it works — but it's a time bomb. [ ] ??
 
 ### Tips
 - `ft_token_affect` is too long (60+ lines). Split into helper functions: `ft_affect_word`, `ft_affect_cmd`, `ft_affect_redir`, `ft_affect_heredoc`.
-- Use `else if` chains consistently instead of independent `if` blocks.
+- Use `else if` chains consistently instead of independent `if` blocks. [ ]
 
 ---
 
@@ -570,7 +570,7 @@ line = readline("> ");
 if (!line)
     continue;  // CTRL-D → NULL → loops forever
 ```
-Bash exits the heredoc on CTRL-D with a warning. **Fix:**
+Bash exits the heredoc on CTRL-D with a warning. **Fix:** [x]
 ```c
 if (!line)
     break;
@@ -580,10 +580,10 @@ if (!line)
 ```c
 ft_printf("TEST HEREDOC : %s\n", token->next->str);
 ```
-**Remove** — this prints to stdout and corrupts command output.
+**Remove** — this prints to stdout and corrupts command output. [ ]
 
 ### Tips
-- Heredoc should be handled **before** execution (during parsing), not during cmd list creation. In your current flow, the heredoc `readline` call blocks inside `ft_cmd_lst_create`, which means signals during heredoc input are not properly handled.
+- Heredoc should be handled **before** execution (during parsing), not during cmd list creation. In your current flow, the heredoc `readline` call blocks inside `ft_cmd_lst_create`, which means signals during heredoc input are not properly handled. [ ]
 
 ---
 
@@ -605,12 +605,12 @@ if (fd == -1)                    // fd is still -1 after heredoc!
     return (GENERAL_ERROR);
 }
 ```
-After the heredoc branch, `fd` is still `-1` (its initial value), so the `if (fd == -1)` check fires and returns an error **even though the heredoc succeeded**. 
+After the heredoc branch, `fd` is still `-1` (its initial value), so the `if (fd == -1)` check fires and returns an error **even though the heredoc succeeded**. [ ] ??
 
-But `ft_token_affect` in `cmds.c` handles `IN_DCHEVRON` separately and never calls `ft_redirection_handler` for heredocs. So this branch is **dead code** inside `ft_redirection_handler`. **Remove the heredoc branch** from this function.
+But `ft_token_affect` in `cmds.c` handles `IN_DCHEVRON` separately and never calls `ft_redirection_handler` for heredocs. So this branch is **dead code** inside `ft_redirection_handler`. **Remove the heredoc branch** from this function. [ ] ??
 
 ### `perror(token->path)` — wrong field
-For redirections, `token->path` is NULL (path is only set for commands). Should be `token->next->str` (the filename).
+For redirections, `token->path` is NULL (path is only set for commands). Should be `token->next->str` (the filename). [x]
 
 ### Tips
 - `ft_open` is clean and simple. Keep it.
@@ -627,20 +627,20 @@ static void pipefd_set(int pipe_fd[2])
     pipe_fd[1] = -1;
 }
 ```
-This can be done inline: `int pipe_fd[2] = {-1, -1};`. **Remove the function.**
+This can be done inline: `int pipe_fd[2] = {-1, -1};`. **Remove the function.** [x]
 
 ### `ft_pipe_and_fork`: pipe created even for single external commands
 When `size_cmd == 1`, a pipe is created but both ends are closed in the child. Wasteful. Add `if (size_cmd > 1 || i < size_cmd - 1)` guard around `pipe()`.
 
 ### `ft_pipe_and_fork`: leaks `prev_pipe` after loop
-After the while loop, `prev_pipe` holds the read-end of the last pipe. It's never closed in the parent. **Add:**
+After the while loop, `prev_pipe` holds the read-end of the last pipe. It's never closed in the parent. **Add:** [x]
 ```c
 if (prev_pipe != -1)
     close(prev_pipe);
 ```
 
 ### Tips
-- The `signal(SIGINT, SIG_IGN)` in `parent_process` is correct — parent should ignore SIGINT while child runs. But `setup_signal` should be re-called after `ft_wait_subprocess` to restore readline handling. Currently this happens at the top of the next loop iteration, which works.
+- The `signal(SIGINT, SIG_IGN)` in `parent_process` is correct — parent should ignore SIGINT while child runs. But `setup_signal` should be re-called after `ft_wait_subprocess` to restore readline handling. Currently this happens at the top of the next loop iteration, which works. [x]
 
 ---
 
@@ -651,10 +651,10 @@ if (prev_pipe != -1)
 run_built_in_piped(cmd, minishell);
 exit(1);
 ```
-Should be `exit(0)` on success. (Already noted in REPORT1.)
+Should be `exit(0)` on success. (Already noted in REPORT1.) [x]
 
 ### `ft_child_new`: uses `sizeof(struct s_child)` instead of `sizeof(t_child)`
-Both work, but `sizeof(t_child)` is more idiomatic and consistent with the rest of the codebase.
+Both work, but `sizeof(t_child)` is more idiomatic and consistent with the rest of the codebase. [x]
 
 ### Tips
 - `child` struct is allocated via gc but only one instance exists (reused across iterations via `child_set`). This is fine, but the gc allocation is slightly wasteful for a single small struct — a stack variable would suffice.
@@ -663,11 +663,11 @@ Both work, but `sizeof(t_child)` is more idiomatic and consistent with the rest 
 
 ## 20. `src/execution/handler.c`
 
-### `handler_signal_child`: perror message says SIGQUIT for SIGINT
+### `handler_signal_child`: perror message says SIGQUIT for SIGINT [x]
+
 ```c
 if (signal(SIGINT, SIG_DFL) == SIG_ERR)
-    perror("signal error default SIGQUIT");  // Should say SIGINT
-```
+    perror("signal error default SIGQUIT");  // Should say SIGINT ```
 
 ### `handler_last_cmd`: only closes `prev_pipe` inside the `outfd != 1` branch
 ```c
@@ -678,7 +678,7 @@ if (outfd != 1)
     close(outfd);
 }
 ```
-If `outfd == 1` (no redirection), `prev_pipe` is **never closed**. Move `close(prev_pipe)` **before** the if block.
+If `outfd == 1` (no redirection), `prev_pipe` is **never closed**. Move `close(prev_pipe)` **before** the if block. [x]
 
 ### Tips
 - All handler functions are small and focused — good. Just fix the fd leak.

@@ -45,7 +45,7 @@ int	ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token)
 		ft_heredoc_handle(minishell, cmd, token);
 	if (fd == -1)
 	{
-		perror(token->path);
+		perror(token->next->str);
 		return (GENERAL_ERROR);
 	}
 	if (fd > 2 && token->type == IN_CHEVRON)

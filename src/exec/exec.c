@@ -55,12 +55,8 @@ void ft_pipe_and_fork(t_minishell *minishell,int size_cmd, int pipe_fd[2], int *
 		cmd = cmd->next;
 		i++;
 	}
-}
-
-static void pipefd_set(int pipe_fd[2])
-{
-	pipe_fd[0] = -1;
-	pipe_fd[1] = -1;
+	if (prev_pipe != -1)
+		close(prev_pipe);
 }
 
 void	ft_exec(t_minishell *minishell)
@@ -69,7 +65,6 @@ void	ft_exec(t_minishell *minishell)
 	int pipe_fd[2];
 	int size_cmd;
 
-	pipefd_set(pipe_fd);
 	//WARN: if !minishell->head_cmd is NULL
 	size_cmd = ft_cmd_size(minishell->head_cmd);
 	if (!size_cmd)
