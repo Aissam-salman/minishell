@@ -2,8 +2,8 @@
 # define MINISHELL_H
 
 // FAITS MAISON
-# include "../libft/libft.h"
-# include "errors.h"
+#include "../libft/libft.h"
+#include "errors.h"
 
 // PRODUITS IMPORTES
 # include <signal.h>
@@ -34,7 +34,7 @@ typedef enum e_type
 	OUT_DCHEVRON,
 	WORD,
 	CMD,
-	LAST_HEREDOC,
+	// LAST_HEREDOC,
 	// R_FILE,
 	FLAG,
 	NBR_TYPES,
@@ -57,7 +57,7 @@ typedef struct s_cmd
 	char			**args;
 	int				infd;
 	int				outfd;
-	int				pipefd[2];
+	// int				pipefd[2];
 	struct s_cmd	*next;
 }					t_cmd;
 
@@ -99,9 +99,35 @@ typedef struct s_child
 
 // ── PARSING ─────────────────────────────────────────
 
-// parsing/lexer.c
-void				ft_state_detect(char c, t_minishell *minishell);
-int					ft_buffer_add(char *buffer, char c);
+// UTILS/CMDS.C
+int					ft_cmd_lst_create(t_minishell *minishell);
+/////////
+
+// UTILS/ENV_SETUP.C
+t_env				*ft_env_new(t_minishell *minishell, char *str);
+int					ft_env_add(t_minishell *minishell, t_env *new_env);
+t_env				*ft_env_find(t_env	*head_env, char *to_find);
+void				ft_env_setup(t_minishell *minishell, char **envp);
+void				ft_env_delone(t_env **head_env, char *target_name);
+/////////
+
+// UTILS/OUTPUT.C
+void				ft_env_print(t_env *head, int fd);
+void				ft_cmd_print(t_cmd *head);
+void				ft_tokens_print(t_token *head);
+void				ft_type_print(t_token *token);
+void				ft_state_print(char c, char *buffer,
+						t_minishell *minishell);
+/////////
+
+// UTILS/TOKENS.C
+t_token				*ft_token_create(t_minishell *minishell, char *buffer);
+int					ft_token_add(t_minishell *minishell, t_token *to_add);
+/////////
+
+// PARSING/LEXER.C
+void	ft_state_detect(char c, t_minishell *minishell);
+int	ft_buffer_add(char *buffer, char c);
 int					ft_tokenize(t_minishell *minishell);
 
 // parsing/parser.c
@@ -128,8 +154,23 @@ int					is_need_expands(t_token *token);
 
 // ── EXEC ────────────────────────────────────────────
 
-// exec/exec.c
+// UTILS/PARSER_UTILS.C
+void	ft_quotes_handle(t_minishell *minishell, t_token *token);
+/////////
+
+// HELPERS/cntrl.C
+int				ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token);
+/////////
+
+// UTILS/CMDS.C
+int				ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token, int *i);
+int				ft_cmd_lst_create(t_minishell *minishell);
+/////////
+int   				ft_cmd_size(t_cmd *cmd_head);
+
+// EXECUTION/EXEC.C
 void				ft_exec(t_minishell *minishell);
+/////////
 
 // exec/child_exec.c
 void				child_set(t_child *child, int i, int prev_pipe, int size_cmd);

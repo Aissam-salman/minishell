@@ -67,7 +67,7 @@
 ## 1. `includes/minishell.h`
 
 ### Inconsistent include formatting
-Some `#include` directives use the 42 norm indentation (`# include`) while others don't (`#include`). Pick one style and stick to it.
+Some `#include` directives use the 42 norm indentation (`# include`) while others don't (`#include`). Pick one style and stick to it. [x]
 
 ### Duplicate prototype declarations
 The following functions are declared **twice** in the header:
@@ -77,29 +77,29 @@ The following functions are declared **twice** in the header:
 - `close_pipe_and_exec()` — once under `EXEC.C` and once under `CHILD_EXEC.C`.
 - `ft_state_detect()` / `ft_buffer_add()` / `ft_tokenize()` — declared twice under `PARSING/LEXER.C`.
 
-**Action:** Remove all duplicate declarations. Each function should appear exactly once.
+**Action:** Remove all duplicate declarations. Each function should appear exactly once. [x]
 
 ### Stale/wrong prototype
 ```c
 void ft_create_cmd_lst(t_minishell *minishell);
 ```
-This prototype has signature `void` but the actual function `ft_cmd_lst_create` returns `int`. Also the name doesn't match. **Remove this line.**
+This prototype has signature `void` but the actual function `ft_cmd_lst_create` returns `int`. Also the name doesn't match. **Remove this line.** [x]
 
 ### Broken line in prototype
 ```c
 int
 _tokenize(t_minishell *minishell);
 ```
-This is a linebreak typo — it should be `ft_tokenize`. **Fix or remove** (the correct prototype already exists below).
+This is a linebreak typo — it should be `ft_tokenize`. **Fix or remove** (the correct prototype already exists below). [x]
 
 ### Unused struct member: `t_cmd.pipefd[2]`
-The `pipefd[2]` field inside `t_cmd` is **never read or written** anywhere in the codebase. The pipe fds are passed as local arrays in `exec.c`. **Remove it.**
+The `pipefd[2]` field inside `t_cmd` is **never read or written** anywhere in the codebase. The pipe fds are passed as local arrays in `exec.c`. **Remove it.** [x]
 
 ### Unused field: `exit_status`
-`minishell->exit_status` is declared but **never assigned or read** anywhere. This should be the `$?` value. It needs to be wired up in `ft_wait_subprocess` and in built-in return paths.
+`minishell->exit_status` is declared but **never assigned or read** anywhere. This should be the `$?` value. It needs to be wired up in `ft_wait_subprocess` and in built-in return paths. [x]
 
 ### Unused enum value: `LAST_HEREDOC`
-Never referenced anywhere. **Remove it.**
+Never referenced anywhere. **Remove it.** [x]
 
 ### `SEPARATORS` macro
 ```c
@@ -125,7 +125,7 @@ SYNTAX_ERROR = 3,    // bash uses exit code 2 for syntax errors
 PARSING_FAIL = 50,   // internal, OK
 BUFFER_FAIL = 98,    // internal, OK
 ```
-Bash returns **2** for syntax errors (e.g., `bash -c '>' ; echo $?` → `2`). Your `SYNTAX_ERROR = 3` will give wrong `$?`.
+Bash returns **2** for syntax errors (e.g., `bash -c '>' ; echo $?` → `2`). Your `SYNTAX_ERROR = 3` will give wrong `$?`. [x]
 
 ### Missing error code: `MISUSE = 2`
 Bash defines exit code **2** as "Misuse of shell builtins" (which covers syntax errors). Add it.
@@ -145,7 +145,7 @@ Every prototype in this file is either **wrong** (signatures don't match actual 
 
 This file is not included by any `.c` file in the Makefile's `SRCS`.
 
-**Action:** Delete `testing.h` entirely or move it to a `tests/` directory if it's used by unit tests.
+**Action:** Delete `testing.h` entirely or move it to a `tests/` directory if it's used by unit tests. [x]
 
 ---
 
@@ -160,13 +160,13 @@ This file is not included by any `.c` file in the Makefile's `SRCS`.
 if (*minishell.line == EOF)
     ft_printf("\n");
 ```
-`readline` returns `NULL` on EOF (CTRL-D), which is already handled above. If `readline` returns a non-NULL string, `*minishell.line` is a normal `char` — it will never equal `EOF` (which is typically `-1`, and `char` is `0–127` or `0–255`). **Remove this block.**
+`readline` returns `NULL` on EOF (CTRL-D), which is already handled above. If `readline` returns a non-NULL string, `*minishell.line` is a normal `char` — it will never equal `EOF` (which is typically `-1`, and `char` is `0–127` or `0–255`). **Remove this block.** [x]
 
 ### `ft_minishell_init` is redundant with `ft_bzero`
-`ft_bzero` already zeroes the entire struct at startup. Inside the loop, `ft_minishell_init` only resets `head_token` and `head_cmd`. This is fine, but the function name is misleading — it's a "reset per iteration", not a full init. Rename to `ft_minishell_reset`.
+`ft_bzero` already zeroes the entire struct at startup. Inside the loop, `ft_minishell_init` only resets `head_token` and `head_cmd`. This is fine, but the function name is misleading — it's a "reset per iteration", not a full init. Rename to `ft_minishell_reset`. /OK
 
 ### Missing `checker_token` error handling
-After `checker_token(&minishell)`, the code never checks if any token has `code_error != 0`. Execution proceeds unconditionally. **Add a check:**
+After `checker_token(&minishell)`, the code never checks if any token has `code_error != 0`. Execution proceeds unconditionally. **Add a check:** [x]
 ```c
 checker_token(&minishell);
 if (ft_has_token_error(minishell.head_token))
@@ -178,10 +178,10 @@ if (ft_has_token_error(minishell.head_token))
 ft_gc_free_all(&minishell.gc);
 ft_exit(&minishell, 0, NULL);
 ```
-These lines are **never reached** because the `while (1)` loop has no `break`. The only exits are via `ft_buildin_exit`. **Remove or make the loop breakable.**
+These lines are **never reached** because the `while (1)` loop has no `break`. The only exits are via `ft_buildin_exit`. **Remove or make the loop breakable.** [x]
 
 ### Tips
-- The `(void)argc; (void)argv;` is fine for now, but bash rejects extra arguments in interactive mode. Consider validating `argc == 1`.
+- The `(void)argc; (void)argv;` is fine for now, but bash rejects extra arguments in interactive mode. Consider validating `argc == 1`. [x]
 
 ---
 
@@ -191,7 +191,7 @@ These lines are **never reached** because the `while (1)` loop has no `break`. T
 ```c
 else if (head->name == target_name)
 ```
-This compares **pointers**, not string content. If `target_name` is a different allocation with the same text, this will never match. Use `ft_strcmp`.
+This compares **pointers**, not string content. If `target_name` is a different allocation with the same text, this will never match. Use `ft_strcmp`. [x]
 
 ### `ft_env_delone`: crash when list has one element
 ```c
@@ -204,23 +204,24 @@ while (head)
     if (head->next)         // CRASH if head is NULL
         nxt = head->next;
 ```
-If `head->next` is NULL at the end of the list, `head` becomes NULL, then `head->next` is a **NULL dereference**.
+If `head->next` is NULL at the end of the list, `head` becomes NULL, then `head->next` is a **NULL dereference**. [x]
 
 ### `ft_env_delone`: first-element check uses wrong comparison
 ```c
 if (ft_strcmp(head->name, target_name) == 0 &&
     ft_strcmp(head->name, (*head_env)->name))  // ???
 ```
-The second condition `ft_strcmp(head->name, (*head_env)->name)` checks if the current node is NOT the head. But in the first iteration `head == *head_env`, so this evaluates to `ft_strcmp(X, X)` which is **0 (false)**. This means the first element can **never** be deleted by this branch. The logic is inverted.
+The second condition `ft_strcmp(head->name, (*head_env)->name)` checks if the current node is NOT the head. But in the first iteration `head == *head_env`, so this evaluates to `ft_strcmp(X, X)` which is **0 (false)**. This means the first element can **never** be deleted by this branch. The logic is inverted. [x]
+
 
 ### `ft_env_find`: uses `ft_strncmp` with `ft_strlen(to_find)` — prefix matching bug
 ```c
 if (!ft_strncmp(head_env->name, to_find, ft_strlen(to_find)))
 ```
-If you search for `"HOME"`, this also matches `"HOMEWORLD"` because it only compares the first 4 characters. Use `ft_strcmp` instead.
+If you search for `"HOME"`, this also matches `"HOMEWORLD"` because it only compares the first 4 characters. Use `ft_strcmp` instead. [x]
 
 ### Tips
-- Rewrite `ft_env_delone` from scratch — it has multiple interacting bugs.
+- Rewrite `ft_env_delone` from scratch — it has multiple interacting bugs.[x]
 
 ---
 
@@ -233,10 +234,10 @@ If you search for `"HOME"`, this also matches `"HOMEWORLD"` because it only comp
 if (signal(SIGINT, SIG_DFL) == SIG_ERR)
     perror("signal error default SIGQUIT");  // Says SIGQUIT but handles SIGINT
 ```
-This is in `handler.c`, not here, but the pattern shows up. In this file, all is correct.
+This is in `handler.c`, not here, but the pattern shows up. In this file, all is correct. [x]
 
 ### Tips
-- `SA_RESTART` flag means `readline` will restart after signal — this is correct behavior for SIGINT.
+- `SA_RESTART` flag means `readline` will restart after signal — this is correct behavior for SIGINT. [x]
 
 ---
 
@@ -604,7 +605,7 @@ if (fd == -1)                    // fd is still -1 after heredoc!
     return (GENERAL_ERROR);
 }
 ```
-After the heredoc branch, `fd` is still `-1` (its initial value), so the `if (fd == -1)` check fires and returns an error **even though the heredoc succeeded**. 
+After the heredoc branch, `fd` is still `-1` (its initial value), so the `if (fd == -1)` check fires and returns an error **even though the heredoc succeeded**.
 
 But `ft_token_affect` in `cmds.c` handles `IN_DCHEVRON` separately and never calls `ft_redirection_handler` for heredocs. So this branch is **dead code** inside `ft_redirection_handler`. **Remove the heredoc branch** from this function.
 

@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
+/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 16:28:43 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/16 17:30:22 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/16 18:07:31 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <unistd.h>
 
 // ERROR + MSG SUR SORTIE ERREUR
 int	ft_error(int error, char *str1, char *str2)
@@ -26,7 +27,7 @@ int	ft_error(int error, char *str1, char *str2)
 			ft_putstr_fd(str1, STDERR_FILENO);
 		if (str2)
 			ft_putstr_fd(str2, STDERR_FILENO);
-		ft_putchar_fd('\n', STDERR_FILENO);
+		ft_putchar_fd('\n', STDOUT_FILENO);
 		return (error);
 	}
 	else if (errno != 0)
@@ -43,7 +44,7 @@ void	ft_exit(t_minishell *minishell, int error, char *str)
 	// FREE / LIBERE TOUT
 	ft_gc_free_all(&minishell->gc);
 	rl_clear_history();
-
+	minishell->exit_status = error;
 	// IMPRIME ERREUR
 	if (str)
 	{

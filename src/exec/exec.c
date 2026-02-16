@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <string.h>
 
 void parent_process(int *prev_pipe, int pipe_fd[2])
 {
@@ -46,7 +47,7 @@ void ft_pipe_and_fork(t_minishell *minishell,int size_cmd, int pipe_fd[2], int *
 				perror("Pipe");
 			pids[i] = fork();
 			if (pids[i] < 0)
-				ft_exit(minishell, errno, "FORK");
+				ft_exit(minishell, errno, strerror(errno));
 			if (pids[i] == 0)
 				child_process(minishell, cmd, child,  pipe_fd);
 			parent_process(&prev_pipe, pipe_fd);

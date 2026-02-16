@@ -17,7 +17,7 @@ void handler_signal_child()
 	if (signal(SIGQUIT, SIG_DFL) == SIG_ERR)
 		perror("signal error default SIGQUIT");
 	if (signal(SIGINT, SIG_DFL) == SIG_ERR)
-		perror("signal error default SIGQUIT");
+		perror("signal error default SIGINT");
 }
 
 void	handler_first_cmd(int infd, int size_cmd, int pipe_fd)

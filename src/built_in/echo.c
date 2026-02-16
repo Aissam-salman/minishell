@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
+/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 19:33:53 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/16 13:13:40 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/16 18:02:35 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,15 @@
 
 void ft_echo(char **args, int have_flag)
 {
+	//FIX: handle -nnnnnnn -nnn -nnnnn flags
 	int i;
-	
+
+	if (!args || !*args)
+	{
+		if (write(1, "\n", 1) == -1)
+			ft_error(errno, "write",NULL);
+		return;
+	}
 	// -n  == 1
 	if (!args)
 		return;
@@ -30,7 +37,7 @@ void ft_echo(char **args, int have_flag)
 		}
 	}
 	else
-	{
+{
 		i = 1;
 		while (args[i])
 		{

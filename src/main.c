@@ -1,4 +1,5 @@
 #include "../includes/minishell.h"
+#include "errors.h"
 
 void	ft_minishell_reset(t_minishell *minishell)
 {
@@ -11,7 +12,6 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	minishell;
 
-	(void)argc;
 	(void)argv;
 	ft_bzero(&minishell, sizeof(t_minishell));
 	ft_env_setup(&minishell, envp);

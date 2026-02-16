@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
+/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 18:26:24 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/16 17:27:02 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/16 18:06:37 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include "errors.h"
 
 int	handle_redirection(t_token *token)
 {
@@ -25,17 +26,14 @@ int	handle_redirection(t_token *token)
 
 void	handle_word(t_token *token, t_minishell *minishell, int *cmd_find)
 {
-	// ft_filter_quote(token, minishell);
 	if (*cmd_find == 0)
 	{
-		ft_check_cmd(minishell, token);  
+		ft_check_cmd(minishell, token);
 		token->type = CMD;
 		*cmd_find = 1;
 	}
 	if (ft_check_flags(token->str) == 1)
 		token->type = FLAG;
-	// if (ft_check_file(token) == 1)
-	// 	token->type = R_FILE;
 }
 
 int	handle_pipe(t_token *token, int *cmd_find)
