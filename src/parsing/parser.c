@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include "errors.h"
 
 void	handle_redirection(t_token *token)
 {
@@ -20,20 +21,11 @@ void	handle_redirection(t_token *token)
 	{
 		if (ft_check_file_of_redirection(token) == 0)
 			token->code_error = 299;
-		// else
-		// 	token->next->type = R_FILE;
 	}
 }
 
-// void	handle_expands(t_token *token, t_minishell *minishell)
-// {
-// 	ft_filter_quote(token, minishell);
-// 	token->str = ft_check_expands(minishell, token->str);
-// }
-
 void	handle_word(t_token *token, t_minishell *minishell, int *cmd_find)
 {
-	// ft_filter_quote(token, minishell);
 	if (*cmd_find == 0)
 	{
 		ft_check_cmd(minishell, token);  
@@ -42,14 +34,12 @@ void	handle_word(t_token *token, t_minishell *minishell, int *cmd_find)
 	}
 	if (ft_check_flags(token->str) == 1)
 		token->type = FLAG;
-	// if (ft_check_file(token) == 1)
-	// 	token->type = R_FILE;
 }
 
 void	handle_pipe(t_token *token, int *cmd_find)
 {
 	if (!ft_check_pipe(token->str))
-		token->code_error = 2;
+		token->code_error = SYNTAX_ERROR;
 	*cmd_find = 0;
 }
 

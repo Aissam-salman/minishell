@@ -145,7 +145,7 @@ Every prototype in this file is either **wrong** (signatures don't match actual 
 
 This file is not included by any `.c` file in the Makefile's `SRCS`.
 
-**Action:** Delete `testing.h` entirely or move it to a `tests/` directory if it's used by unit tests.
+**Action:** Delete `testing.h` entirely or move it to a `tests/` directory if it's used by unit tests. [x]
 
 ---
 
@@ -160,13 +160,13 @@ This file is not included by any `.c` file in the Makefile's `SRCS`.
 if (*minishell.line == EOF)
     ft_printf("\n");
 ```
-`readline` returns `NULL` on EOF (CTRL-D), which is already handled above. If `readline` returns a non-NULL string, `*minishell.line` is a normal `char` — it will never equal `EOF` (which is typically `-1`, and `char` is `0–127` or `0–255`). **Remove this block.**
+`readline` returns `NULL` on EOF (CTRL-D), which is already handled above. If `readline` returns a non-NULL string, `*minishell.line` is a normal `char` — it will never equal `EOF` (which is typically `-1`, and `char` is `0–127` or `0–255`). **Remove this block.** [x]
 
 ### `ft_minishell_init` is redundant with `ft_bzero`
-`ft_bzero` already zeroes the entire struct at startup. Inside the loop, `ft_minishell_init` only resets `head_token` and `head_cmd`. This is fine, but the function name is misleading — it's a "reset per iteration", not a full init. Rename to `ft_minishell_reset`.
+`ft_bzero` already zeroes the entire struct at startup. Inside the loop, `ft_minishell_init` only resets `head_token` and `head_cmd`. This is fine, but the function name is misleading — it's a "reset per iteration", not a full init. Rename to `ft_minishell_reset`. /OK
 
 ### Missing `checker_token` error handling
-After `checker_token(&minishell)`, the code never checks if any token has `code_error != 0`. Execution proceeds unconditionally. **Add a check:**
+After `checker_token(&minishell)`, the code never checks if any token has `code_error != 0`. Execution proceeds unconditionally. **Add a check:** [x]
 ```c
 checker_token(&minishell);
 if (ft_has_token_error(minishell.head_token))
@@ -178,10 +178,10 @@ if (ft_has_token_error(minishell.head_token))
 ft_gc_free_all(&minishell.gc);
 ft_exit(&minishell, 0, NULL);
 ```
-These lines are **never reached** because the `while (1)` loop has no `break`. The only exits are via `ft_buildin_exit`. **Remove or make the loop breakable.**
+These lines are **never reached** because the `while (1)` loop has no `break`. The only exits are via `ft_buildin_exit`. **Remove or make the loop breakable.** [x]
 
 ### Tips
-- The `(void)argc; (void)argv;` is fine for now, but bash rejects extra arguments in interactive mode. Consider validating `argc == 1`.
+- The `(void)argc; (void)argv;` is fine for now, but bash rejects extra arguments in interactive mode. Consider validating `argc == 1`. [x]
 
 ---
 
@@ -191,7 +191,7 @@ These lines are **never reached** because the `while (1)` loop has no `break`. T
 ```c
 else if (head->name == target_name)
 ```
-This compares **pointers**, not string content. If `target_name` is a different allocation with the same text, this will never match. Use `ft_strcmp`.
+This compares **pointers**, not string content. If `target_name` is a different allocation with the same text, this will never match. Use `ft_strcmp`. [x]
 
 ### `ft_env_delone`: crash when list has one element
 ```c
@@ -204,23 +204,24 @@ while (head)
     if (head->next)         // CRASH if head is NULL
         nxt = head->next;
 ```
-If `head->next` is NULL at the end of the list, `head` becomes NULL, then `head->next` is a **NULL dereference**.
+If `head->next` is NULL at the end of the list, `head` becomes NULL, then `head->next` is a **NULL dereference**. [x]
 
 ### `ft_env_delone`: first-element check uses wrong comparison
 ```c
 if (ft_strcmp(head->name, target_name) == 0 &&
     ft_strcmp(head->name, (*head_env)->name))  // ???
 ```
-The second condition `ft_strcmp(head->name, (*head_env)->name)` checks if the current node is NOT the head. But in the first iteration `head == *head_env`, so this evaluates to `ft_strcmp(X, X)` which is **0 (false)**. This means the first element can **never** be deleted by this branch. The logic is inverted.
+The second condition `ft_strcmp(head->name, (*head_env)->name)` checks if the current node is NOT the head. But in the first iteration `head == *head_env`, so this evaluates to `ft_strcmp(X, X)` which is **0 (false)**. This means the first element can **never** be deleted by this branch. The logic is inverted. [x]
+
 
 ### `ft_env_find`: uses `ft_strncmp` with `ft_strlen(to_find)` — prefix matching bug
 ```c
 if (!ft_strncmp(head_env->name, to_find, ft_strlen(to_find)))
 ```
-If you search for `"HOME"`, this also matches `"HOMEWORLD"` because it only compares the first 4 characters. Use `ft_strcmp` instead.
+If you search for `"HOME"`, this also matches `"HOMEWORLD"` because it only compares the first 4 characters. Use `ft_strcmp` instead. [x]
 
 ### Tips
-- Rewrite `ft_env_delone` from scratch — it has multiple interacting bugs.
+- Rewrite `ft_env_delone` from scratch — it has multiple interacting bugs.[x]
 
 ---
 
@@ -233,10 +234,10 @@ If you search for `"HOME"`, this also matches `"HOMEWORLD"` because it only comp
 if (signal(SIGINT, SIG_DFL) == SIG_ERR)
     perror("signal error default SIGQUIT");  // Says SIGQUIT but handles SIGINT
 ```
-This is in `handler.c`, not here, but the pattern shows up. In this file, all is correct.
+This is in `handler.c`, not here, but the pattern shows up. In this file, all is correct. [x]
 
 ### Tips
-- `SA_RESTART` flag means `readline` will restart after signal — this is correct behavior for SIGINT.
+- `SA_RESTART` flag means `readline` will restart after signal — this is correct behavior for SIGINT. [x]
 
 ---
 
