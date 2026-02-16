@@ -6,7 +6,7 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 18:31:47 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/14 14:39:17 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/16 18:03:42 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,13 @@ void close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2])
 		run_built_in_piped(cmd, minishell);
 		exit(1);
 	}
-	else
-		if (execv(cmd->path, cmd->args) == -1)
-			ft_exit(minishell, errno, strerror(errno));
+	if (!cmd->path || access(cmd->path, X_OK) != 0)
+	{
+		ft_error(127, cmd->args[0], ": command not found");
+		ft_exit(minishell, errno, NULL);
+	}
+	if (execv(cmd->path, cmd->args) == -1)
+		ft_exit(minishell, errno, "EXECV");
 }
 
 void child_process(t_minishell *minishell, t_cmd *cmd, t_child *child, int pipe_fd[2])

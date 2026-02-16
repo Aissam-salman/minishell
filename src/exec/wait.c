@@ -6,7 +6,7 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 18:46:29 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/13 18:47:59 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/16 18:05:52 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,18 @@ void ft_wait_subprocess(t_minishell *minishell, int size_cmd, int *pids)
 {
 	int status;
 	t_cmd *cmd;
+	int i;
 
 	cmd = minishell->head_cmd;
-	int i = 0;
+	i = 0;
 	while (i < size_cmd)
 	{
 		waitpid(pids[i], &status, 0);
 		handler_status(status, cmd, minishell);
+		if (WIFEXITED(status))
+			minishell->exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			minishell->exit_status = 128 + WTERMSIG(status);
 		cmd = cmd->next;
 		i++;
 	}

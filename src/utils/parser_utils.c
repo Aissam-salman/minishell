@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 13:04:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/16 12:05:28 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/16 17:21:00 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 	// char *expension;
 	char	buffer[BUFFER_SIZE];
 	char	*err_value;
-	char	*env;
+	t_env	*path_env;
 
 	ft_bzero(buffer, BUFFER_SIZE);
 
@@ -27,8 +27,7 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 	// ATTENTION A L'EXPAND POUR LA VALEUR DE RETOUR
 	if (str[*start] == '?')
 	{
-		// A MODIF : RECUPERE LA VARIABLE D'ERREUR GLOBAL
-		err_value = ft_itoa_gc(GENERAL_ERROR, &minishell->gc);
+		err_value = ft_itoa_gc(minishell->exit_status, &minishell->gc);
 		if (!err_value)
 			return (ft_error(MALLOC_FAIL, "Error malloc expands", NULL));
 
@@ -46,15 +45,14 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 			return (BUFFER_FAIL);
 		(*start)++;
 	}
-
 	// ON RECUPERE L'ENV
 	// ft_printf("BUFFER = %s\n", buffer);
-	env = getenv(buffer);
+	path_env = ft_env_find(minishell->head_env, buffer);
 
 	// ft_printf("ENV = %s\n", env);
-	if (env)
+	if (path_env->content)
 	{
-		if (ft_strlcat(usable_str, env, BUFFER_SIZE) > BUFFER_SIZE)
+		if (ft_strlcat(usable_str, path_env->content, BUFFER_SIZE) > BUFFER_SIZE)
 			return (ft_error(BUFFER_FAIL, "Insufficient buffer size", NULL));
 	}
 	return (0);

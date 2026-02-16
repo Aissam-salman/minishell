@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
+/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 16:28:43 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/13 18:31:28 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/16 18:07:31 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,9 @@ void	ft_exit(t_minishell *minishell, int error, char *str)
 	minishell->exit_status = error;
 	// IMPRIME ERREUR
 	if (str)
+	{
 		ft_putstr_fd(str, STDERR_FILENO);
-	ft_putchar_fd('\n', STDOUT_FILENO);
+		ft_putchar_fd('\n', STDERR_FILENO);
+	}
 	exit(error);
 }
