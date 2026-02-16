@@ -2,8 +2,8 @@
 # define MINISHELL_H
 
 // FAITS MAISON
-#include "../libft/libft.h"
-#include "errors.h"
+# include "../libft/libft.h"
+# include "errors.h"
 
 // PRODUITS IMPORTES
 # include <signal.h>
@@ -24,7 +24,7 @@
 # define SEPARATORS " $\'\"\t"
 
 // ENUM TYPES ELEMENTS
-typedef enum e_type
+typedef enum	e_type
 {
 	DEFAULT = 0,
 	PIPE,
@@ -41,7 +41,7 @@ typedef enum e_type
 }					t_types;
 
 // ENUMS MACHINE STATES
-typedef enum e_state
+typedef enum	e_state
 {
 	NORMAL,
 	IN_QUOTE,
@@ -51,7 +51,7 @@ typedef enum e_state
 }					t_state;
 
 // STRUCTURE POUR CMD
-typedef struct s_cmd
+typedef struct	s_cmd
 {
 	char			*path;
 	char			**args;
@@ -62,7 +62,7 @@ typedef struct s_cmd
 }					t_cmd;
 
 // STRUCTURE POUR UN ELEMENT
-typedef struct s_token
+typedef struct	s_token
 {
 	char			*str;
 	t_types			type;
@@ -70,15 +70,15 @@ typedef struct s_token
 	char			*path;
 }					t_token;
 
-typedef struct s_env
+typedef struct	s_env
 {
 	char			*name;
 	char			*content;
 	struct s_env	*next;
-}		t_env;
+}					t_env;
 
 // STRUCTURE GLOBALE POUR LE MINISHELL
-typedef struct s_minishell
+typedef struct	s_minishell
 {
 	t_token			*head_token;
 	t_cmd			*head_cmd;
@@ -90,12 +90,12 @@ typedef struct s_minishell
 }					t_minishell;
 
 // STRUCTURE POUR EXEC CHILD
-typedef struct s_child
+typedef struct	s_child
 {
-	int index;
-	int prev_pipe;
-	int size_cmd;
-} t_child;
+	int				index;
+	int				prev_pipe;
+	int 			size_cmd;
+}					t_child;
 
 // ── PARSING ─────────────────────────────────────────
 
@@ -126,12 +126,12 @@ int					ft_token_add(t_minishell *minishell, t_token *to_add);
 /////////
 
 // PARSING/LEXER.C
-void	ft_state_detect(char c, t_minishell *minishell);
-int	ft_buffer_add(char *buffer, char c);
+void				ft_state_detect(char c, t_minishell *minishell);
+int					ft_buffer_add(char *buffer, char c);
 int					ft_tokenize(t_minishell *minishell);
 
 // parsing/parser.c
-int				checker_token(t_minishell *minishell);
+int					checker_token(t_minishell *minishell);
 
 // parsing/check.c
 int					ft_check_flags(char *str);
@@ -142,17 +142,10 @@ void				ft_cmd_find_path(t_minishell *minishell, t_token *token);
 int					is_redirection(t_token *token);
 int					ft_check_pipe(char *str);
 
-// parsing/expander.c
-char				*ft_check_expands(t_minishell *minishell, char *str);
-
-// parsing/filter.c
-void				ft_filter_quote(t_token *token, t_minishell *minishell);
-int					is_need_expands(t_token *token);
-
 // ── EXEC ────────────────────────────────────────────
 
 // UTILS/PARSER_UTILS.C
-void	ft_quotes_handle(t_minishell *minishell, t_token *token);
+void				ft_quotes_handle(t_minishell *minishell, t_token *token);
 /////////
 
 // HELPERS/cntrl.C

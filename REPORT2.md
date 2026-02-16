@@ -463,9 +463,9 @@ int ft_check_pipe(char *str)
 path_env = ft_env_find(minishell->head_env, buffer);
 if (path_env->content)  // CRASH: path_env can be NULL
 ```
-`ft_env_find` returns NULL if the variable doesn't exist. Dereferencing NULL → **SEGV**.
+`ft_env_find` returns NULL if the variable doesn't exist. Dereferencing NULL → **SEGV**. [x]
 
-**Fix:**
+**Fix:** 
 ```c
 path_env = ft_env_find(minishell->head_env, buffer);
 if (path_env && path_env->content)
@@ -473,7 +473,7 @@ if (path_env && path_env->content)
 
 ### `ft_expend`: `$?` uses hardcoded `GENERAL_ERROR` instead of actual exit status
 ```c
-err_value = ft_itoa_gc(GENERAL_ERROR, &minishell->gc);
+err_value = ft_itoa_gc(GENERAL_ERROR, &minishell->gc); [x]
 ```
 This always returns `"1"`. Should use `minishell->exit_status` (which itself needs to be wired up — see minishell.h section).
 
@@ -491,7 +491,7 @@ Typo in the function name.
 ## 13. `src/parsing/support/expander.c`
 
 ### **Entirely dead code**: `ft_check_expands` is never called
-All calls to `ft_check_expands` in the codebase are **commented out** (in `parser.c`'s `handle_expands`). The expansion logic has been moved to `parser_utils.c` (`ft_quotes_handle` / `ft_expend`).
+All calls to `ft_check_expands` in the codebase are **commented out** (in `parser.c`'s `handle_expands`). The expansion logic has been moved to `parser_utils.c` (`ft_quotes_handle` / `ft_expend`). [x]
 
 **Action:** Delete this entire file and remove it from the Makefile.
 
@@ -508,9 +508,9 @@ All calls to `ft_check_expands` in the codebase are **commented out** (in `parse
 
 ### **Entirely dead code**: both functions are never called
 - `is_need_expands()` — never called from any active code.
-- `ft_filter_quote()` — all call sites are commented out in `parser.c`.
+- `ft_filter_quote()` — all call sites are commented out in `parser.c`. 
 
-**Action:** Delete this entire file and remove it from the Makefile.
+**Action:** Delete this entire file and remove it from the Makefile. [x]
 
 ### `ft_strdup_without`: double allocation waste
 ```c

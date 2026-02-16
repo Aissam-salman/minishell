@@ -28,7 +28,7 @@ void	handle_word(t_token *token, t_minishell *minishell, int *cmd_find)
 {
 	if (*cmd_find == 0)
 	{
-		ft_check_cmd(minishell, token);
+		ft_cmd_find_path(minishell, token);
 		token->type = CMD;
 		*cmd_find = 1;
 	}
