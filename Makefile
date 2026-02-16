@@ -1,13 +1,17 @@
 NAME= minishell
 
 SRCS = src/main.c \
-       src/signal/signal_core.c \
-		src/errors/errors.c \
 		src/parsing/lexer.c \
 		src/parsing/parser.c \
-		src/parsing/support/expander.c \
-		src/parsing/support/check.c \
-		src/parsing/support/check2.c \
+		src/parsing/expander.c \
+		src/parsing/check.c \
+		src/parsing/check2.c \
+		src/parsing/filter.c \
+		src/exec/exec.c \
+		src/exec/child_exec.c \
+		src/exec/handler.c \
+		src/exec/wait.c \
+		src/exec/cntrl.c \
 		src/built_in/env.c \
 		src/built_in/export.c \
 		src/built_in/pwd.c \
@@ -22,11 +26,8 @@ SRCS = src/main.c \
 		src/utils/heredoc.c \
 		src/utils/env_setup.c \
 		src/utils/parser_utils.c \
-		src/helpers/cntrl.c \
-		src/execution/exec.c \
-		src/execution/child_exec.c \
-		src/execution/handler.c \
-		src/execution/wait.c 
+		src/utils/errors.c \
+		src/utils/signal_core.c
 
 OBJ_DIR = objs
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
@@ -65,17 +66,22 @@ re: fclean all
 ###############################################
 ############## TESTING ########################
 
-SRCS_NO_MAIN = src/errors/errors.c \
-			src/parsing/lexer.c \
+SRCS_NO_MAIN = src/parsing/lexer.c \
 			src/parsing/parser.c \
-			src/parsing/helper/expander.c \
-			src/parsing/helper/check.c \
-			src/parsing/helper/check2.c \
+			src/parsing/expander.c \
+			src/parsing/check.c \
+			src/parsing/check2.c \
+			src/parsing/filter.c \
+			src/exec/exec.c \
+			src/exec/child_exec.c \
+			src/exec/handler.c \
+			src/exec/wait.c \
+			src/exec/cntrl.c \
 			src/utils/cmds.c \
 			src/utils/output.c \
 			src/utils/tokens.c \
-			src/helpers/cntrl.c \
-			src/exec.c
+			src/utils/errors.c \
+			src/utils/signal_core.c
 
 OBJS_NO_MAIN = $(SRCS_NO_MAIN:%.c=$(OBJ_DIR)/%.o)
 

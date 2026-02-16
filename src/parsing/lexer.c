@@ -65,10 +65,13 @@ void	ft_state_detect(char c, t_minishell *minishell)
 int	ft_state_interpret(char *line, int *index, char *buffer,
 		t_minishell *minishell)
 {
+	int len_buffer;
+
+	len_buffer = ft_strlen(buffer);
 	// SI ESPACES
 	if (ft_ischarset(line[*index], SPACES) && minishell->state == NORMAL)
 	{
-		if (ft_strlen(buffer) > 0)
+		if (len_buffer > 0)
 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
 				return (ft_error(MALLOC_FAIL, "Fail Malloc Interpreter", NULL));
 		minishell->state = WAITING;
@@ -76,7 +79,7 @@ int	ft_state_interpret(char *line, int *index, char *buffer,
 	// SI OPERATORS
 	if (ft_ischarset(line[*index], OPERATORS) && minishell->state == NORMAL)
 	{
-		if (ft_strlen(buffer) > 0 && buffer[0] != line[*index])
+		if (len_buffer > 0 && (buffer[0] != line[*index] || len_buffer >= 2))
 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
 				return (ft_error(MALLOC_FAIL, "Fail Malloc Interpreter", NULL));
 	}

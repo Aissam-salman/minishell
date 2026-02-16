@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 14:15:59 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/16 13:21:38 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/16 17:21:00 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,11 @@ void run_built_in(t_cmd *cmd, t_minishell *minishell)
 	char *str;
 
 	str = cmd->args[0];
+	minishell->exit_status = 0;
 	if (ft_strcmp(str, "exit") == 0)
 		ft_buildin_exit(minishell, cmd->args[1]);
 	else if (ft_strcmp(str, "export") == 0)
-		ft_export(minishell, 2, cmd->args[1]);
+		minishell->exit_status = ft_export(minishell, 2, cmd->args[1]);
 	else if (ft_strcmp(str, "unset") == 0)
 		ft_unset(&minishell->head_env, cmd->args[1]);
 	else if (ft_strcmp(str, "env") == 0)

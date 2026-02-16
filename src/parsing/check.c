@@ -6,11 +6,11 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:57:07 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/16 14:04:51 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/16 17:01:31 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 int ft_check_flags(char *str)
 {
@@ -34,30 +34,16 @@ int ft_check_flags(char *str)
 	return (1);
 }
 
-// A MODIFIER : POUR POUVOIR GERE "unvalid syntax near token <<"
-int ft_check_redirection(char *str)
+// REGARDE SI LA STRING EST UN OPERATEUR VALIDE (<, <<, >, >>)
+int	ft_check_redirection(char *str)
 {
-	int i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] != str[0] || i > 2)
-		{
-			return (1);
-		}
-		i++;
-	}
-    // if (!str)
-	//     return (0);
-    // if (str[0] == ' ')
-	//     return (0);
-    // else if ((str[0] == '<' && !str[1]) || (str[0] == '>' && !str[1]))
-	//     return (1);
-    // else if ((str[0] == '<' && str[1] == '<' && !str[2]) ||
-	// 	    (str[0] == '>' && str[1] == '>' && !str[2]))
-	//     return (1);
-    // return (0);
+	if (!str)
+		return (0);
+	if ((str[0] == '<' && !str[1])
+		|| (str[0] == '<' && str[1] == '<' && !str[2])
+		|| (str[0] == '>' && !str[1])
+		|| (str[0] == '>' && str[1] == '>' && !str[2]))
+		return (1);
 	return (0);
 }
 

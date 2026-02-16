@@ -1049,4 +1049,76 @@ These are the exit codes that bash uses and that your minishell should match for
 
 ---
 
+## 33. Recommended `e_errors` Enum (No Bonus)
+
+Copy-paste ready enum for `errors.h` covering every exit code needed by minishell mandatory part.
+
+The key rules:
+- **Bash-visible codes** (the ones that can become `$?`) must match bash exactly.
+- **Internal-only codes** use negative values so they can never accidentally leak as an exit status.
+- `NO_SUCH_FILE_O_DIR` is removed — it's not a single exit code. Use `CMD_NOT_FOUND` (127) when a command isn't found, and `GENERAL_ERROR` (1) when a file argument doesn't exist.
+
+```c
+typedef enum e_errors
+{
+	/* ── Internal-only (never leak as $?) ── */
+	PARSING_FAIL = -3,
+	BUFFER_FAIL  = -2,
+	MALLOC_FAIL  = -1,
+
+	/* ── Bash-compatible exit codes ──────── */
+	SUCCESS            = 0,    // Command succeeded
+	GENERAL_ERROR      = 1,    // Catchall: bad flag, cd fail, export invalid id, etc.
+	SYNTAX_ERROR       = 2,    // bash: syntax error near unexpected token
+	                           //   also: exit with non-numeric arg
+	PERMISSION_DENIED  = 126,  // Command found but not executable (chmod -x)
+	CMD_NOT_FOUND      = 127,  // Command not found in PATH
+	SIGNAL_BASE        = 128,  // Base for signal exits (128 + signum)
+	SIGINT_EXIT        = 130,  // 128 + 2  — CTRL-C
+	SIGQUIT_EXIT       = 131,  // 128 + 3  — CTRL-\ (core dump)
+}	t_errors;
+```
+
+### How each code is used
+
+| Code | Name | Where it's set |
+|------|------|----------------|
+| `-3` | `PARSING_FAIL` | `ft_tokenize` / `ft_cmd_lst_create` on internal parse failure. Caught in `main.c` loop → `continue`, never reaches `$?`. |
+| `-2` | `BUFFER_FAIL` | `ft_buffer_add` if buffer is full. Same handling as above. |
+| `-1` | `MALLOC_FAIL` | Any `ft_gc_malloc` / `ft_calloc_gc` failure. Call `ft_exit(minishell, 1, "malloc fail")`. |
+| `0` | `SUCCESS` | Default on success. Built-ins return this. `WEXITSTATUS(status)` gives this when child exits normally. |
+| `1` | `GENERAL_ERROR` | `cd` to non-existent dir, `export` with bad identifier, `exit` with too many args (does NOT exit), write errors in `echo`, `pwd` if `getcwd` fails. |
+| `2` | `SYNTAX_ERROR` | Unclosed quotes, `| |`, `> >`, `< <newline>`, or `exit abc` (non-numeric arg → print error, exit with 2). |
+| `126` | `PERMISSION_DENIED` | `access(path, X_OK)` fails but `access(path, F_OK)` succeeds → command exists but can't execute. |
+| `127` | `CMD_NOT_FOUND` | Command not found in PATH and not a built-in. Also: empty command name. |
+| `128` | `SIGNAL_BASE` | Not used directly. Base value for computing `128 + WTERMSIG(status)`. |
+| `130` | `SIGINT_EXIT` | Child killed by SIGINT (CTRL-C). Set via `128 + WTERMSIG(status)` in `ft_wait_subprocess`. |
+| `131` | `SIGQUIT_EXIT` | Child killed by SIGQUIT (CTRL-\\). Same mechanism. |
+
+### Quick reference: setting `$?` in `ft_wait_subprocess`
+
+```c
+if (WIFEXITED(status))
+    minishell->exit_status = WEXITSTATUS(status);
+else if (WIFSIGNALED(status))
+    minishell->exit_status = SIGNAL_BASE + WTERMSIG(status);
+```
+
+### Quick reference: setting `$?` in built-ins
+
+```c
+// In run_built_in(), after each call:
+minishell->exit_status = ret;  // where ret is 0 or 1
+
+// Special case — exit with non-numeric arg:
+minishell->exit_status = SYNTAX_ERROR;  // 2
+ft_exit(minishell, SYNTAX_ERROR, "numeric argument required");
+
+// Special case — exit with too many args:
+ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
+minishell->exit_status = GENERAL_ERROR;  // 1, and do NOT exit
+```
+
+---
+
 *End of report. No files were modified.*

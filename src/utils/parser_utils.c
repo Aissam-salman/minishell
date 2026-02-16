@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 13:04:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/16 12:19:39 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/16 17:21:00 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 	// ATTENTION A L'EXPAND POUR LA VALEUR DE RETOUR
 	if (str[*start] == '?')
 	{
-		// A MODIF : RECUPERE LA VARIABLE D'ERREUR GLOBAL
-		err_value = ft_itoa_gc(GENERAL_ERROR, &minishell->gc);
+		err_value = ft_itoa_gc(minishell->exit_status, &minishell->gc);
 		if (!err_value)
 			return (ft_error(MALLOC_FAIL, "Error malloc expands", NULL));
 

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 // TODO: refacto
 char	*ft_check_expands(t_minishell *minishell, char *str)
