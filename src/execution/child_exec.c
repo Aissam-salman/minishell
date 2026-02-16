@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <string.h>
 
 void child_set(t_child *child, int i, int prev_pipe, int size_cmd)
 {
@@ -44,7 +45,7 @@ void close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2])
 	}
 	else
 		if (execv(cmd->path, cmd->args) == -1)
-			ft_exit(minishell, errno, "EXECV");
+			ft_exit(minishell, errno, strerror(errno));
 }
 
 void child_process(t_minishell *minishell, t_cmd *cmd, t_child *child, int pipe_fd[2])

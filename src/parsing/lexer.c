@@ -158,7 +158,6 @@ void	ft_type_affect(t_minishell *minishell)
 			current->type = WORD;
 		current = current->next;
 	}
-
 }
 
 // On récupere la ligne, on traite pour avoir des types de mots

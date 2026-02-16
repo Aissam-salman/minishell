@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <unistd.h>
 
 // ERROR + MSG SUR SORTIE ERREUR
 int	ft_error(int error, char *str1, char *str2)
@@ -26,7 +27,7 @@ int	ft_error(int error, char *str1, char *str2)
 			ft_putstr_fd(str1, STDERR_FILENO);
 		if (str2)
 			ft_putstr_fd(str2, STDERR_FILENO);
-		ft_putchar_fd('\n', STDERR_FILENO);
+		ft_putchar_fd('\n', STDOUT_FILENO);
 		return (error);
 	}
 	else if (errno != 0)
@@ -47,6 +48,6 @@ void	ft_exit(t_minishell *minishell, int error, char *str)
 	// IMPRIME ERREUR
 	if (str)
 		ft_putstr_fd(str, STDERR_FILENO);
-	ft_putchar_fd('\n', STDERR_FILENO);
+	ft_putchar_fd('\n', STDOUT_FILENO);
 	exit(error);
 }

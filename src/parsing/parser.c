@@ -49,7 +49,7 @@ void	handle_word(t_token *token, t_minishell *minishell, int *cmd_find)
 void	handle_pipe(t_token *token, int *cmd_find)
 {
 	if (!ft_check_pipe(token->str))
-		token->code_error = 301;
+		token->code_error = 2;
 	*cmd_find = 0;
 }
 
@@ -69,7 +69,6 @@ void	checker_token(t_minishell *minishell)
 			handle_word(token, minishell, &cmd_find);
 		else if (token->type == PIPE)
 			handle_pipe(token, &cmd_find);
-		// ft_printf("TOKEN STR = %s\n", token->str);
 		token = token->next;
 	}
 }

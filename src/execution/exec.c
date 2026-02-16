@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <string.h>
 
 void parent_process(int *prev_pipe, int pipe_fd[2])
 {
@@ -46,7 +47,7 @@ void ft_pipe_and_fork(t_minishell *minishell,int size_cmd, int pipe_fd[2], int *
 				perror("Pipe");
 			pids[i] = fork();
 			if (pids[i] < 0)
-				ft_exit(minishell, errno, "FORK");
+				ft_exit(minishell, errno, strerror(errno));
 			if (pids[i] == 0)
 				child_process(minishell, cmd, child,  pipe_fd);
 			parent_process(&prev_pipe, pipe_fd);
@@ -79,7 +80,7 @@ void	ft_exec(t_minishell *minishell)
 	//NOTE: if size == 1 and build in qui touche a l'env separer le bordel
 	// handle if only export KEY=VALUE  ft_export, 
 	ft_pipe_and_fork(minishell, size_cmd, pipe_fd, pids);
-	if (!is_built_in(minishell->head_cmd) && size_cmd > 1)
+	if (!is_built_in(minishell->head_cmd))
 		ft_wait_subprocess(minishell, size_cmd, pids);
 }
 

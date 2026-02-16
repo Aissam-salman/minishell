@@ -2,20 +2,20 @@
 # define MINISHELL_H
 
 // FAITS MAISON
-# include "../libft/libft.h"
-# include "errors.h"
+#include "../libft/libft.h"
+#include "errors.h"
 
 // PRODUITS IMPORTES
 #include <signal.h>
-# include <errno.h>
-# include <unistd.h>
-# include <stdio.h>
-# include <fcntl.h>
+#include <errno.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <fcntl.h>
 #include <readline/history.h>
-# include <readline/readline.h>
-# include <stdlib.h>
-# include <sys/stat.h>
-# include <sys/wait.h>
+#include <readline/readline.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
 
 // MACROS
 # define BUFFER_SIZE 1000
@@ -103,12 +103,6 @@ typedef struct s_child
 void	signal_callback_handler(int sig);
 void	setup_signal(void);
 
-// PARSING/LEXER.C
-void				ft_state_detect(char c, t_minishell *minishell);
-int					ft_buffer_add(char *buffer, char c);
-int					_tokenize(t_minishell *minishell);
-/////////
-
 // UTILS/CMDS.C
 void				ft_create_cmd_lst(t_minishell *minishell);
 /////////
@@ -189,10 +183,6 @@ int   				ft_cmd_size(t_cmd *cmd_head);
 
 // EXECUTION/EXEC.C
 void				ft_exec(t_minishell *minishell);
-void				handler_signal_child();
-void				handler_first_cmd(int infd, int size_cmd, int pipe_fd);
-void				handler_last_cmd(int prev_pipe, int outfd);
-void				close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2]);
 /////////
 
 // EXECUTION/CHILD_EXEC.C

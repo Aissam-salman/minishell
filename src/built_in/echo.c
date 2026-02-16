@@ -15,7 +15,13 @@
 void ft_echo(char **args, int have_flag)
 {
 	int i;
-	
+
+	if (!args || !*args)
+	{
+		if (write(1, "\n", 1) == -1)
+			ft_error(errno, "write",NULL);
+		return;
+	}
 	// -n  == 1
 	if (have_flag)
 	{
@@ -28,7 +34,7 @@ void ft_echo(char **args, int have_flag)
 		}
 	}
 	else
-	{
+{
 		i = 1;
 		while (args[i])
 		{
