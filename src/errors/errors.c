@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 16:28:43 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/13 18:31:28 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/16 13:44:03 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,9 @@ void	ft_exit(t_minishell *minishell, int error, char *str)
 
 	// IMPRIME ERREUR
 	if (str)
+	{
 		ft_putstr_fd(str, STDERR_FILENO);
-	ft_putchar_fd('\n', STDERR_FILENO);
+		ft_putchar_fd('\n', STDERR_FILENO);
+	}
 	exit(error);
 }

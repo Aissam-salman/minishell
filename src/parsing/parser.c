@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 18:26:24 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/13 17:44:08 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/16 13:47:27 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	handle_redirection(t_token *token)
 		// else
 		// 	token->next->type = R_FILE;
 	}
+	else
+		token->code_error = SYNTAX_ERROR;
 }
 
 // void	handle_expands(t_token *token, t_minishell *minishell)
@@ -53,7 +55,7 @@ void	handle_pipe(t_token *token, int *cmd_find)
 	*cmd_find = 0;
 }
 
-void	checker_token(t_minishell *minishell)
+void checker_token(t_minishell *minishell)
 {
 	t_token	*token;
 	int		cmd_find;
@@ -64,11 +66,17 @@ void	checker_token(t_minishell *minishell)
 	{
 		ft_quotes_handle( minishell, token);
 		if (is_redirection(token))
+		{
 			handle_redirection(token);
+			if (token->next)
+				token = token->next;
+		}
 		else if (token->type == WORD)
 			handle_word(token, minishell, &cmd_find);
 		else if (token->type == PIPE)
 			handle_pipe(token, &cmd_find);
+		if (token->code_error != 0)
+			return;
 		// ft_printf("TOKEN STR = %s\n", token->str);
 		token = token->next;
 	}

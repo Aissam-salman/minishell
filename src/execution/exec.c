@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 17:17:28 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/14 14:11:54 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/16 13:08:13 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	ft_exec(t_minishell *minishell)
 	//NOTE: if size == 1 and build in qui touche a l'env separer le bordel
 	// handle if only export KEY=VALUE  ft_export, 
 	ft_pipe_and_fork(minishell, size_cmd, pipe_fd, pids);
-	if (!is_built_in(minishell->head_cmd) && size_cmd > 1)
+	if (!is_built_in(minishell->head_cmd))
 		ft_wait_subprocess(minishell, size_cmd, pids);
 }
 

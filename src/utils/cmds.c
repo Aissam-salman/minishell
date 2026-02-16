@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:34:00 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/16 12:55:24 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/16 13:30:50 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr, int
 		{
 			// ft_tokens_print(next);
 			token->next->type = WORD;
-			ft_tokens_print(minishell->head_token);
+			// ft_tokens_print(minishell->head_token);
 			ft_heredoc_handle(minishell, cmd, token);
 			*token_ptr = next;
 		}
