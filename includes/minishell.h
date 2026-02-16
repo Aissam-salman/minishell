@@ -138,7 +138,7 @@ int					ft_check_flags(char *str);
 int					ft_check_redirection(char *str);
 
 // parsing/check2.c
-void				ft_check_cmd(t_minishell *minishell, t_token *token);
+void				ft_cmd_find_path(t_minishell *minishell, t_token *token);
 int					is_redirection(t_token *token);
 int					ft_check_pipe(char *str);
 

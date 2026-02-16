@@ -411,13 +411,13 @@ Only handles `IN_CHEVRON` and `IN_DCHEVRON`. Does not handle `OUT_CHEVRON` or `O
 ```c
 env = getenv("PATH");
 ```
-Your shell has its own env list (`minishell->head_env`). If the user does `export PATH=/new/path`, the internal list is updated but `getenv()` still returns the **original** system PATH. Use `ft_env_find(minishell->head_env, "PATH")` instead.
+Your shell has its own env list (`minishell->head_env`). If the user does `export PATH=/new/path`, the internal list is updated but `getenv()` still returns the **original** system PATH. Use `ft_env_find(minishell->head_env, "PATH")` instead. [x]
 
 ### `ft_test_path`: redundant NULL check
 ```c
 if (cur_path && access(cur_path, X_OK) == 0)
 ```
-`cur_path` is the return value of `ft_strjoin_gc`. If `ft_strjoin_gc` returns NULL, you have bigger problems (malloc fail). The `access` call will just fail on NULL anyway. Not harmful, but unnecessary.
+`cur_path` is the return value of `ft_strjoin_gc`. If `ft_strjoin_gc` returns NULL, you have bigger problems (malloc fail). The `access` call will just fail on NULL anyway. Not harmful, but unnecessary. [x]
 
 ### `ft_check_cmd`: unused variable `res`
 ```c
@@ -430,7 +430,7 @@ Can be simplified to:
 if (ft_test_path(minishell, envp, token))
     return;
 ```
-Or remove `res` entirely.
+Or remove `res` entirely. [x]
 
 ### `ft_check_pipe`: trivially simplifiable
 ```c
@@ -443,7 +443,7 @@ int ft_check_pipe(char *str)
     return (0);
 }
 ```
-Could be:
+Could be: [x]
 ```c
 int ft_check_pipe(char *str)
 {
