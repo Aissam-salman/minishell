@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handler.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 18:43:32 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/13 18:45:42 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/16 13:10:40 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void handler_last_cmd(int prev_pipe, int outfd)
 	if (outfd != 1)
 	{
 		dup2(outfd, STDOUT_FILENO);
+		close(prev_pipe);
 		close(outfd);
 	}
 }
@@ -45,5 +46,5 @@ void handler_mid_cmd(int prev_pipe, int pipe_fd)
 {
 	dup2(prev_pipe, STDIN_FILENO);
 	close(prev_pipe);
-	dup2(pipe_fd, STDIN_FILENO);
+	dup2(pipe_fd, STDOUT_FILENO);
 }

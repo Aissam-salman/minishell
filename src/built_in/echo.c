@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 19:33:53 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/14 15:01:05 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/16 13:13:40 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void ft_echo(char **args, int have_flag)
 	int i;
 	
 	// -n  == 1
+	if (!args)
+		return;
 	if (have_flag)
 	{
 		i = 2;
