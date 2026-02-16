@@ -136,9 +136,6 @@ int				checker_token(t_minishell *minishell);
 // parsing/check.c
 int					ft_check_flags(char *str);
 int					ft_check_redirection(char *str);
-int					ft_check_heredoc_end(char *str);
-int					ft_check_file_of_redirection(t_token *token);
-int					ft_check_file(t_token *token);
 
 // parsing/check2.c
 void				ft_check_cmd(t_minishell *minishell, t_token *token);

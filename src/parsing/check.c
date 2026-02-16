@@ -17,7 +17,7 @@ int ft_check_flags(char *str)
 	int i;
 
 	i = 0;
-	if (str[i] != '-' || !str[i])
+	if ( !str[i] || str[i] != '-')
 		return (0);
 	else
 		i++;
@@ -45,34 +45,4 @@ int	ft_check_redirection(char *str)
 		|| (str[0] == '>' && str[1] == '>' && !str[2]))
 		return (1);
 	return (0);
-}
-
-int ft_check_heredoc_end(char *str)
-{
-	//NOTE: maybe handle " " and ""
-	if (!str)
-		return (0);
-	return (1);
-}
-
-int ft_check_file_of_redirection(t_token *token)
-{
-	if (token->type == IN_CHEVRON)
-	{
-		if (access(token->next->str, R_OK) == -1)
-			return (0);
-	}
-	else if (token->type == IN_DCHEVRON)
-	{
-		if (ft_check_heredoc_end(token->next->str) == 0)
-			return (0);
-	}
-	return (1);
-}
-
-int ft_check_file(t_token *token)
-{
-	if (access(token->str, R_OK | W_OK) == -1)
-		return (0);
-	return (1);
 }

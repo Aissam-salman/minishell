@@ -303,10 +303,10 @@ The if/else chain checks `str[0]` then `str[1]`. This is fine for 3 operators, b
 ```c
 ft_bzero(buffer, ft_strlen(buffer));
 ```
-Side-effecting the caller's buffer inside a "create" function is surprising. Consider clearing the buffer in the caller instead, or document this behavior clearly.
+Side-effecting the caller's buffer inside a "create" function is surprising. Consider clearing the buffer in the caller instead, or document this behavior clearly. [x]
 
 ### Tips
-- `ft_token_last` is a utility that could be shared with `ft_cmd_last` and `ft_env_last` via a generic pattern, since all three linked lists follow the same structure.
+- `ft_token_last` is a utility that could be shared with `ft_cmd_last` and `ft_env_last` via a generic pattern, since all three linked lists follow the same structure. [x]
 
 ---
 
@@ -321,7 +321,7 @@ Side-effecting the caller's buffer inside a "create" function is surprising. Con
 // void handle_expands(t_token *token, t_minishell *minishell)
 // { ... }
 ```
-**Remove entirely.** Quote/expand handling is now in `parser_utils.c`.
+**Remove entirely.** Quote/expand handling is now in `parser_utils.c`. [x]
 
 ### Dead code: commented-out lines inside `handle_word`
 ```c
@@ -329,9 +329,9 @@ Side-effecting the caller's buffer inside a "create" function is surprising. Con
 // if (ft_check_file(token) == 1)
 //     token->type = R_FILE;
 ```
-**Remove.**
+**Remove.** [x]
 
-### `handle_word` promotes to FLAG after CMD
+### `handle_word` promotes to FLAG after CMD 
 ```c
 if (*cmd_find == 0)
 {
@@ -342,16 +342,16 @@ if (*cmd_find == 0)
 if (ft_check_flags(token->str) == 1)
     token->type = FLAG;
 ```
-If the **first word** is a flag-like string (e.g., `-l`), it gets set to `CMD` then immediately overwritten to `FLAG`. The second `if` should be `else if` so that the command itself is never re-typed.
+If the **first word** is a flag-like string (e.g., `-l`), it gets set to `CMD` then immediately overwritten to `FLAG`. The second `if` should be `else if` so that the command itself is never re-typed. [x]
 
 ### Magic number `301`
 ```c
 token->code_error = 301;
 ```
-No corresponding enum value. Use a named constant.
+No corresponding enum value. Use a named constant. [x]
 
 ### Tips
-- `checker_token` should return an `int` (error code) so `main.c` can check it directly instead of scanning all tokens for `code_error`.
+- `checker_token` should return an `int` (error code) so `main.c` can check it directly instead of scanning all tokens for `code_error`. [x]
 
 ---
 
@@ -365,7 +365,7 @@ int ft_check_redirection(char *str)
     // ... entire body is commented out
 }
 ```
-Missing semicolon after `int i`, and the entire function body is commented out. This **will not compile**. Either restore the function body or provide a new implementation.
+Missing semicolon after `int i`, and the entire function body is commented out. This **will not compile**. Either restore the function body or provide a new implementation. [x]
 
 ### `ft_check_flags`: logic bug on first line
 ```c
@@ -377,7 +377,7 @@ if (str[i] != '-' || !str[i])
 if (!str[0] || str[0] != '-')
     return (0);
 ```
-Check for empty **first**, then check the character. Clearer and safer.
+Check for empty **first**, then check the character. Clearer and safer. [x]
 
 ### `ft_check_heredoc_end`: does nothing useful
 ```c
@@ -388,16 +388,16 @@ int ft_check_heredoc_end(char *str)
     return (1);
 }
 ```
-This function only checks if `str` is NULL. It's called from `ft_check_file_of_redirection`. This is essentially a NULL check — either inline it or give it a meaningful name.
+This function only checks if `str` is NULL. It's called from `ft_check_file_of_redirection`. This is essentially a NULL check — either inline it or give it a meaningful name. [x] remove
 
 ### `ft_check_file`: **never called**
 ```c
 int ft_check_file(t_token *token)
 ```
-All references to `ft_check_file` in the codebase are **commented out**. **Remove this function.**
+All references to `ft_check_file` in the codebase are **commented out**. **Remove this function.** [x]
 
 ### `ft_check_file_of_redirection`: incomplete logic
-Only handles `IN_CHEVRON` and `IN_DCHEVRON`. Does not handle `OUT_CHEVRON` or `OUT_DCHEVRON`. For output redirections, it silently returns 1 (OK) without any check.
+Only handles `IN_CHEVRON` and `IN_DCHEVRON`. Does not handle `OUT_CHEVRON` or `OUT_DCHEVRON`. For output redirections, it silently returns 1 (OK) without any check. [x] remove unused
 
 ### Tips
 - This file needs the most work. Fix the compilation error first.
