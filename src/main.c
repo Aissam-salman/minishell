@@ -1,6 +1,6 @@
 #include "../includes/minishell.h"
 
-void	ft_minishell_init(t_minishell *minishell)
+void	ft_minishell_reset(t_minishell *minishell)
 {
 	minishell->head_token = NULL;
 	minishell->head_cmd = NULL;
@@ -14,14 +14,13 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	ft_bzero(&minishell, sizeof(t_minishell));
-	minishell.envs = envp;
 	ft_env_setup(&minishell, envp);
 	// ft_printf("RESULT = %s\n", ft_env_find(minishell.head_env, "PATH")->content);
 	// ft_env(minishell.head_env, STDOUT_FILENO);
 	while (1)
 	{
 		setup_signal();
-		ft_minishell_init(&minishell);
+		ft_minishell_reset(&minishell);
 		minishell.line = readline("foo$> ");
 		// NOTE: CTRL-D
 		if (!minishell.line)

@@ -86,7 +86,6 @@ typedef struct s_minishell
 	t_env			*head_env;
 	t_list			*gc;
 	char			*line;
-	char			**envs;
 	t_state			state;
 	int				exit_status;
 }					t_minishell;

@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 15:04:28 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/16 12:47:52 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/16 15:23:14 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ t_token	*ft_heredoc_find_last(t_token *token)
 	{
 		if (token->type == IN_DCHEVRON)
 		{
-			ft_printf("TEST HEREDOC : %s\n", token->next->str);
+			// ft_printf("TEST HEREDOC : %s\n", token->next->str);
 			last = token;
 		}
 		token = token->next;

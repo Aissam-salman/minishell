@@ -30,7 +30,7 @@ SRCS = src/main.c \
 
 OBJ_DIR = objs
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
-CC = cc -Wall -Wextra -Werror -fsanitize=address -g
+CC = cc -Wall -Wextra -Werror -fsanitize=address -g3
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 INCS = -I. -Iincludes -I$(LIBFT_DIR)

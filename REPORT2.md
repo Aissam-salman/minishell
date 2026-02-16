@@ -2,44 +2,67 @@
 
 *Generated on 2026-02-16 after full review of every `.c` and `.h` file in `src/`, `includes/`.*
 
+*Sections are ordered by **execution flow**: headers → initialization → lexing → parsing → command construction → execution → built-ins → post-execution → utilities.*
+
 ---
 
 ## Table of Contents
 
+### Headers & Definitions
 1. [includes/minishell.h](#1-includesminishellh)
 2. [includes/errors.h](#2-includeserrorsh)
 3. [includes/testing.h](#3-includestestingh)
+
+### Initialization
 4. [src/main.c](#4-srcmainc)
-5. [src/signal/signal_core.c](#5-srcsignalsignal_corec)
-6. [src/errors/errors.c](#6-srcerrorserrorsc)
+5. [src/utils/env_setup.c](#5-srcutilsenv_setupc)
+6. [src/signal/signal_core.c](#6-srcsignalsignal_corec)
+
+### Lexing (Tokenization)
 7. [src/parsing/lexer.c](#7-srcparsinglexerc)
-8. [src/parsing/parser.c](#8-srcparsingparserc)
-9. [src/parsing/support/check.c](#9-srcparsingsupportcheckc)
-10. [src/parsing/support/check2.c](#10-srcparsingsupportcheck2c)
-11. [src/parsing/support/expander.c](#11-srcparsingsupportexpanderc)
-12. [src/parsing/support/filter.c](#12-srcparsingsupportfilterc)
-13. [src/utils/tokens.c](#13-srcutilstokensc)
-14. [src/utils/cmds.c](#14-srcutilscmdsc)
-15. [src/utils/env_setup.c](#15-srcutilsenv_setupc)
-16. [src/utils/output.c](#16-srcutilsoutputc)
-17. [src/utils/parser_utils.c](#17-srcutilsparser_utilsc)
-18. [src/utils/heredoc.c](#18-srcutilsheredocc)
-19. [src/helpers/cntrl.c](#19-srchelperscntrlc)
-20. [src/execution/exec.c](#20-srcexecutionexecc)
-21. [src/execution/child_exec.c](#21-srcexecutionchild_execc)
-22. [src/execution/handler.c](#22-srcexecutionhandlerc)
-23. [src/execution/wait.c](#23-srcexecutionwaitc)
-24. [src/built_in/is_built_in.c](#24-srcbuilt_inis_built_inc)
-25. [src/built_in/echo.c](#25-srcbuilt_inechoc)
-26. [src/built_in/env.c](#26-srcbuilt_inenvc)
-27. [src/built_in/export.c](#27-srcbuilt_inexportc)
+8. [src/utils/tokens.c](#8-srcutilstokensc)
+
+### Parsing & Validation
+9. [src/parsing/parser.c](#9-srcparsingparserc)
+10. [src/parsing/support/check.c](#10-srcparsingsupportcheckc)
+11. [src/parsing/support/check2.c](#11-srcparsingsupportcheck2c)
+12. [src/utils/parser_utils.c](#12-srcutilsparser_utilsc)
+13. [src/parsing/support/expander.c](#13-srcparsingsupportexpanderc)
+14. [src/parsing/support/filter.c](#14-srcparsingsupportfilterc)
+
+### Command Construction
+15. [src/utils/cmds.c](#15-srcutilscmdsc)
+16. [src/utils/heredoc.c](#16-srcutilsheredocc)
+
+### Execution
+17. [src/helpers/cntrl.c](#17-srchelperscntrlc)
+18. [src/execution/exec.c](#18-srcexecutionexecc)
+19. [src/execution/child_exec.c](#19-srcexecutionchild_execc)
+20. [src/execution/handler.c](#20-srcexecutionhandlerc)
+
+### Built-in Commands
+21. [src/built_in/is_built_in.c](#21-srcbuilt_inis_built_inc)
+22. [src/built_in/echo.c](#22-srcbuilt_inechoc)
+23. [src/built_in/cd.c](#23-srcbuilt_incdc)
+24. [src/built_in/pwd.c](#24-srcbuilt_inpwdc)
+25. [src/built_in/export.c](#25-srcbuilt_inexportc)
+26. [src/built_in/unset.c](#26-srcbuilt_inunsetc)
+27. [src/built_in/env.c](#27-srcbuilt_inenvc)
 28. [src/built_in/exit.c](#28-srcbuilt_inexitc)
-29. [src/built_in/pwd.c](#29-srcbuilt_inpwdc)
-30. [src/built_in/cd.c](#30-srcbuilt_incdc)
-31. [src/built_in/unset.c](#31-srcbuilt_inunsetc)
+
+### Post-Execution & Utilities
+29. [src/execution/wait.c](#29-srcexecutionwaitc)
+30. [src/errors/errors.c](#30-srcerrorserrorsc)
+31. [src/utils/output.c](#31-srcutilsoutputc)
+
+### Reference
 32. [Return Value Reference Table](#32-return-value-reference-table)
 
 ---
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- HEADERS & DEFINITIONS                              -->
+<!-- ═══════════════════════════════════════════════════ -->
 
 ## 1. `includes/minishell.h`
 
@@ -126,6 +149,10 @@ This file is not included by any `.c` file in the Makefile's `SRCS`.
 
 ---
 
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- INITIALIZATION                                     -->
+<!-- ═══════════════════════════════════════════════════ -->
+
 ## 4. `src/main.c`
 
 ### Dead code: `if (*minishell.line == EOF)`
@@ -158,7 +185,46 @@ These lines are **never reached** because the `while (1)` loop has no `break`. T
 
 ---
 
-## 5. `src/signal/signal_core.c`
+## 5. `src/utils/env_setup.c`
+
+### `ft_env_delone`: uses `==` to compare strings instead of `ft_strcmp`
+```c
+else if (head->name == target_name)
+```
+This compares **pointers**, not string content. If `target_name` is a different allocation with the same text, this will never match. Use `ft_strcmp`.
+
+### `ft_env_delone`: crash when list has one element
+```c
+head = *head_env;
+nxt = head->next;          // could be NULL
+while (head)
+{
+    // ...
+    head = head->next;
+    if (head->next)         // CRASH if head is NULL
+        nxt = head->next;
+```
+If `head->next` is NULL at the end of the list, `head` becomes NULL, then `head->next` is a **NULL dereference**.
+
+### `ft_env_delone`: first-element check uses wrong comparison
+```c
+if (ft_strcmp(head->name, target_name) == 0 &&
+    ft_strcmp(head->name, (*head_env)->name))  // ???
+```
+The second condition `ft_strcmp(head->name, (*head_env)->name)` checks if the current node is NOT the head. But in the first iteration `head == *head_env`, so this evaluates to `ft_strcmp(X, X)` which is **0 (false)**. This means the first element can **never** be deleted by this branch. The logic is inverted.
+
+### `ft_env_find`: uses `ft_strncmp` with `ft_strlen(to_find)` — prefix matching bug
+```c
+if (!ft_strncmp(head_env->name, to_find, ft_strlen(to_find)))
+```
+If you search for `"HOME"`, this also matches `"HOMEWORLD"` because it only compares the first 4 characters. Use `ft_strcmp` instead.
+
+### Tips
+- Rewrite `ft_env_delone` from scratch — it has multiple interacting bugs.
+
+---
+
+## 6. `src/signal/signal_core.c`
 
 ### Clean file, no major issues
 
@@ -174,25 +240,9 @@ This is in `handler.c`, not here, but the pattern shows up. In this file, all is
 
 ---
 
-## 6. `src/errors/errors.c`
-
-### `ft_error`: commented-out code noise
-4 lines of commented-out code at the top. **Remove.**
-
-### `ft_exit`: always prints newline even without error
-```c
-if (str)
-{
-    ft_putstr_fd(str, STDERR_FILENO);
-    ft_putchar_fd('\n', STDERR_FILENO);
-}
-```
-If `str` is NULL, the function calls `exit()` silently, which is correct. But previously (before your recent edit) it always printed a newline. Make sure the version you use is the clean one.
-
-### Tips
-- Consider making `ft_error` return the error code consistently so callers can do `return (ft_error(...))` in one line (already done in most places — good).
-
----
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- LEXING (TOKENIZATION)                              -->
+<!-- ═══════════════════════════════════════════════════ -->
 
 ## 7. `src/parsing/lexer.c`
 
@@ -241,7 +291,29 @@ The if/else chain checks `str[0]` then `str[1]`. This is fine for 3 operators, b
 
 ---
 
-## 8. `src/parsing/parser.c`
+## 8. `src/utils/tokens.c`
+
+### Clean file, well-structured
+
+### Minor: return values inconsistency
+`ft_token_add` returns `0` on success and `1` on error. The rest of the codebase uses `SUCCESS` (0) and `GENERAL_ERROR` (1). Use the enums for consistency.
+
+### `ft_token_create`: buffer cleared inside creator
+```c
+ft_bzero(buffer, ft_strlen(buffer));
+```
+Side-effecting the caller's buffer inside a "create" function is surprising. Consider clearing the buffer in the caller instead, or document this behavior clearly.
+
+### Tips
+- `ft_token_last` is a utility that could be shared with `ft_cmd_last` and `ft_env_last` via a generic pattern, since all three linked lists follow the same structure.
+
+---
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PARSING & VALIDATION                               -->
+<!-- ═══════════════════════════════════════════════════ -->
+
+## 9. `src/parsing/parser.c`
 
 ### Dead code: commented-out `handle_expands`
 ```c
@@ -282,7 +354,7 @@ No corresponding enum value. Use a named constant.
 
 ---
 
-## 9. `src/parsing/support/check.c`
+## 10. `src/parsing/support/check.c`
 
 ### **COMPILATION ERROR**: `ft_check_redirection` is broken
 ```c
@@ -332,7 +404,7 @@ Only handles `IN_CHEVRON` and `IN_DCHEVRON`. Does not handle `OUT_CHEVRON` or `O
 
 ---
 
-## 10. `src/parsing/support/check2.c`
+## 11. `src/parsing/support/check2.c`
 
 ### `ft_get_path` uses `getenv("PATH")` instead of the internal env list
 ```c
@@ -383,7 +455,39 @@ int ft_check_pipe(char *str)
 
 ---
 
-## 11. `src/parsing/support/expander.c`
+## 12. `src/utils/parser_utils.c`
+
+### `ft_expend`: crash when env variable not found
+```c
+path_env = ft_env_find(minishell->head_env, buffer);
+if (path_env->content)  // CRASH: path_env can be NULL
+```
+`ft_env_find` returns NULL if the variable doesn't exist. Dereferencing NULL → **SEGV**.
+
+**Fix:**
+```c
+path_env = ft_env_find(minishell->head_env, buffer);
+if (path_env && path_env->content)
+```
+
+### `ft_expend`: `$?` uses hardcoded `GENERAL_ERROR` instead of actual exit status
+```c
+err_value = ft_itoa_gc(GENERAL_ERROR, &minishell->gc);
+```
+This always returns `"1"`. Should use `minishell->exit_status` (which itself needs to be wired up — see minishell.h section).
+
+### `ft_quotes_handle`: complex nested conditions
+The block at lines 84–99 has three `else if` branches for deciding when to add a character. This can be simplified with a helper function `should_add_char(c, state)`.
+
+### Function name: `ft_expend` → should be `ft_expand`
+Typo in the function name.
+
+### Tips
+- This is the most complex parsing function. Add unit tests for edge cases: `$NONEXISTENT`, `$?`, `"$HOME"`, `'$HOME'`, `$`, `$$`.
+
+---
+
+## 13. `src/parsing/support/expander.c`
 
 ### **Entirely dead code**: `ft_check_expands` is never called
 All calls to `ft_check_expands` in the codebase are **commented out** (in `parser.c`'s `handle_expands`). The expansion logic has been moved to `parser_utils.c` (`ft_quotes_handle` / `ft_expend`).
@@ -399,7 +503,7 @@ All calls to `ft_check_expands` in the codebase are **commented out** (in `parse
 
 ---
 
-## 12. `src/parsing/support/filter.c`
+## 14. `src/parsing/support/filter.c`
 
 ### **Entirely dead code**: both functions are never called
 - `is_need_expands()` — never called from any active code.
@@ -419,25 +523,11 @@ The first `ft_gc_malloc` is immediately leaked because `clear_word` is reassigne
 
 ---
 
-## 13. `src/utils/tokens.c`
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- COMMAND CONSTRUCTION                               -->
+<!-- ═══════════════════════════════════════════════════ -->
 
-### Clean file, well-structured
-
-### Minor: return values inconsistency
-`ft_token_add` returns `0` on success and `1` on error. The rest of the codebase uses `SUCCESS` (0) and `GENERAL_ERROR` (1). Use the enums for consistency.
-
-### `ft_token_create`: buffer cleared inside creator
-```c
-ft_bzero(buffer, ft_strlen(buffer));
-```
-Side-effecting the caller's buffer inside a "create" function is surprising. Consider clearing the buffer in the caller instead, or document this behavior clearly.
-
-### Tips
-- `ft_token_last` is a utility that could be shared with `ft_cmd_last` and `ft_env_last` via a generic pattern, since all three linked lists follow the same structure.
-
----
-
-## 14. `src/utils/cmds.c`
+## 15. `src/utils/cmds.c`
 
 ### Massive commented-out code blocks
 At least 15 lines of commented-out code throughout the file. **Remove all of them.**
@@ -471,104 +561,7 @@ This is correct (args[0] is the command name) but fragile. If the loop also coun
 
 ---
 
-## 15. `src/utils/env_setup.c`
-
-### `ft_env_delone`: uses `==` to compare strings instead of `ft_strcmp`
-```c
-else if (head->name == target_name)
-```
-This compares **pointers**, not string content. If `target_name` is a different allocation with the same text, this will never match. Use `ft_strcmp`.
-
-### `ft_env_delone`: crash when list has one element
-```c
-head = *head_env;
-nxt = head->next;          // could be NULL
-while (head)
-{
-    // ...
-    head = head->next;
-    if (head->next)         // CRASH if head is NULL
-        nxt = head->next;
-```
-If `head->next` is NULL at the end of the list, `head` becomes NULL, then `head->next` is a **NULL dereference**.
-
-### `ft_env_delone`: first-element check uses wrong comparison
-```c
-if (ft_strcmp(head->name, target_name) == 0 &&
-    ft_strcmp(head->name, (*head_env)->name))  // ???
-```
-The second condition `ft_strcmp(head->name, (*head_env)->name)` checks if the current node is NOT the head. But in the first iteration `head == *head_env`, so this evaluates to `ft_strcmp(X, X)` which is **0 (false)**. This means the first element can **never** be deleted by this branch. The logic is inverted.
-
-### `ft_env_find`: uses `ft_strncmp` with `ft_strlen(to_find)` — prefix matching bug
-```c
-if (!ft_strncmp(head_env->name, to_find, ft_strlen(to_find)))
-```
-If you search for `"HOME"`, this also matches `"HOMEWORLD"` because it only compares the first 4 characters. Use `ft_strcmp` instead.
-
-### Tips
-- Rewrite `ft_env_delone` from scratch — it has multiple interacting bugs.
-
----
-
-## 16. `src/utils/output.c`
-
-### `ft_cmd_print`: bug — iterates `current` but prints `head`
-```c
-while (current)
-{
-    // Uses head->path, head->args, head->outfd, head->infd
-    current = current->next;
-}
-```
-It iterates via `current` but always prints the **first** command (`head`). Should use `current` everywhere.
-
-### `ft_cmd_print`, `ft_tokens_print`, `ft_type_print`, `ft_state_print`: **debug-only functions, never called in production**
-All call sites are commented out. These are useful for development but should be:
-1. Wrapped in `#ifdef DEBUG` guards, or
-2. Moved to a separate `debug.c` file.
-
-### `ft_type_print`: doesn't handle all enum values
-Missing: `CMD`, `FLAG`, `LAST_HEREDOC`, `DEFAULT` (partially handled), `NBR_TYPES`.
-
-### Tips
-- `ft_env_print` IS used (by `ft_env` and `ft_export`) — keep it.
-- Consider removing all other print functions from the Makefile for production builds.
-
----
-
-## 17. `src/utils/parser_utils.c`
-
-### `ft_expend`: crash when env variable not found
-```c
-path_env = ft_env_find(minishell->head_env, buffer);
-if (path_env->content)  // CRASH: path_env can be NULL
-```
-`ft_env_find` returns NULL if the variable doesn't exist. Dereferencing NULL → **SEGV**.
-
-**Fix:**
-```c
-path_env = ft_env_find(minishell->head_env, buffer);
-if (path_env && path_env->content)
-```
-
-### `ft_expend`: `$?` uses hardcoded `GENERAL_ERROR` instead of actual exit status
-```c
-err_value = ft_itoa_gc(GENERAL_ERROR, &minishell->gc);
-```
-This always returns `"1"`. Should use `minishell->exit_status` (which itself needs to be wired up — see minishell.h section).
-
-### `ft_quotes_handle`: complex nested conditions
-The block at lines 84–99 has three `else if` branches for deciding when to add a character. This can be simplified with a helper function `should_add_char(c, state)`.
-
-### Function name: `ft_expend` → should be `ft_expand`
-Typo in the function name.
-
-### Tips
-- This is the most complex parsing function. Add unit tests for edge cases: `$NONEXISTENT`, `$?`, `"$HOME"`, `'$HOME'`, `$`, `$$`.
-
----
-
-## 18. `src/utils/heredoc.c`
+## 16. `src/utils/heredoc.c`
 
 ### `ft_heredoc`: CTRL-D (NULL from readline) causes infinite loop
 ```c
@@ -593,7 +586,11 @@ ft_printf("TEST HEREDOC : %s\n", token->next->str);
 
 ---
 
-## 19. `src/helpers/cntrl.c`
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- EXECUTION                                          -->
+<!-- ═══════════════════════════════════════════════════ -->
+
+## 17. `src/helpers/cntrl.c`
 
 ### `ft_redirection_handler`: heredoc branch can never succeed
 ```c
@@ -619,7 +616,7 @@ For redirections, `token->path` is NULL (path is only set for commands). Should 
 
 ---
 
-## 20. `src/execution/exec.c`
+## 18. `src/execution/exec.c`
 
 ### `pipefd_set`: unnecessary function
 ```c
@@ -646,7 +643,7 @@ if (prev_pipe != -1)
 
 ---
 
-## 21. `src/execution/child_exec.c`
+## 19. `src/execution/child_exec.c`
 
 ### `close_pipe_and_exec`: piped built-in exits with `exit(1)`
 ```c
@@ -663,7 +660,7 @@ Both work, but `sizeof(t_child)` is more idiomatic and consistent with the rest 
 
 ---
 
-## 22. `src/execution/handler.c`
+## 20. `src/execution/handler.c`
 
 ### `handler_signal_child`: perror message says SIGQUIT for SIGINT
 ```c
@@ -687,43 +684,11 @@ If `outfd == 1` (no redirection), `prev_pipe` is **never closed**. Move `close(p
 
 ---
 
-## 23. `src/execution/wait.c`
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- BUILT-IN COMMANDS                                  -->
+<!-- ═══════════════════════════════════════════════════ -->
 
-### `handler_status`: logic bug with `WIFEXITED` inside `WIFSIGNALED`
-```c
-if (WIFSIGNALED(status))
-{
-    // ...
-    if (WIFEXITED(status) > 0)  // This is ALWAYS false here
-        ft_printf("Error: %s\n", strerror(status));
-}
-```
-`WIFSIGNALED` and `WIFEXITED` are **mutually exclusive**. A process either exited normally OR was killed by a signal, never both. This `WIFEXITED` check inside the `WIFSIGNALED` block will **never** be true. **Remove it.**
-
-### `handler_status`: `strerror(status)` is wrong
-`strerror` takes an `errno` value, not a `waitpid` status. Use `WTERMSIG(status)` to get the signal number, then `strsignal(sig)`.
-
-### `handler_status`: accessing `cmd->args[1]` without NULL check
-```c
-ft_printf(" %s %s\n", cmd->args[0], cmd->args[1]);
-```
-If the command has no arguments (e.g., `sleep` killed by signal), `args[1]` is NULL → undefined behavior with `ft_printf`.
-
-### `ft_wait_subprocess`: variable declaration inside block
-```c
-int i = 0;
-```
-42 norm requires declarations at the top of the function. Move it up.
-
-### `ft_wait_subprocess`: doesn't save exit status
-The exit status of the **last** command should be saved to `minishell->exit_status` for `$?` support.
-
-### Tips
-- For proper `$?` support: `if (WIFEXITED(status)) minishell->exit_status = WEXITSTATUS(status); else if (WIFSIGNALED(status)) minishell->exit_status = 128 + WTERMSIG(status);`
-
----
-
-## 24. `src/built_in/is_built_in.c`
+## 21. `src/built_in/is_built_in.c`
 
 ### `is_built_in`: checks `cmd->args[0]` before `cmd->args`
 ```c
@@ -750,7 +715,7 @@ These built-ins are omitted from the piped version. In bash:
 
 ---
 
-## 25. `src/built_in/echo.c`
+## 22. `src/built_in/echo.c`
 
 ### Incorrect `echo` behavior — newline after every argument
 ```c
@@ -788,26 +753,49 @@ Currently, if `args[1]` is NULL, nothing is printed. Bash does: `echo` → `\n`.
 
 ---
 
-## 26. `src/built_in/env.c`
+## 23. `src/built_in/cd.c`
 
-### Trivial wrapper function
+### `save_pwd`: returns `malloc`'d memory — memory leak risk
+`getcwd(NULL, 0)` calls `malloc`. The result is `free()`d in most paths but could be missed on error paths in `ft_cd`.
+
+### `ft_cd`: `cd -` always prints pwd
 ```c
-void ft_env(t_env *head_env, int outfd)
+if (ft_strcmp(path, "-") == 0)
 {
-    ft_env_print(head_env, outfd);
+    // ... chdir ...
+    ft_pwd();   // prints current directory
+    return;
 }
 ```
-This is a one-line wrapper. Consider inlining it or keeping it if you plan to add `env` argument handling later.
+In bash, `cd -` prints the **old** directory (the one you're going TO), not the current one. Functionally this is close since by the time `ft_pwd` runs, you've already chdir'd. But the `ft_pwd` call should only happen for `cd -`, which it does — this is correct.
 
-### Missing: `env` should only print variables that have a value
-In bash, `env` only prints `NAME=VALUE` pairs. If an env variable was `export`ed without a value, it should NOT appear in `env` output (but should appear in `export` output).
+### `update_old_pwd`: doesn't add to env if OLDPWD doesn't exist
+```c
+env_old_pwd = ft_env_find(*head_env, "OLDPWD");
+if (!env_old_pwd)
+    env_old_pwd = ft_env_new(minishell, "OLDPWD");
+```
+The new node is created but **never added to the list**. The `ft_env_add` call is missing. So if OLDPWD didn't exist before, it's created, modified, and then lost.
 
 ### Tips
-- `env` with arguments (e.g., `env ls`) should print an error or run the command in a modified environment. For minishell, you can ignore this.
+- Factor out the `free(old_pwd)` calls — there are 3 different paths that each `free` it.
 
 ---
 
-## 27. `src/built_in/export.c`
+## 24. `src/built_in/pwd.c`
+
+### Uses `printf` instead of `ft_printf` or `write`
+```c
+printf("%s\n", buff);
+```
+Inconsistent with the rest of the codebase. Use `ft_putstr_fd(buff, STDOUT_FILENO)` + `ft_putchar_fd('\n', STDOUT_FILENO)`.
+
+### Tips
+- Clean and simple otherwise.
+
+---
+
+## 25. `src/built_in/export.c`
 
 ### `ft_env_format_check`: debug print left in
 ```c
@@ -844,6 +832,38 @@ If the variable already exists, this creates a **duplicate**. Should find and up
 
 ---
 
+## 26. `src/built_in/unset.c`
+
+### Trivial wrapper, delegates to `ft_env_delone`
+The function itself is fine, but `ft_env_delone` (in `env_setup.c`) is broken — see that section.
+
+### Missing: multiple argument support
+`unset VAR1 VAR2` should unset both. Currently only `cmd->args[1]` is used, ignoring any further arguments.
+
+### Tips
+- Loop over all arguments: `int i = 1; while (cmd->args[i]) ft_unset(&head_env, cmd->args[i++]);`
+
+---
+
+## 27. `src/built_in/env.c`
+
+### Trivial wrapper function
+```c
+void ft_env(t_env *head_env, int outfd)
+{
+    ft_env_print(head_env, outfd);
+}
+```
+This is a one-line wrapper. Consider inlining it or keeping it if you plan to add `env` argument handling later.
+
+### Missing: `env` should only print variables that have a value
+In bash, `env` only prints `NAME=VALUE` pairs. If an env variable was `export`ed without a value, it should NOT appear in `env` output (but should appear in `export` output).
+
+### Tips
+- `env` with arguments (e.g., `env ls`) should print an error or run the command in a modified environment. For minishell, you can ignore this.
+
+---
+
 ## 28. `src/built_in/exit.c`
 
 ### Non-standard include path
@@ -873,60 +893,95 @@ This is the same cleanup as `ft_exit`. Consider calling `ft_exit` instead.
 
 ---
 
-## 29. `src/built_in/pwd.c`
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- POST-EXECUTION & UTILITIES                         -->
+<!-- ═══════════════════════════════════════════════════ -->
 
-### Uses `printf` instead of `ft_printf` or `write`
+## 29. `src/execution/wait.c`
+
+### `handler_status`: logic bug with `WIFEXITED` inside `WIFSIGNALED`
 ```c
-printf("%s\n", buff);
-```
-Inconsistent with the rest of the codebase. Use `ft_putstr_fd(buff, STDOUT_FILENO)` + `ft_putchar_fd('\n', STDOUT_FILENO)`.
-
-### Tips
-- Clean and simple otherwise.
-
----
-
-## 30. `src/built_in/cd.c`
-
-### `save_pwd`: returns `malloc`'d memory — memory leak risk
-`getcwd(NULL, 0)` calls `malloc`. The result is `free()`d in most paths but could be missed on error paths in `ft_cd`.
-
-### `ft_cd`: `cd -` always prints pwd
-```c
-if (ft_strcmp(path, "-") == 0)
+if (WIFSIGNALED(status))
 {
-    // ... chdir ...
-    ft_pwd();   // prints current directory
-    return;
+    // ...
+    if (WIFEXITED(status) > 0)  // This is ALWAYS false here
+        ft_printf("Error: %s\n", strerror(status));
 }
 ```
-In bash, `cd -` prints the **old** directory (the one you're going TO), not the current one. Functionally this is close since by the time `ft_pwd` runs, you've already chdir'd. But the `ft_pwd` call should only happen for `cd -`, which it does — this is correct.
+`WIFSIGNALED` and `WIFEXITED` are **mutually exclusive**. A process either exited normally OR was killed by a signal, never both. This `WIFEXITED` check inside the `WIFSIGNALED` block will **never** be true. **Remove it.**
 
-### `update_old_pwd`: doesn't add to env if OLDPWD doesn't exist
+### `handler_status`: `strerror(status)` is wrong
+`strerror` takes an `errno` value, not a `waitpid` status. Use `WTERMSIG(status)` to get the signal number, then `strsignal(sig)`.
+
+### `handler_status`: accessing `cmd->args[1]` without NULL check
 ```c
-env_old_pwd = ft_env_find(*head_env, "OLDPWD");
-if (!env_old_pwd)
-    env_old_pwd = ft_env_new(minishell, "OLDPWD");
+ft_printf(" %s %s\n", cmd->args[0], cmd->args[1]);
 ```
-The new node is created but **never added to the list**. The `ft_env_add` call is missing. So if OLDPWD didn't exist before, it's created, modified, and then lost.
+If the command has no arguments (e.g., `sleep` killed by signal), `args[1]` is NULL → undefined behavior with `ft_printf`.
+
+### `ft_wait_subprocess`: variable declaration inside block
+```c
+int i = 0;
+```
+42 norm requires declarations at the top of the function. Move it up.
+
+### `ft_wait_subprocess`: doesn't save exit status
+The exit status of the **last** command should be saved to `minishell->exit_status` for `$?` support.
 
 ### Tips
-- Factor out the `free(old_pwd)` calls — there are 3 different paths that each `free` it.
+- For proper `$?` support: `if (WIFEXITED(status)) minishell->exit_status = WEXITSTATUS(status); else if (WIFSIGNALED(status)) minishell->exit_status = 128 + WTERMSIG(status);`
 
 ---
 
-## 31. `src/built_in/unset.c`
+## 30. `src/errors/errors.c`
 
-### Trivial wrapper, delegates to `ft_env_delone`
-The function itself is fine, but `ft_env_delone` (in `env_setup.c`) is broken — see that section.
+### `ft_error`: commented-out code noise
+4 lines of commented-out code at the top. **Remove.**
 
-### Missing: multiple argument support
-`unset VAR1 VAR2` should unset both. Currently only `cmd->args[1]` is used, ignoring any further arguments.
+### `ft_exit`: always prints newline even without error
+```c
+if (str)
+{
+    ft_putstr_fd(str, STDERR_FILENO);
+    ft_putchar_fd('\n', STDERR_FILENO);
+}
+```
+If `str` is NULL, the function calls `exit()` silently, which is correct. But previously (before your recent edit) it always printed a newline. Make sure the version you use is the clean one.
 
 ### Tips
-- Loop over all arguments: `int i = 1; while (cmd->args[i]) ft_unset(&head_env, cmd->args[i++]);`
+- Consider making `ft_error` return the error code consistently so callers can do `return (ft_error(...))` in one line (already done in most places — good).
 
 ---
+
+## 31. `src/utils/output.c`
+
+### `ft_cmd_print`: bug — iterates `current` but prints `head`
+```c
+while (current)
+{
+    // Uses head->path, head->args, head->outfd, head->infd
+    current = current->next;
+}
+```
+It iterates via `current` but always prints the **first** command (`head`). Should use `current` everywhere.
+
+### `ft_cmd_print`, `ft_tokens_print`, `ft_type_print`, `ft_state_print`: **debug-only functions, never called in production**
+All call sites are commented out. These are useful for development but should be:
+1. Wrapped in `#ifdef DEBUG` guards, or
+2. Moved to a separate `debug.c` file.
+
+### `ft_type_print`: doesn't handle all enum values
+Missing: `CMD`, `FLAG`, `LAST_HEREDOC`, `DEFAULT` (partially handled), `NBR_TYPES`.
+
+### Tips
+- `ft_env_print` IS used (by `ft_env` and `ft_export`) — keep it.
+- Consider removing all other print functions from the Makefile for production builds.
+
+---
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- REFERENCE                                          -->
+<!-- ═══════════════════════════════════════════════════ -->
 
 ## 32. Return Value Reference Table
 
