@@ -8,23 +8,6 @@ void	ft_minishell_init(t_minishell *minishell)
 	// minishell->line = NULL;
 }
 
-int ft_has_token_error(t_token *head_token)
-{
-	t_token *head;
-
-	head = head_token;
-	while (head)
-	{
-		if (head->code_error != 0)
-		{
-			ft_error(head->code_error, "Error parsing", NULL);
-			return (GENERAL_ERROR);
-		}
-		head = head->next;
-	}
-	return (SUCCESS);
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	minishell;
@@ -54,8 +37,6 @@ int	main(int argc, char **argv, char **envp)
 				if (ft_tokenize(&minishell))
 					continue;
 				checker_token(&minishell);
-				if (ft_has_token_error(minishell.head_token))
-					continue;
 				// ft_tokens_print(minishell.head_token);
 				if (ft_cmd_lst_create(&minishell) != SUCCESS)
 					continue;
