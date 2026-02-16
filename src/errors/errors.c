@@ -44,7 +44,7 @@ void	ft_exit(t_minishell *minishell, int error, char *str)
 	// FREE / LIBERE TOUT
 	ft_gc_free_all(&minishell->gc);
 	rl_clear_history();
-
+	minishell->exit_status = error;
 	// IMPRIME ERREUR
 	if (str)
 		ft_putstr_fd(str, STDERR_FILENO);

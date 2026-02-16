@@ -77,29 +77,29 @@ The following functions are declared **twice** in the header:
 - `close_pipe_and_exec()` — once under `EXEC.C` and once under `CHILD_EXEC.C`.
 - `ft_state_detect()` / `ft_buffer_add()` / `ft_tokenize()` — declared twice under `PARSING/LEXER.C`.
 
-**Action:** Remove all duplicate declarations. Each function should appear exactly once.
+**Action:** Remove all duplicate declarations. Each function should appear exactly once. [x]
 
 ### Stale/wrong prototype
 ```c
 void ft_create_cmd_lst(t_minishell *minishell);
 ```
-This prototype has signature `void` but the actual function `ft_cmd_lst_create` returns `int`. Also the name doesn't match. **Remove this line.**
+This prototype has signature `void` but the actual function `ft_cmd_lst_create` returns `int`. Also the name doesn't match. **Remove this line.** [x]
 
 ### Broken line in prototype
 ```c
 int
 _tokenize(t_minishell *minishell);
 ```
-This is a linebreak typo — it should be `ft_tokenize`. **Fix or remove** (the correct prototype already exists below).
+This is a linebreak typo — it should be `ft_tokenize`. **Fix or remove** (the correct prototype already exists below). [x]
 
 ### Unused struct member: `t_cmd.pipefd[2]`
-The `pipefd[2]` field inside `t_cmd` is **never read or written** anywhere in the codebase. The pipe fds are passed as local arrays in `exec.c`. **Remove it.**
+The `pipefd[2]` field inside `t_cmd` is **never read or written** anywhere in the codebase. The pipe fds are passed as local arrays in `exec.c`. **Remove it.** [x]
 
 ### Unused field: `exit_status`
-`minishell->exit_status` is declared but **never assigned or read** anywhere. This should be the `$?` value. It needs to be wired up in `ft_wait_subprocess` and in built-in return paths.
+`minishell->exit_status` is declared but **never assigned or read** anywhere. This should be the `$?` value. It needs to be wired up in `ft_wait_subprocess` and in built-in return paths. [x]
 
 ### Unused enum value: `LAST_HEREDOC`
-Never referenced anywhere. **Remove it.**
+Never referenced anywhere. **Remove it.** [x]
 
 ### `SEPARATORS` macro
 ```c
@@ -125,7 +125,7 @@ SYNTAX_ERROR = 3,    // bash uses exit code 2 for syntax errors
 PARSING_FAIL = 50,   // internal, OK
 BUFFER_FAIL = 98,    // internal, OK
 ```
-Bash returns **2** for syntax errors (e.g., `bash -c '>' ; echo $?` → `2`). Your `SYNTAX_ERROR = 3` will give wrong `$?`.
+Bash returns **2** for syntax errors (e.g., `bash -c '>' ; echo $?` → `2`). Your `SYNTAX_ERROR = 3` will give wrong `$?`. [x]
 
 ### Missing error code: `MISUSE = 2`
 Bash defines exit code **2** as "Misuse of shell builtins" (which covers syntax errors). Add it.

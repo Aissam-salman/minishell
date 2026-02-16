@@ -16,8 +16,7 @@
 typedef enum e_errors {
 	SUCCESS = 0,
 	GENERAL_ERROR = 1,
-	NO_SUCH_FILE_O_DIR = 2,
-	SYNTAX_ERROR = 3,
+	SYNTAX_ERROR = 2,
 	PARSING_FAIL = 50,
 	BUFFER_FAIL = 98,
 	MALLOC_FAIL = 99,
