@@ -83,8 +83,8 @@ typedef struct s_minishell
 {
 	t_token			*head_token;
 	t_cmd			*head_cmd;
-	t_list			*gc;
 	t_env			*head_env;
+	t_list			*gc;
 	char			*line;
 	char			**envs;
 	t_state			state;
@@ -178,11 +178,11 @@ void	ft_quotes_handle(t_minishell *minishell, t_token *token);
 /////////
 
 // HELPERS/cntrl.C
-void				ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token);
+int				ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token);
 /////////
 
 // UTILS/CMDS.C
-int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token *token, int *i);
+int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token, int *i);
 int				ft_cmd_lst_create(t_minishell *minishell);
 /////////
 int   				ft_cmd_size(t_cmd *cmd_head);

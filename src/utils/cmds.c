@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:34:00 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/13 18:33:12 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/14 18:36:26 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,13 @@ int	ft_token_word_count(t_token *current)
 	return (count);
 }
 
-int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token *token, int *i)
+// A MODIFIER : REVOIR PK SI < AVEC RIEN BUG 1 FOIS SUR 2
+int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr, int *i)
 {
 	t_token *next;
+	t_token *token;
+
+	token = *token_ptr;
 	// if (!minishell || !cmd || !token)
 	// 	return ;
 	// SI WORD = AJOUTE A ARGS
@@ -101,20 +105,31 @@ int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token *token, int *i)
 	else if (token->type == OUT_CHEVRON || token->type == OUT_DCHEVRON
 		|| token->type == IN_CHEVRON)
 	{
-		ft_redirection_handler(minishell, cmd, token);
+		if (!next || !next->str || !next->str[0])
+			return (ft_error(SYNTAX_ERROR, "Syntax error near unexpected token 'newline'", NULL));
+
+		// A MODIFIER : VALEUR DE RETOUR
+		if (ft_redirection_handler(minishell, cmd, token))
+			return (GENERAL_ERROR);
+		if (token->next)
+			*token_ptr = token->next;
 	}
 	// GESTION DES HERE_DOC
 	else if (token->type == IN_DCHEVRON)
 	{
-		if (!next || !next->str)
+		if (!next || !next->str || !next->str[0])
 			return (ft_error(SYNTAX_ERROR, "Syntax error near unexpected token 'newline'", NULL));
 		else if (next->type != WORD)
 		{
 			// ft_tokens_print(next);
+			ft_tokens_print(minishell->head_token);
 			return (ft_error(SYNTAX_ERROR, "Syntax error near unexpected token ", next->str));
 		}
 		else 
+		{
 			ft_heredoc_handle(minishell, cmd, token);
+			*token_ptr = next;
+		}
 	}
 	return (SUCCESS);
 
@@ -148,11 +163,13 @@ int	ft_cmd_lst_create(t_minishell *minishell)
 		while (tok_current && tok_current->type != PIPE)
 		{
 			// AFFEECT LES DIFFERENTES PARTIES DE CMD A CHAQUE TOKEN
-			if (ft_token_affect(minishell, cmd_new, tok_current, &i))
+			if (ft_token_affect(minishell, cmd_new, &tok_current, &i))
 				return (GENERAL_ERROR);
 
 			// DOIT SAUTER LE NOEUD D'APRES
-			tok_current = tok_current->next;
+			// if (tok_current) already moved in ft_token_affect if redirs used
+			if (tok_current)
+				tok_current = tok_current->next;
 		}
 		// SET LE DERNIER NOEUD A NULL
 		cmd_new->args[i] = NULL;
