@@ -18,7 +18,7 @@
 # include <sys/wait.h>
 
 // MACROS
-# define BUFFER_SIZE 1000
+# define BUFFER_SIZE 5000
 
 # define OPERATORS "|<>"
 # define SEPARATORS " $\'\"\t"
@@ -106,7 +106,8 @@ void	setup_signal(void);
 // PARSING/LEXER.C
 void				ft_state_detect(char c, t_minishell *minishell);
 int					ft_buffer_add(char *buffer, char c);
-int					_tokenize(t_minishell *minishell);
+int					
+_tokenize(t_minishell *minishell);
 /////////
 
 // UTILS/CMDS.C

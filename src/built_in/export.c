@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 20:27:53 by fardeau           #+#    #+#             */
-/*   Updated: 2026/02/13 18:32:24 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/16 12:26:10 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	ft_env_format_check(char *str)
 	if (!ft_isalpha(str[0]) || str[0] == '-')
 	{
 		// A MODIFIER : TRAITER LES MESSAGES D'ERREUR
-		ft_printf("First char not conform\n");
+		ft_putstr_fd("First char not conform\n", STDERR_FILENO);
 		return (GENERAL_ERROR);
 	}
 	return (SUCCESS);

@@ -6,12 +6,13 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 15:04:28 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/14 15:31:27 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/16 12:47:52 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+// A MODIFIER : RAJOUTER LA GESTION DES SIGNAUX
 void	ft_heredoc(t_minishell *minishell, t_cmd *cmd, t_token *token, int mod)
 {
 	char *line;
@@ -63,7 +64,10 @@ t_token	*ft_heredoc_find_last(t_token *token)
 	while (token && token->type != PIPE)
 	{
 		if (token->type == IN_DCHEVRON)
+		{
+			ft_printf("TEST HEREDOC : %s\n", token->next->str);
 			last = token;
+		}
 		token = token->next;
 	}
 	// if (last)
