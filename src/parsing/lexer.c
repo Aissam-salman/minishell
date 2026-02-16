@@ -8,8 +8,6 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 // TRAITER LES CHANGEMENTS D'ETAT
 /*

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 #include <string.h>
 
 void parent_process(int *prev_pipe, int pipe_fd[2])

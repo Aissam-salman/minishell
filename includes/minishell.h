@@ -187,7 +187,7 @@ void				handler_last_cmd(int prev_pipe, int outfd);
 void				handler_mid_cmd(int prev_pipe, int pipe_fd);
 
 // exec/wait.c
-void				handler_status(int status, t_cmd *cmd);
+void				handler_status(int status, t_cmd *cmd, t_minishell *minishell);
 void				ft_wait_subprocess(t_minishell *minishell, int size_cmd,
 								int *pids);
 
