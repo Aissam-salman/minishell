@@ -17,6 +17,7 @@ int	main(int argc, char **argv, char **envp)
 	ft_env_setup(&minishell, envp);
 	while (1)
 	{
+		minishell.state = NORMAL;
 		setup_signal();
 		ft_minishell_reset(&minishell);
 		minishell.line = readline("foo$> ");
@@ -28,7 +29,6 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		ft_gc_add_node(&minishell.gc, minishell.line);
-		minishell.state = NORMAL;
 		add_history(minishell.line);
 		if (ft_tokenize(&minishell))
 		{

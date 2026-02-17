@@ -12,6 +12,7 @@ SRCS = src/main.c \
 		src/exec/handler.c \
 		src/exec/wait.c \
 		src/exec/cntrl.c \
+		src/built_in/extra_bin.c \
 		src/built_in/env.c \
 		src/built_in/export.c \
 		src/built_in/pwd.c \
