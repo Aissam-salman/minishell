@@ -12,10 +12,10 @@
 
 #include "../../includes/minishell.h"
 
-void ft_echo(char **args, int have_flag)
+void ft_echo(char **args)
 {
-	//FIX: handle -nnnnnnn -nnn -nnnnn flags
 	int i;
+	int is_flag;
 
 	if (!args || !*args)
 	{
@@ -23,31 +23,37 @@ void ft_echo(char **args, int have_flag)
 			ft_error(errno, "write",NULL);
 		return;
 	}
-	// -n  == 1
-	if (!args)
-		return;
-	if (have_flag)
+	//FIX: handle -nnnnnnn -nnn -nnnnn flags
+	i = 1;
+	if (args[i][0] == '-')
+		is_flag = 1;
+	else 
+		is_flag = 0;
+	if (is_flag)
 	{
-		i = 2;
+		int j = 0;
+
+		while (args[i] && args[i][j])
 		while (args[i])
 		{
 			if (write(1, args[i], ft_strlen(args[i])) == -1)
 				ft_error(errno, "write",NULL);
+			if (args[i + 1])
+				write(1, " ", 1);
 			i++;
 		}
 	}
 	else
-{
-		i = 1;
+	{
 		while (args[i])
 		{
 			if (write(1, args[i], ft_strlen(args[i])) == -1)
 				ft_error(errno, "write",NULL);
-			if (write(1, "\n", 1) == -1)
+			if (write(1, " ", 1) == -1)
 				ft_error(errno, "write",NULL);
 			i++;
 		}
-
 	}
-	//TODO: handle \n from readline maybe
+	if (!is_flag)
+		write(1, "\n", 1);
 }

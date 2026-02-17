@@ -194,7 +194,7 @@ int					is_built_in(t_cmd *cmd);
 void				run_built_in(t_cmd *cmd, t_minishell *minishell);
 
 // built_in/echo.c
-void				ft_echo(char **args, int have_flag);
+void				ft_echo(char **args);
 
 // built_in/cd.c
 void				ft_cd(t_minishell *minishell, char *path);
