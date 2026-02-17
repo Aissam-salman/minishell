@@ -16,10 +16,29 @@ void	ft_env_print(t_env *head, int fd)
 {
 	while (head)
 	{
-		ft_putstr_fd(head->name, fd);
-		ft_putstr_fd("=", fd);
-		ft_putstr_fd(head->content, fd);
-		ft_putstr_fd("\n", fd);
+		if (head->content)
+		{
+			ft_putstr_fd(head->name, fd);
+			ft_putstr_fd("=", fd);
+			ft_putstr_fd(head->content, fd);
+			ft_putstr_fd("\n", fd);
+		}
+		head = head->next;
+	}
+}
+
+void	ft_env_print_export_no_param(t_env *head, int fd)
+{
+	while (head)
+	{
+		if (head->content)
+		{
+			ft_putstr_fd("export ", fd);
+			ft_putstr_fd(head->name, fd);
+			ft_putstr_fd("=", fd);
+			ft_putstr_fd(head->content, fd);
+			ft_putstr_fd("\n", fd);
+		}
 		head = head->next;
 	}
 }

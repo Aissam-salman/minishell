@@ -788,7 +788,7 @@ The new node is created but **never added to the list**. The `ft_env_add` call i
 ```c
 printf("%s\n", buff);
 ```
-Inconsistent with the rest of the codebase. Use `ft_putstr_fd(buff, STDOUT_FILENO)` + `ft_putchar_fd('\n', STDOUT_FILENO)`.
+Inconsistent with the rest of the codebase. Use `ft_putstr_fd(buff, STDOUT_FILENO)` + `ft_putchar_fd('\n', STDOUT_FILENO)`. [x]
 
 ### Tips
 - Clean and simple otherwise.
@@ -804,7 +804,7 @@ ft_printf("format: %s\n", str);
 **Remove** — this prints to stdout and corrupts output.
 
 ### `ft_env_format_check`: incomplete validation
-Only checks first character. In bash, identifiers can contain `_` and must not start with a digit. The check `!ft_isalpha(str[0]) || str[0] == '-'` is redundant (`'-'` is not alpha anyway).
+Only checks first character. In bash, identifiers can contain `_` and must not start with a digit. The check `!ft_isalpha(str[0]) || str[0] == '-'` is redundant (`'-'` is not alpha anyway). [x]
 
 **Correct validation:**
 ```c
@@ -818,17 +818,17 @@ Bash output of `export` is:
 declare -x HOME="/home/user"
 declare -x PATH="/usr/bin:..."
 ```
-Your implementation calls `ft_env_print` which prints `HOME=/home/user`. **Use a different format.**
+Your implementation calls `ft_env_print` which prints `HOME=/home/user`. **Use a different format.** [x]
 
 ### `ft_export`: doesn't check if variable already exists
 ```c
 new = ft_env_new(minishell, str);
 ft_env_add(minishell, new);
 ```
-If the variable already exists, this creates a **duplicate**. Should find and update the existing entry first.
+If the variable already exists, this creates a **duplicate**. Should find and update the existing entry first. [x]
 
 ### Tips
-- Export without `=` (e.g., `export FOO`) should mark the variable as exported but with no value. Currently it creates a node with `content = NULL`, which is close but `env` should not print it.
+- Export without `=` (e.g., `export FOO`) should mark the variable as exported but with no value. Currently it creates a node with `content = NULL`, which is close but `env` should not print it. [x]
 
 ---
 
@@ -838,7 +838,7 @@ If the variable already exists, this creates a **duplicate**. Should find and up
 The function itself is fine, but `ft_env_delone` (in `env_setup.c`) is broken — see that section.
 
 ### Missing: multiple argument support
-`unset VAR1 VAR2` should unset both. Currently only `cmd->args[1]` is used, ignoring any further arguments.
+`unset VAR1 VAR2` should unset both. Currently only `cmd->args[1]` is used, ignoring any further arguments. [x]
 
 ### Tips
 - Loop over all arguments: `int i = 1; while (cmd->args[i]) ft_unset(&head_env, cmd->args[i++]);`
@@ -857,10 +857,11 @@ void ft_env(t_env *head_env, int outfd)
 This is a one-line wrapper. Consider inlining it or keeping it if you plan to add `env` argument handling later.
 
 ### Missing: `env` should only print variables that have a value
-In bash, `env` only prints `NAME=VALUE` pairs. If an env variable was `export`ed without a value, it should NOT appear in `env` output (but should appear in `export` output).
+In bash, `env` only prints `NAME=VALUE` pairs. If an env variable was `export`ed without a value, it should NOT appear in `env` output (but should appear in `export` output). [x]
 
 ### Tips
-- `env` with arguments (e.g., `env ls`) should print an error or run the command in a modified environment. For minishell, you can ignore this.
+- `env` with arguments (e.g., `env ls`) should print an error or run the command in a modified environment. For minishell, you can ignore this. [ ] ??? > [!WARNING]
+> 
 
 ---
 
@@ -870,7 +871,7 @@ In bash, `env` only prints `NAME=VALUE` pairs. If an env variable was `export`ed
 ```c
 #include "includes/ft_conversion.h"
 ```
-This works but is inconsistent with the rest of the codebase which uses `../../includes/minishell.h` (and `minishell.h` includes `libft.h` which includes `ft_conversion.h`). **Remove this line** — `ft_atoi` is already available via `minishell.h`.
+This works but is inconsistent with the rest of the codebase which uses `../../includes/minishell.h` (and `minishell.h` includes `libft.h` which includes `ft_conversion.h`). **Remove this line** — `ft_atoi` is already available via `minishell.h`. [x] 
 
 ### `ft_buildin_exit`: no validation of argument
 Bash handles these cases:
@@ -889,7 +890,7 @@ rl_clear_history();
 This is the same cleanup as `ft_exit`. Consider calling `ft_exit` instead.
 
 ### Tips
-- Exit status should be `code % 256` (bash wraps it). `ft_atoi` doesn't handle this.
+- Exit status should be `code % 256` (bash wraps it). `ft_atoi` doesn't handle this. [x]
 
 ---
 

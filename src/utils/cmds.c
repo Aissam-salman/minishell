@@ -73,8 +73,6 @@ int	ft_token_word_count(t_token *current)
 	{
 		if (current->type == PIPE)
 			return (count);
-		else if (current->type == WORD || current->type == CMD
-			|| current->type == FLAG)
 		else
 			count++;
 		current = current->next;

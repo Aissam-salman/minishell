@@ -19,7 +19,7 @@ int	ft_pwd(void)
 	buff = getcwd(NULL, 0);
 	if (buff)
 	{
-		printf("%s\n", buff);
+		ft_printf("%s\n", buff);
 		free(buff);
 		return (SUCCESS);
 	}
