@@ -68,6 +68,7 @@ void	ft_cmd_find_path(t_minishell *minishell, t_token *token)
 		if (access(token->str, X_OK) == 0)
 		{
 			token->path = token->str;
+			//FIX: return 126
 			return;
 		}
 	}
