@@ -8,6 +8,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include "errors.h"
 
 // TRAITER LES CHANGEMENTS D'ETAT
 /*
@@ -78,6 +79,8 @@ int	ft_state_interpret(char *line, int *index, char *buffer,
 		if (len_buffer > 0 && (buffer[0] != line[*index] || len_buffer >= 2))
 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
 				return (ft_error(minishell, MALLOC_FAIL, "Fail Malloc Interpreter", NULL));
+		if (ft_buffer_add(buffer, line[*index]))
+			return (BUFFER_FAIL);
 	}
 	// SI STATE != WAITING
 	else if (minishell->state != WAITING)
