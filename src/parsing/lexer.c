@@ -31,7 +31,6 @@ int	ft_buffer_add(char *buffer, char c)
 	}
 	else
 		return (ft_error(NULL, BUFFER_FAIL, "Insufficient buffer size", NULL));
-
 }
 
 // AFFECTE L'ETAT A MINISHELL POUR
@@ -62,7 +61,7 @@ void	ft_state_detect(char c, t_minishell *minishell)
 int	ft_state_interpret(char *line, int *index, char *buffer,
 		t_minishell *minishell)
 {
-	int len_buffer;
+	int	len_buffer;
 
 	len_buffer = ft_strlen(buffer);
 	// SI ESPACES
@@ -70,15 +69,18 @@ int	ft_state_interpret(char *line, int *index, char *buffer,
 	{
 		if (len_buffer > 0)
 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
-				return (ft_error(minishell, MALLOC_FAIL, "Fail Malloc Interpreter", NULL));
+				return (ft_error(minishell, MALLOC_FAIL,
+						"Fail Malloc Interpreter", NULL));
 		minishell->state = WAITING;
 	}
 	// SI OPERATORS
-	else if (ft_ischarset(line[*index], OPERATORS) && minishell->state == NORMAL)
+	else if (ft_ischarset(line[*index], OPERATORS)
+		&& minishell->state == NORMAL)
 	{
 		if (len_buffer > 0 && (buffer[0] != line[*index] || len_buffer >= 2))
 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
-				return (ft_error(minishell, MALLOC_FAIL, "Fail Malloc Interpreter", NULL));
+				return (ft_error(minishell, MALLOC_FAIL,
+						"Fail Malloc Interpreter", NULL));
 		if (ft_buffer_add(buffer, line[*index]))
 			return (BUFFER_FAIL);
 	}
@@ -88,7 +90,8 @@ int	ft_state_interpret(char *line, int *index, char *buffer,
 		if (!ft_ischarset(line[*index], OPERATORS) && ft_ischarset(buffer[0],
 				OPERATORS))
 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
-				return (ft_error(minishell, MALLOC_FAIL, "Fail Malloc Interpreter", NULL));
+				return (ft_error(minishell, MALLOC_FAIL,
+						"Fail Malloc Interpreter", NULL));
 		if (ft_buffer_add(buffer, line[*index]))
 			return (BUFFER_FAIL);
 	}
@@ -106,15 +109,16 @@ int	ft_token_lst_create(t_minishell *minishell)
 	// On recupere la ligne
 	line = minishell->line;
 	line_len = ft_strlen(line);
+	minishell->state = NORMAL;
 
 	// INITIALISATION DU TABLEAU ARGS
 	buffer = ft_calloc_gc(line_len + 1, sizeof(char), &minishell->gc);
 	if (!buffer)
-		return (ft_error(minishell, MALLOC_FAIL, "Fail Malloc Buffer Interpreter", NULL));
-
+		return (ft_error(minishell, MALLOC_FAIL,
+				"Fail Malloc Buffer Interpreter", NULL));
 	// BOUCLE POUR TRAITER CHAQUE CHAR DE MINISHELL.LINE
 	i = 0;
-	while (i < line_len) 
+	while (i < line_len)
 	{
 		// ON DETECTE L'ETAT POUR POUVOIR DETERMINER QUOI FAIRE DU CHARACTERE
 		ft_state_detect(line[i], minishell);
@@ -126,10 +130,12 @@ int	ft_token_lst_create(t_minishell *minishell)
 	}
 	line[i] = '\0';
 	if (minishell->state == IN_QUOTE || minishell->state == IN_DQUOTE)
-		return (ft_error(minishell, PARSING_FAIL, "Syntax error: unclosed quotes", NULL));
+		return (ft_error(minishell, PARSING_FAIL,
+				"Syntax error: unclosed quotes", NULL));
 	if (ft_strlen(buffer) > 0)
 		if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
-			return (ft_error(minishell, MALLOC_FAIL, "Fail Malloc Interpreter", NULL));
+			return (ft_error(minishell, MALLOC_FAIL, "Fail Malloc Interpreter",
+					NULL));
 	return (0);
 }
 
@@ -145,14 +151,14 @@ void	ft_type_affect(t_minishell *minishell)
 		else if (current->str[0] == '<')
 		{
 			current->type = IN_CHEVRON;
-			//FIX: handle case if str[i] != <
+			// FIX: handle case if str[i] != <
 			if (current->str[1])
 				current->type = IN_DCHEVRON;
 		}
 		else if (current->str[0] == '>')
 		{
 			current->type = OUT_CHEVRON;
-			//FIX: handle case if str[i] != >
+			// FIX: handle case if str[i] != >
 			if (current->str[1])
 				current->type = OUT_DCHEVRON;
 		}

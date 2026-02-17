@@ -15,8 +15,8 @@
 /*
 ** Map function that builds a new list by applying f to each content of lst.
 */
-t_list	*ft_lstmap_gc(t_list *lst, void *(*f)(void *), void (*del)(void *), \
-	t_list **gc_head)
+t_list	*ft_lstmap_gc(t_list *lst, void *(*f)(void *), void (*del)(void *),
+		t_list **gc_head)
 {
 	t_list	*head;
 	t_list	*tmp;

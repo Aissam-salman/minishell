@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-void handler_signal_child()
+void	handler_signal_child(void)
 {
 	if (signal(SIGQUIT, SIG_DFL) == SIG_ERR)
 		perror("signal error default SIGQUIT");
@@ -31,7 +31,7 @@ void	handler_first_cmd(int infd, int size_cmd, int pipe_fd)
 		dup2(pipe_fd, STDOUT_FILENO);
 }
 
-void handler_last_cmd(int prev_pipe, int outfd)
+void	handler_last_cmd(int prev_pipe, int outfd)
 {
 	dup2(prev_pipe, STDIN_FILENO);
 	close(prev_pipe);
@@ -42,7 +42,7 @@ void handler_last_cmd(int prev_pipe, int outfd)
 	}
 }
 
-void handler_mid_cmd(int prev_pipe, int pipe_fd)
+void	handler_mid_cmd(int prev_pipe, int pipe_fd)
 {
 	dup2(prev_pipe, STDIN_FILENO);
 	close(prev_pipe);

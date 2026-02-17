@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdio.h>	
+#include <stdio.h>
 
 static int	ft_is_set(char c, char const *set)
 {

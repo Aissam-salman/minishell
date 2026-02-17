@@ -13,7 +13,7 @@
 #include "libft.h"
 
 size_t	ft_strlcat(char *dst, const char *src, size_t siz)
-{	
+{
 	size_t	d_len;
 	size_t	s_len;
 	size_t	i;
@@ -44,8 +44,8 @@ size_t	ft_strlcat(char *dst, const char *src, size_t siz)
 // 	char const src1[5] = "ABCDE";
 // 	char const src2[5] = "ABCDE";
 
-// 	size_t res1;	
-// 	size_t res2;	
+// 	size_t res1;
+// 	size_t res2;
 // 	size_t	size = 20;
 
 // 	res1 = ft_strlcat(dest1, src1, size);

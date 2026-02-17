@@ -201,7 +201,7 @@ void				run_built_in(t_cmd *cmd, t_minishell *minishell);
 void				ft_echo(char **args);
 
 // built_in/cd.c
-void				ft_cd(t_minishell *minishell, char *path);
+int				ft_cd(t_minishell *minishell, char *path);
 
 // built_in/pwd.c
 int					ft_pwd(void);

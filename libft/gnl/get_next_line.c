@@ -80,9 +80,9 @@ static char	*ft_found_newline(char **arr)
 
 char	*get_next_line(int fd)
 {
-	static char		*arr_s[1024];
-	char			buf[1];
-	char			*tmp;
+	static char	*arr_s[1024];
+	char		buf[1];
+	char		*tmp;
 
 	if (fd < 0 || BUFFER_SIZE_GNL <= 0 || read(fd, buf, 0) < 0)
 	{

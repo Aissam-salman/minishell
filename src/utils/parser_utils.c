@@ -14,30 +14,28 @@
 
 int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 {
-	// char *expension;
 	char	buffer[BUFFER_SIZE];
 	char	*err_value;
 	t_env	*path_env;
 
+	// char *expension;
 	ft_bzero(buffer, BUFFER_SIZE);
-
 	// ON INCREMENTE POUR NE PAS PRENDRE LE $
 	(*start)++;
-
 	// ATTENTION A L'EXPAND POUR LA VALEUR DE RETOUR
 	if (str[*start] && str[*start] == '?')
 	{
 		err_value = ft_itoa_gc(minishell->cached_status, &minishell->gc);
 		if (!err_value)
-			return (ft_error(minishell, MALLOC_FAIL, "Error malloc expands", NULL));
-
+			return (ft_error(minishell, MALLOC_FAIL, "Error malloc expands",
+					NULL));
 		// SI TAILLE DU BUFFER TROP PETITE
 		if (ft_strlcat(usable_str, err_value, BUFFER_SIZE) > BUFFER_SIZE)
-			return (ft_error(minishell, BUFFER_FAIL, "Insufficient buffer size", NULL));
+			return (ft_error(minishell, BUFFER_FAIL, "Insufficient buffer size",
+					NULL));
 		(*start)++;
 		return (0);
 	}
-
 	// ON PARCOURT STR JUSQU'A " ou ' ou $ ou SPACES
 	while (str[*start] && !ft_ischarset(str[*start], SEPARATORS))
 	{
@@ -48,12 +46,13 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 	// ON RECUPERE L'ENV
 	// ft_printf("BUFFER = %s\n", buffer);
 	path_env = ft_env_find(minishell->head_env, buffer);
-
 	// ft_printf("ENV = %s\n", env);
 	if (path_env && path_env->content)
 	{
-		if (ft_strlcat(usable_str, path_env->content, BUFFER_SIZE) > BUFFER_SIZE)
-			return (ft_error(minishell, BUFFER_FAIL, "Insufficient buffer size", NULL));
+		if (ft_strlcat(usable_str, path_env->content,
+				BUFFER_SIZE) > BUFFER_SIZE)
+			return (ft_error(minishell, BUFFER_FAIL, "Insufficient buffer size",
+					NULL));
 	}
 	return (0);
 }
@@ -61,7 +60,7 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 // FONCTION PRINCIPALE POUR GERE LES QUOTES
 void	ft_quotes_handle(t_minishell *minishell, t_token *token)
 {
-	int 	i;
+	int		i;
 	char	usable_str[BUFFER_SIZE];
 
 	i = 0;
@@ -72,7 +71,6 @@ void	ft_quotes_handle(t_minishell *minishell, t_token *token)
 	{
 		// ON AFFECTE L'ETAT ET ON GARDE LE PRECEDENT EN MEMOIRE
 		ft_state_detect(token->str[i], minishell);
-
 		// SI ON TROUVE UN DOLLAR
 		if (token->str[i] == '$' && minishell->state != IN_QUOTE)
 		{
@@ -99,9 +97,9 @@ void	ft_quotes_handle(t_minishell *minishell, t_token *token)
 		}
 		i++;
 	}
-
 	// DUP DU BUFFER POUR REMPLACER STR DU TOKEN AVEC LES EXPENDS SI NECESSAIRE
 	token->str = ft_strdup_gc(usable_str, &minishell->gc);
 	if (!token->str)
-		ft_error(minishell, MALLOC_FAIL, "Error malloc end of quotes handling", NULL);
+		ft_error(minishell, MALLOC_FAIL, "Error malloc end of quotes handling",
+			NULL);
 }

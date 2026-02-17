@@ -13,9 +13,9 @@
 #include "minishell.h"
 #include <stdlib.h>
 
-void handler_status(int status, t_cmd *cmd, t_minishell *minishell)
+void	handler_status(int status, t_cmd *cmd, t_minishell *minishell)
 {
-	int sig;
+	int	sig;
 
 	if (WIFSIGNALED(status))
 	{
@@ -24,10 +24,9 @@ void handler_status(int status, t_cmd *cmd, t_minishell *minishell)
 		if (sig == SIGQUIT)
 		{
 			ft_printf("Quit");
-
 			if (WCOREDUMP(status))
 			{
-				ft_printf("\t\t\t\t%s","(core dumped)");
+				ft_printf("\t\t\t\t%s", "(core dumped)");
 			}
 			ft_printf(" %s %s\n", cmd->args[0], cmd->args[1]);
 		}
@@ -40,11 +39,11 @@ void handler_status(int status, t_cmd *cmd, t_minishell *minishell)
 	}
 }
 
-void ft_wait_subprocess(t_minishell *minishell, int size_cmd, int *pids)
+void	ft_wait_subprocess(t_minishell *minishell, int size_cmd, int *pids)
 {
-	int status;
-	t_cmd *cmd;
-	int i;
+	int		status;
+	t_cmd	*cmd;
+	int		i;
 
 	cmd = minishell->head_cmd;
 	i = 0;
@@ -53,7 +52,8 @@ void ft_wait_subprocess(t_minishell *minishell, int size_cmd, int *pids)
 		waitpid(pids[i], &status, 0);
 		handler_status(status, cmd, minishell);
 		if (WIFEXITED(status))
-			minishell->exit_status = WEXITSTATUS(status); else if (WIFSIGNALED(status))
+			minishell->exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
 			minishell->exit_status = 128 + WTERMSIG(status);
 		cmd = cmd->next;
 		i++;

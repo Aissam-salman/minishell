@@ -12,7 +12,8 @@
 
 #include "libft.h"
 
-char	*ft_strmapi_gc(char const *s, char (*f)(unsigned int, char), t_list **gc_head)
+char	*ft_strmapi_gc(char const *s, char (*f)(unsigned int, char),
+		t_list **gc_head)
 {
 	char	*mapi;
 

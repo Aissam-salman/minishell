@@ -13,16 +13,16 @@
 #include "../../includes/minishell.h"
 #include <string.h>
 
-void child_set(t_child *child, int i, int prev_pipe, int size_cmd)
+void	child_set(t_child *child, int i, int prev_pipe, int size_cmd)
 {
 	child->prev_pipe = prev_pipe;
 	child->index = i;
 	child->size_cmd = size_cmd;
 }
 
-t_child *ft_child_new(t_minishell *minishell)
+t_child	*ft_child_new(t_minishell *minishell)
 {
-	t_child *child;
+	t_child	*child;
 
 	child = ft_gc_malloc(sizeof(t_child), &minishell->gc);
 	if (!child)
@@ -33,9 +33,8 @@ t_child *ft_child_new(t_minishell *minishell)
 	return (child);
 }
 
-void close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2])
+void	close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2])
 {
-
 	close(pipe_fd[0]);
 	close(pipe_fd[1]);
 	if (is_built_in(cmd) == 1)
@@ -49,10 +48,11 @@ void close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2])
 		ft_exit(minishell, errno, NULL);
 	}
 	if (execv(cmd->path, cmd->args) == -1)
-		ft_exit(minishell, errno, "EXECV");
+		ft_exit(minishell, errno, strerror(errno));
 }
 
-void child_process(t_minishell *minishell, t_cmd *cmd, t_child *child, int pipe_fd[2])
+void	child_process(t_minishell *minishell, t_cmd *cmd, t_child *child,
+		int pipe_fd[2])
 {
 	handler_signal_child();
 	if (child->index == 0)
