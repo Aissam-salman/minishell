@@ -728,7 +728,7 @@ while (args[i])
 ```
 Bash `echo hello world` prints `hello world\n`, not `hello\nworld\n`.
 
-**Fix:**
+**Fix:** [x]
 ```c
 i = 1;
 while (args[i])
@@ -746,7 +746,7 @@ if (!have_flag)
 Same issue for the `-n` branch.
 
 ### `echo` with no args: bash prints a single newline
-Currently, if `args[1]` is NULL, nothing is printed. Bash does: `echo` → `\n`. **Add a newline if no args and no `-n` flag.**
+Currently, if `args[1]` is NULL, nothing is printed. Bash does: `echo` → `\n`. **Add a newline if no args and no `-n` flag.** [x]
 
 ### Tips
 - `-n` flag detection should handle multiple `-n` args: `echo -n -n hello` is valid in bash.
@@ -767,7 +767,7 @@ if (ft_strcmp(path, "-") == 0)
     return;
 }
 ```
-In bash, `cd -` prints the **old** directory (the one you're going TO), not the current one. Functionally this is close since by the time `ft_pwd` runs, you've already chdir'd. But the `ft_pwd` call should only happen for `cd -`, which it does — this is correct.
+In bash, `cd -` prints the **old** directory (the one you're going TO), not the current one. Functionally this is close since by the time `ft_pwd` runs, you've already chdir'd. But the `ft_pwd` call should only happen for `cd -`, which it does — this is correct. [x]
 
 ### `update_old_pwd`: doesn't add to env if OLDPWD doesn't exist
 ```c
@@ -775,10 +775,10 @@ env_old_pwd = ft_env_find(*head_env, "OLDPWD");
 if (!env_old_pwd)
     env_old_pwd = ft_env_new(minishell, "OLDPWD");
 ```
-The new node is created but **never added to the list**. The `ft_env_add` call is missing. So if OLDPWD didn't exist before, it's created, modified, and then lost.
+The new node is created but **never added to the list**. The `ft_env_add` call is missing. So if OLDPWD didn't exist before, it's created, modified, and then lost. [x]
 
 ### Tips
-- Factor out the `free(old_pwd)` calls — there are 3 different paths that each `free` it.
+- Factor out the `free(old_pwd)` calls — there are 3 different paths that each `free` it. [x]
 
 ---
 

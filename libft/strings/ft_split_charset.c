@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-static	void	free_tab(char **arr, size_t index)
+static void	free_tab(char **arr, size_t index)
 {
 	size_t	i;
 
@@ -36,8 +36,8 @@ static size_t	ft_count_word(char const *s, char *charset)
 	count = 0;
 	while (s[i])
 	{
-		if (!ft_ischarset(s[i], charset)
-			&& (i == 0 || ft_ischarset(s[i - 1], charset)))
+		if (!ft_ischarset(s[i], charset) && (i == 0 || ft_ischarset(s[i - 1],
+					charset)))
 			count++;
 		i++;
 	}

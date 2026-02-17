@@ -13,9 +13,9 @@
 #include "../../includes/minishell.h"
 #include "includes/ft_conversion.h"
 
-void ft_buildin_exit(t_minishell *minishell, char *code_exit)
+void	ft_buildin_exit(t_minishell *minishell, char *code_exit)
 {
-	int code;
+	int	code;
 
 	code = 0;
 	if (code_exit)

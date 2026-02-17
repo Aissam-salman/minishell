@@ -12,36 +12,38 @@
 
 #include "../../includes/minishell.h"
 
-int ft_is_flag(char *str)
+int	ft_is_flag(char *str)
 {
-	int j = 0;
+	int	j;
+
+	j = 0;
 	if (str[j] && str[j] == '-')
 		j++;
 	else
 		return (0);
-	while (str[j] && str[j] == 'n') 
+	while (str[j] && str[j] == 'n')
 		j++;
 	if (!str[j])
 		return (1);
 	return (0);
 }
 
-void ft_write_safe(char *str, int len)
+void	ft_write_safe(char *str, int len)
 {
 	if (write(1, str, len) == -1)
-		ft_error(NULL, errno, "write",NULL);
+		ft_error(NULL, errno, "write", NULL);
 }
 
-int have_flag_first(char *str)
+int	have_flag_first(char *str)
 {
 	if (str[0] == '-' && str[1] == 'n')
 		return (1);
 	return (0);
 }
 
-void ft_echo(char **args)
+void	ft_echo(char **args)
 {
-	int i;
+	int	i;
 
 	if (!args || !*args || !args[1])
 		return (ft_write_safe("\n", 1));
@@ -53,7 +55,7 @@ void ft_echo(char **args)
 		while (args[i])
 		{
 			if (!ft_is_flag(args[i]))
-				break;
+				break ;
 			i++;
 		}
 	}

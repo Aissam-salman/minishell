@@ -14,9 +14,9 @@
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	char		*tmp;
-	size_t		s_len;
-	size_t		t_len;
+	char	*tmp;
+	size_t	s_len;
+	size_t	t_len;
 
 	if (!s)
 		return (NULL);
@@ -40,7 +40,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 }
 
 // #include <stdio.h>
-// int	main()
+// int	main(void)
 // {
 // 	char *res;
 // 	char *test1 = "tripouille";

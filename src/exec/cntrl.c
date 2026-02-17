@@ -30,12 +30,11 @@ int	ft_open(char *path, t_types mod)
 	return (-1);
 }
 
-
 int	ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token)
 {
-	// A MODIFIER : Les valeurs de retour, SET en fonction du cas
-	int fd;
+	int	fd;
 
+	// A MODIFIER : Les valeurs de retour, SET en fonction du cas
 	fd = -1;
 	if (token->next == NULL)
 		return (GENERAL_ERROR);
@@ -50,7 +49,8 @@ int	ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token)
 	}
 	if (fd > 2 && token->type == IN_CHEVRON)
 		ft_redirection_exec(fd, &cmd->infd);
-	else if (fd > 2 && (token->type == OUT_CHEVRON || token->type == OUT_DCHEVRON))
+	else if (fd > 2 && (token->type == OUT_CHEVRON
+			|| token->type == OUT_DCHEVRON))
 		ft_redirection_exec(fd, &cmd->outfd);
 	return (0);
 }

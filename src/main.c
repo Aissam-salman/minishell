@@ -22,7 +22,7 @@ int	main(int argc, char **argv, char **envp)
 		ft_minishell_reset(&minishell);
 		minishell.line = readline("foo$> ");
 		if (!minishell.line)
-				ft_buildin_exit(&minishell, 0);
+			ft_buildin_exit(&minishell, 0);
 		if (!*minishell.line)
 		{
 			free(minishell.line);
@@ -42,7 +42,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		ft_cmd_lst_create(&minishell);
 		if (minishell.exit_status != 0)
-			continue;
+			continue ;
 		ft_exec(&minishell);
 	}
 	ft_exit(&minishell, minishell.exit_status, NULL);

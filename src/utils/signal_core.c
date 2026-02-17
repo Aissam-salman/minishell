@@ -14,7 +14,7 @@
 
 void	signal_callback_handler(int sig)
 {
-	//C-C
+	// C-C
 	if (sig == SIGINT)
 	{
 		ft_printf("\n");
@@ -36,7 +36,7 @@ void	setup_signal(void)
 	if (sigaction(SIGINT, &sa, NULL) == -1)
 		perror("signal error SIGINT");
 	// C-'\'
-	//NOTE: ignore signal by default for parent process
+	// NOTE: ignore signal by default for parent process
 	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 		perror("signal error ignore SIGQUIT");
 }

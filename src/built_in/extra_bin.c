@@ -16,6 +16,6 @@ void	ft_extra_bin(t_minishell *minishell, int mod)
 {
 	if (mod == 0)
 		minishell->exit_status = 0;
-	if (mod == 1)	
+	if (mod == 1)
 		minishell->exit_status = 1;
 }
