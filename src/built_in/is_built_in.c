@@ -39,7 +39,7 @@ void	run_built_in(t_cmd *cmd, t_minishell *minishell)
 	str = cmd->args[0];
 	minishell->exit_status = 0;
 	if (ft_strcmp(str, "exit") == 0)
-		ft_buildin_exit(minishell, cmd->args[1]);
+		ft_buildin_exit(minishell, cmd->args);
 	else if (ft_strcmp(str, "export") == 0)
 		minishell->exit_status = ft_export(minishell, 2, cmd->args[1]);
 	else if (ft_strcmp(str, "unset") == 0)
