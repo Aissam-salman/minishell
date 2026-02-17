@@ -210,7 +210,7 @@ int					ft_pwd(void);
 int					ft_export(t_minishell *minishell, int fd, char *str);
 
 // built_in/unset.c
-void				ft_unset(t_env **head_env, char *target_name);
+void				ft_unset(t_env **head_env, char **args);
 
 // built_in/env.c
 void				ft_env(t_env *head_env, int outfd);
