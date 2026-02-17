@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   child_exec.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
+/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 18:31:47 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/16 13:43:39 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/16 18:03:42 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <string.h>
 
 void child_set(t_child *child, int i, int prev_pipe, int size_cmd)
 {
@@ -23,7 +24,7 @@ t_child *ft_child_new(t_minishell *minishell)
 {
 	t_child *child;
 
-	child = ft_gc_malloc(sizeof(struct s_child), &minishell->gc);
+	child = ft_gc_malloc(sizeof(t_child), &minishell->gc);
 	if (!child)
 		return (NULL);
 	child->index = 0;
@@ -39,8 +40,8 @@ void close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2])
 	close(pipe_fd[1]);
 	if (is_built_in(cmd) == 1)
 	{
-		run_built_in_piped(cmd, minishell);
-		exit(1);
+		run_built_in(cmd, minishell);
+		exit(0);
 	}
 	if (!cmd->path || access(cmd->path, X_OK) != 0)
 	{

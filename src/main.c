@@ -11,8 +11,8 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	minishell;
 
-	(void)argc;
 	(void)argv;
+	(void)argc;
 	ft_bzero(&minishell, sizeof(t_minishell));
 	ft_env_setup(&minishell, envp);
 	while (1)

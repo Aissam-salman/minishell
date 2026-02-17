@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include "errors.h"
 
 // RECUPERE LE DERNIER TOKEN
 t_token	*ft_token_last(t_token *token)
@@ -45,13 +46,13 @@ int	ft_token_add(t_minishell *minishell, t_token *to_add)
 	t_token	*last;
 
 	if (!minishell || !to_add)
-		return (1);
+		return (GENERAL_ERROR);
 	if (!minishell->head_token)
 	{
 		minishell->head_token = to_add;
-		return (0);
+		return (SUCCESS);
 	}
 	last = ft_token_last(minishell->head_token);
 	last->next = to_add;
-	return (0);
+	return (SUCCESS);
 }

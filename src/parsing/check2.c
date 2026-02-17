@@ -14,19 +14,19 @@
 
 static char	**ft_get_path(t_minishell *minishell)
 {
-	char	*env;
+	t_env	*env;
 	char	**envp;
 
-	env = getenv("PATH");
+	env = ft_env_find(minishell->head_env, "PATH");
 	if (!env)
 		return (NULL);
-	envp = ft_split_sep_gc(env, ':', &minishell->gc);
+	envp = ft_split_sep_gc(env->content, ':', &minishell->gc);
 	if (!envp)
 		return (NULL);
 	return (envp);
 }
 
-static int	ft_test_path(t_minishell *minishell, char **envp, t_token *token)
+static void	ft_test_path(t_minishell *minishell, char **envp, t_token *token)
 {
 	char		*tmp;
 	char		*cur_path;
@@ -37,24 +37,26 @@ static int	ft_test_path(t_minishell *minishell, char **envp, t_token *token)
 	while (envp[i])
 	{
 		tmp = ft_strjoin_gc(envp[i], "/", &minishell->gc);
+		if (!tmp)
+			return;
 		cur_path = ft_strjoin_gc(tmp, token->str, &minishell->gc);
+		if (!cur_path)
+			return;
 		if (stat(cur_path, &stat_file) == 0 && S_ISREG(stat_file.st_mode))
 		{
-			if (cur_path && access(cur_path, X_OK) == 0)
+			if (access(cur_path, X_OK) == 0)
 			{
 				token->path = cur_path;
-				return (1);
+				return;
 			}
 		}
 		i++;
 	}
-	return (0);
 }
 
-void	ft_check_cmd(t_minishell *minishell, t_token *token)
+void	ft_cmd_find_path(t_minishell *minishell, t_token *token)
 {
 	char		**envp;
-	int			res;
 	struct stat	stat_file;
 
 	if (!token || !token->str || !*token->str)
@@ -72,18 +74,12 @@ void	ft_check_cmd(t_minishell *minishell, t_token *token)
 	envp = ft_get_path(minishell);
 	if (!envp)
 		return;
-	res = ft_test_path(minishell, envp, token);
-	if (res == 1)
-		return;
+	ft_test_path(minishell, envp, token);
 }
 
 int	ft_check_pipe(char *str)
 {
-	if (!str)
-		return (0);
-	if (str[0] == '|' && !str[1])
-		return (1);
-	return (0);
+	return (str && str[0] == '|' && !str[1]);
 }
 
 int	is_redirection(t_token *token)

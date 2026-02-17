@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
+#include <string.h>
 
 void parent_process(int *prev_pipe, int pipe_fd[2])
 {
@@ -46,7 +47,7 @@ void ft_pipe_and_fork(t_minishell *minishell,int size_cmd, int pipe_fd[2], int *
 				perror("Pipe");
 			pids[i] = fork();
 			if (pids[i] < 0)
-				ft_exit(minishell, errno, "FORK");
+				ft_exit(minishell, errno, strerror(errno));
 			if (pids[i] == 0)
 				child_process(minishell, cmd, child,  pipe_fd);
 			parent_process(&prev_pipe, pipe_fd);
@@ -54,12 +55,8 @@ void ft_pipe_and_fork(t_minishell *minishell,int size_cmd, int pipe_fd[2], int *
 		cmd = cmd->next;
 		i++;
 	}
-}
-
-static void pipefd_set(int pipe_fd[2])
-{
-	pipe_fd[0] = -1;
-	pipe_fd[1] = -1;
+	if (prev_pipe != -1)
+		close(prev_pipe);
 }
 
 void	ft_exec(t_minishell *minishell)
@@ -68,7 +65,6 @@ void	ft_exec(t_minishell *minishell)
 	int pipe_fd[2];
 	int size_cmd;
 
-	pipefd_set(pipe_fd);
 	//WARN: if !minishell->head_cmd is NULL
 	size_cmd = ft_cmd_size(minishell->head_cmd);
 	if (!size_cmd)

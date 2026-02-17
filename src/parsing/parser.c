@@ -6,11 +6,12 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 18:26:24 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/17 11:36:36 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/17 11:57:12 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include "errors.h"
 
 int	handle_redirection(t_token *token)
 {
@@ -20,22 +21,19 @@ int	handle_redirection(t_token *token)
 		return (ft_error(ERR_SYNTAX, ERRS_SYNT_NEAR, "`newline'"));
 	if (is_redirection(token->next) || token->next->type == PIPE)
 		return (ft_error(ERR_SYNTAX, ERRS_SYNT_NEAR, token->next->str));
-	return (0);
+	return (SUCCESS);
 }
 
 void	handle_word(t_token *token, t_minishell *minishell, int *cmd_find)
 {
-	// ft_filter_quote(token, minishell);
 	if (*cmd_find == 0)
 	{
-		ft_check_cmd(minishell, token);  
+		ft_cmd_find_path(minishell, token);
 		token->type = CMD;
 		*cmd_find = 1;
 	}
-	if (ft_check_flags(token->str) == 1)
+	else if (ft_check_flags(token->str) == 1)
 		token->type = FLAG;
-	// if (ft_check_file(token) == 1)
-	// 	token->type = R_FILE;
 }
 
 int	handle_pipe(t_token *token, int *cmd_find)
@@ -43,7 +41,7 @@ int	handle_pipe(t_token *token, int *cmd_find)
 	if (!ft_check_pipe(token->str))
 		return (ERR_HANDLE_PIPE);
 	*cmd_find = 0;
-	return (0);
+	return (SUCCESS);
 }
 
 int	checker_token(t_minishell *minishell)
@@ -53,7 +51,6 @@ int	checker_token(t_minishell *minishell)
 
 	cmd_find = 0;
 	token = minishell->head_token;
-	// ft_tokens_print(minishell->head_token);
 	while (token)
 	{
 		ft_quotes_handle( minishell, token);
@@ -69,8 +66,7 @@ int	checker_token(t_minishell *minishell)
 		else if (token->type == PIPE)
 			if (handle_pipe(token, &cmd_find))
 				return (ERR_SYNTAX);
-		// ft_printf("TOKEN STR = %s\n", token->str);
 		token = token->next;
 	}
-	return (0);
+	return (SUCCESS);
 }
