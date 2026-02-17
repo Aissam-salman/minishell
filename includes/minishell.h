@@ -192,7 +192,6 @@ int					ft_open(char *path, t_types mod);
 // built_in/is_built_in.c
 int					is_built_in(t_cmd *cmd);
 void				run_built_in(t_cmd *cmd, t_minishell *minishell);
-void				run_built_in_piped(t_cmd *cmd, t_minishell *minishell);
 
 // built_in/echo.c
 void				ft_echo(char **args, int have_flag);
