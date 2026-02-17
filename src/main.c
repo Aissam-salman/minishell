@@ -4,6 +4,9 @@ void	ft_minishell_reset(t_minishell *minishell)
 {
 	minishell->head_token = NULL;
 	minishell->head_cmd = NULL;
+	minishell->state = NORMAL;
+	minishell->cached_status = minishell->exit_status ;
+	minishell->exit_status = 0;
 	// minishell->line = NULL;
 }
 
@@ -17,7 +20,6 @@ int	main(int argc, char **argv, char **envp)
 	ft_env_setup(&minishell, envp);
 	while (1)
 	{
-		minishell.state = NORMAL;
 		setup_signal();
 		ft_minishell_reset(&minishell);
 		minishell.line = readline("foo$> ");
@@ -30,16 +32,12 @@ int	main(int argc, char **argv, char **envp)
 		}
 		ft_gc_add_node(&minishell.gc, minishell.line);
 		add_history(minishell.line);
-		if (ft_tokenize(&minishell))
-		{
-			minishell.exit_status = ERR_SYNTAX;
-			continue ;
-		}
-		if (checker_token(&minishell))
-		{
-			minishell.exit_status = ERR_SYNTAX;
-			continue ;
-		}
+		ft_tokenize(&minishell);
+		if (minishell.exit_status != 0)
+			continue;
+		checker_token(&minishell);
+		if (minishell.exit_status != 0)
+			continue;
 		ft_cmd_lst_create(&minishell);
 		if (minishell.exit_status != 0)
 			continue;
