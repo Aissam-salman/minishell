@@ -14,7 +14,7 @@
 
 void	ft_env(t_minishell *minishell, int outfd)
 {
-	if (minishell->head_cmd && minishell->head_cmd->next)
-		return;
-	ft_env_print(minishell->head_env, outfd);
+	if (!minishell->head_cmd->args[1])
+		ft_env_print(minishell->head_env, outfd);
+	//WARN: handle if env cmd, error or execve the next
 }
