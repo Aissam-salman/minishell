@@ -860,7 +860,8 @@ This is a one-line wrapper. Consider inlining it or keeping it if you plan to ad
 In bash, `env` only prints `NAME=VALUE` pairs. If an env variable was `export`ed without a value, it should NOT appear in `env` output (but should appear in `export` output). [x]
 
 ### Tips
-- `env` with arguments (e.g., `env ls`) should print an error or run the command in a modified environment. For minishell, you can ignore this.
+- `env` with arguments (e.g., `env ls`) should print an error or run the command in a modified environment. For minishell, you can ignore this. [ ] ??? > [!WARNING]
+> 
 
 ---
 
@@ -870,7 +871,7 @@ In bash, `env` only prints `NAME=VALUE` pairs. If an env variable was `export`ed
 ```c
 #include "includes/ft_conversion.h"
 ```
-This works but is inconsistent with the rest of the codebase which uses `../../includes/minishell.h` (and `minishell.h` includes `libft.h` which includes `ft_conversion.h`). **Remove this line** — `ft_atoi` is already available via `minishell.h`.
+This works but is inconsistent with the rest of the codebase which uses `../../includes/minishell.h` (and `minishell.h` includes `libft.h` which includes `ft_conversion.h`). **Remove this line** — `ft_atoi` is already available via `minishell.h`. [x] 
 
 ### `ft_buildin_exit`: no validation of argument
 Bash handles these cases:
