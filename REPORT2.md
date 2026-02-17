@@ -880,7 +880,7 @@ Bash handles these cases:
 - `exit abc` → `bash: exit: abc: numeric argument required` → exit 2
 - `exit 1 2` → `bash: exit: too many arguments` → does NOT exit
 
-Currently your code does `ft_atoi(code_exit)` which silently returns 0 for non-numeric strings. **Add validation.**
+Currently your code does `ft_atoi(code_exit)` which silently returns 0 for non-numeric strings. **Add validation.** [x]
 
 ### `ft_buildin_exit`: duplicates cleanup from `ft_exit`
 ```c
@@ -909,25 +909,25 @@ if (WIFSIGNALED(status))
         ft_printf("Error: %s\n", strerror(status));
 }
 ```
-`WIFSIGNALED` and `WIFEXITED` are **mutually exclusive**. A process either exited normally OR was killed by a signal, never both. This `WIFEXITED` check inside the `WIFSIGNALED` block will **never** be true. **Remove it.**
+`WIFSIGNALED` and `WIFEXITED` are **mutually exclusive**. A process either exited normally OR was killed by a signal, never both. This `WIFEXITED` check inside the `WIFSIGNALED` block will **never** be true. **Remove it.** [x]
 
 ### `handler_status`: `strerror(status)` is wrong
-`strerror` takes an `errno` value, not a `waitpid` status. Use `WTERMSIG(status)` to get the signal number, then `strsignal(sig)`.
+`strerror` takes an `errno` value, not a `waitpid` status. Use `WTERMSIG(status)` to get the signal number, then `strsignal(sig)`. [x]
 
 ### `handler_status`: accessing `cmd->args[1]` without NULL check
 ```c
-ft_printf(" %s %s\n", cmd->args[0], cmd->args[1]);
+ft_printf(" %s %s\n", cmd->args[0], cmd->args[1]); [x]
 ```
-If the command has no arguments (e.g., `sleep` killed by signal), `args[1]` is NULL → undefined behavior with `ft_printf`.
+If the command has no arguments (e.g., `sleep` killed by signal), `args[1]` is NULL → undefined behavior with `ft_printf`. [x]
 
 ### `ft_wait_subprocess`: variable declaration inside block
 ```c
-int i = 0;
+int i = 0; [x]
 ```
 42 norm requires declarations at the top of the function. Move it up.
 
 ### `ft_wait_subprocess`: doesn't save exit status
-The exit status of the **last** command should be saved to `minishell->exit_status` for `$?` support.
+The exit status of the **last** command should be saved to `minishell->exit_status` for `$?` support. [x]
 
 ### Tips
 - For proper `$?` support: `if (WIFEXITED(status)) minishell->exit_status = WEXITSTATUS(status); else if (WIFSIGNALED(status)) minishell->exit_status = 128 + WTERMSIG(status);`
@@ -937,9 +937,9 @@ The exit status of the **last** command should be saved to `minishell->exit_stat
 ## 30. `src/errors/errors.c`
 
 ### `ft_error`: commented-out code noise
-4 lines of commented-out code at the top. **Remove.**
+4 lines of commented-out code at the top. **Remove.** [x]
 
-### `ft_exit`: always prints newline even without error
+### `ft_exit`: always prints newline even without error [x]
 ```c
 if (str)
 {
@@ -947,10 +947,10 @@ if (str)
     ft_putchar_fd('\n', STDERR_FILENO);
 }
 ```
-If `str` is NULL, the function calls `exit()` silently, which is correct. But previously (before your recent edit) it always printed a newline. Make sure the version you use is the clean one.
+If `str` is NULL, the function calls `exit()` silently, which is correct. But previously (before your recent edit) it always printed a newline. Make sure the version you use is the clean one. [x]
 
 ### Tips
-- Consider making `ft_error` return the error code consistently so callers can do `return (ft_error(...))` in one line (already done in most places — good).
+- Consider making `ft_error` return the error code consistently so callers can do `return (ft_error(...))` in one line (already done in most places — good). 
 
 ---
 
@@ -964,7 +964,7 @@ while (current)
     current = current->next;
 }
 ```
-It iterates via `current` but always prints the **first** command (`head`). Should use `current` everywhere.
+It iterates via `current` but always prints the **first** command (`head`). Should use `current` everywhere. [x]
 
 ### `ft_cmd_print`, `ft_tokens_print`, `ft_type_print`, `ft_state_print`: **debug-only functions, never called in production**
 All call sites are commented out. These are useful for development but should be:

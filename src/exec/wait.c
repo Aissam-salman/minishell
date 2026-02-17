@@ -12,10 +12,12 @@
 
 #include "minishell.h"
 #include <stdlib.h>
+#include <string.h>
 
 void	handler_status(int status, t_cmd *cmd, t_minishell *minishell)
 {
 	int	sig;
+	int i;
 
 	if (WIFSIGNALED(status))
 	{
@@ -28,15 +30,21 @@ void	handler_status(int status, t_cmd *cmd, t_minishell *minishell)
 			{
 				ft_printf("\t\t\t\t%s", "(core dumped)");
 			}
-			ft_printf(" %s %s\n", cmd->args[0], cmd->args[1]);
+			i= 0;
+			while (cmd->args[i])
+			{
+				ft_printf(" %s", cmd->args[i]);
+				i++;
+			}
+			ft_printf("\n");
 		}
 		else if (sig == SIGINT)
 		{
 			ft_printf("\n");
 		}
-		if (WIFEXITED(status) > 0)
-			ft_printf("Error: %s\n", strerror(status));
 	}
+	// if (WIFEXITED(status) > 0)
+	// 	ft_error(minishell, WEXITSTATUS(status), strerror(WEXITSTATUS(status)), NULL);
 }
 
 void	ft_wait_subprocess(t_minishell *minishell, int size_cmd, int *pids)

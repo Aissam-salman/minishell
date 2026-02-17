@@ -216,7 +216,7 @@ void				ft_unset(t_env **head_env, char **args);
 void				ft_env(t_minishell *minishell, int outfd);
 
 // built_in/exit.c
-void				ft_buildin_exit(t_minishell *minishell, char *code_exit);
+void				ft_buildin_exit(t_minishell *minishell, char **args);
 
 // ── UTILS ───────────────────────────────────────────
 
