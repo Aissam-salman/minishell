@@ -788,7 +788,7 @@ The new node is created but **never added to the list**. The `ft_env_add` call i
 ```c
 printf("%s\n", buff);
 ```
-Inconsistent with the rest of the codebase. Use `ft_putstr_fd(buff, STDOUT_FILENO)` + `ft_putchar_fd('\n', STDOUT_FILENO)`.
+Inconsistent with the rest of the codebase. Use `ft_putstr_fd(buff, STDOUT_FILENO)` + `ft_putchar_fd('\n', STDOUT_FILENO)`. [x]
 
 ### Tips
 - Clean and simple otherwise.
@@ -804,7 +804,7 @@ ft_printf("format: %s\n", str);
 **Remove** — this prints to stdout and corrupts output.
 
 ### `ft_env_format_check`: incomplete validation
-Only checks first character. In bash, identifiers can contain `_` and must not start with a digit. The check `!ft_isalpha(str[0]) || str[0] == '-'` is redundant (`'-'` is not alpha anyway).
+Only checks first character. In bash, identifiers can contain `_` and must not start with a digit. The check `!ft_isalpha(str[0]) || str[0] == '-'` is redundant (`'-'` is not alpha anyway). [x]
 
 **Correct validation:**
 ```c
@@ -818,7 +818,7 @@ Bash output of `export` is:
 declare -x HOME="/home/user"
 declare -x PATH="/usr/bin:..."
 ```
-Your implementation calls `ft_env_print` which prints `HOME=/home/user`. **Use a different format.**
+Your implementation calls `ft_env_print` which prints `HOME=/home/user`. **Use a different format.** [x]
 
 ### `ft_export`: doesn't check if variable already exists
 ```c
