@@ -189,6 +189,9 @@ int					ft_open(char *path, t_types mod);
 
 // ── BUILT-INS ───────────────────────────────────────
 
+// built_in/extra_bin.c
+void	ft_extra_bin(t_minishell *minishell, int mod);
+
 // built_in/is_built_in.c
 int					is_built_in(t_cmd *cmd);
 void				run_built_in(t_cmd *cmd, t_minishell *minishell);
@@ -251,7 +254,7 @@ void				ft_state_print(char c, char *buffer,
 								t_minishell *minishell);
 
 // utils/errors.c
-int					ft_error(int error, char *str1, char *str2);
+int	ft_error(t_minishell *minishell, int error, char *str1, char *str2);
 void				ft_exit(t_minishell *minishell, int error, char *str);
 
 // utils/signal_core.c

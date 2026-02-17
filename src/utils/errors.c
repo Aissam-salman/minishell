@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 16:28:43 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/16 18:07:31 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/17 12:09:30 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,11 @@
 #include <unistd.h>
 
 // ERROR + MSG SUR SORTIE ERREUR
-int	ft_error(int error, char *str1, char *str2)
+int	ft_error(t_minishell *minishell, int error, char *str1, char *str2)
 {
 	// PENSER  A PRENDRE EN COMPTRE STRERRRNO PLUS SIMPLE POUR LA GESTION
-	// ft_putstr_fd(str, STDERR_FILENO);
-	// if (str)
-	// 	ft_putstr_fd(str, STDERR_FILENO);
+	if (minishell)
+		minishell->exit_status = error;
 	if (str1 || str2)
 	{
 		ft_putstr_fd("Minishell : ", 2);

@@ -29,7 +29,7 @@ int	ft_buffer_add(char *buffer, char c)
 		return (0);
 	}
 	else
-		return (ft_error(BUFFER_FAIL, "Insufficient buffer size", NULL));
+		return (ft_error(NULL, BUFFER_FAIL, "Insufficient buffer size", NULL));
 
 }
 
@@ -69,7 +69,7 @@ int	ft_state_interpret(char *line, int *index, char *buffer,
 	{
 		if (len_buffer > 0)
 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
-				return (ft_error(MALLOC_FAIL, "Fail Malloc Interpreter", NULL));
+				return (ft_error(minishell, MALLOC_FAIL, "Fail Malloc Interpreter", NULL));
 		minishell->state = WAITING;
 	}
 	// SI OPERATORS
@@ -77,7 +77,7 @@ int	ft_state_interpret(char *line, int *index, char *buffer,
 	{
 		if (len_buffer > 0 && (buffer[0] != line[*index] || len_buffer >= 2))
 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
-				return (ft_error(MALLOC_FAIL, "Fail Malloc Interpreter", NULL));
+				return (ft_error(minishell, MALLOC_FAIL, "Fail Malloc Interpreter", NULL));
 	}
 	// SI STATE != WAITING
 	else if (minishell->state != WAITING)
@@ -85,7 +85,7 @@ int	ft_state_interpret(char *line, int *index, char *buffer,
 		if (!ft_ischarset(line[*index], OPERATORS) && ft_ischarset(buffer[0],
 				OPERATORS))
 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
-				return (ft_error(MALLOC_FAIL, "Fail Malloc Interpreter", NULL));
+				return (ft_error(minishell, MALLOC_FAIL, "Fail Malloc Interpreter", NULL));
 		if (ft_buffer_add(buffer, line[*index]))
 			return (BUFFER_FAIL);
 	}
@@ -108,7 +108,7 @@ int	ft_token_lst_create(t_minishell *minishell)
 	// INITIALISATION DU TABLEAU ARGS
 	buffer = ft_calloc_gc(line_len + 1, sizeof(char), &minishell->gc);
 	if (!buffer)
-		return (ft_error(MALLOC_FAIL, "Fail Malloc Buffer Interpreter", NULL));
+		return (ft_error(minishell, MALLOC_FAIL, "Fail Malloc Buffer Interpreter", NULL));
 
 	// BOUCLE POUR TRAITER CHAQUE CHAR DE MINISHELL.LINE
 	i = 0;
@@ -125,10 +125,10 @@ int	ft_token_lst_create(t_minishell *minishell)
 	}
 	line[i] = '\0';
 	if (minishell->state == IN_QUOTE || minishell->state == IN_DQUOTE)
-		return (ft_error(PARSING_FAIL, "Syntax error: unclosed quotes", NULL));
+		return (ft_error(minishell, PARSING_FAIL, "Syntax error: unclosed quotes", NULL));
 	if (ft_strlen(buffer) > 0)
 		if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
-			return (ft_error(MALLOC_FAIL, "Fail Malloc Interpreter", NULL));
+			return (ft_error(minishell, MALLOC_FAIL, "Fail Malloc Interpreter", NULL));
 	return (0);
 }
 

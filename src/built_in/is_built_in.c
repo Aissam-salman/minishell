@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   is_built_in.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 14:15:59 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/16 18:02:06 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/17 11:56:58 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,11 @@ int is_built_in(t_cmd *cmd)
 		ft_strcmp(str, "echo") == 0 ||
 		ft_strcmp(str, "pwd") == 0 ||
 		ft_strcmp(str, "cd") == 0 ||
-	 ft_strcmp(str, "export") == 0 ||
-	 ft_strcmp(str, "unset") == 0 ||
-	 ft_strcmp(str, "env") == 0)
+		ft_strcmp(str, "export") == 0 || 
+		ft_strcmp(str, "unset") == 0 ||
+		ft_strcmp(str, "env") == 0 ||
+		ft_strcmp(str, ":") == 0 ||
+		ft_strcmp(str, "!") == 0)
 		return (1);
 	return (0);
 }
@@ -54,4 +56,8 @@ void run_built_in(t_cmd *cmd, t_minishell *minishell)
 		ft_pwd();
 	else if(ft_strcmp(str, "cd") == 0)
 		ft_cd(minishell, cmd->args[1]);
+	else if (ft_strcmp(str, "!") == 0)
+		ft_extra_bin(minishell, 1);
+	else if (ft_strcmp(str, ":") == 0)
+		ft_extra_bin(minishell, 0);
 }

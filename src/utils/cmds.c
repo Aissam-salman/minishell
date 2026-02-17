@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:34:00 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/16 17:29:05 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/17 12:27:47 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ int	ft_token_word_count(t_token *current)
 	{
 		if (current->type == PIPE)
 			return (count);
-		else if (current->type == WORD || current->type == CMD)
+		else if (current->type == WORD || current->type == CMD ||
+			current->type == FLAG)
 			count++;
 		current = current->next;
 	}
@@ -105,7 +106,7 @@ int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr, int
 		|| token->type == IN_CHEVRON)
 	{
 		if (!next || !next->str || !next->str[0])
-			return (ft_error(ERR_SYNTAX, "Syntax error near unexpected token 'newline'", NULL));
+			return (ft_error(minishell, ERR_SYNTAX, "Syntax error near unexpected token 'newline'", NULL));
 		// A MODIFIER : VALEUR DE RETOUR
 		if (ft_redirection_handler(minishell, cmd, token))
 			return (GENERAL_ERROR);
@@ -116,7 +117,7 @@ int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr, int
 	else if (token->type == IN_DCHEVRON)
 	{
 		if (!next || !next->str)
-			return (ft_error(ERR_SYNTAX, "Syntax error near unexpected token 'newline'", NULL));
+			return (ft_error(minishell, ERR_SYNTAX, "Syntax error near unexpected token 'newline'", NULL));
 		else
 		{
 			// ft_tokens_print(next);
