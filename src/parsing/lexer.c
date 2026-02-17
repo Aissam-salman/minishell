@@ -78,6 +78,8 @@ int	ft_state_interpret(char *line, int *index, char *buffer,
 		if (len_buffer > 0 && (buffer[0] != line[*index] || len_buffer >= 2))
 			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
 				return (ft_error(minishell, MALLOC_FAIL, "Fail Malloc Interpreter", NULL));
+		if (ft_buffer_add(buffer, line[*index]))
+			return (BUFFER_FAIL);
 	}
 	// SI STATE != WAITING
 	else if (minishell->state != WAITING)
@@ -103,7 +105,6 @@ int	ft_token_lst_create(t_minishell *minishell)
 	// On recupere la ligne
 	line = minishell->line;
 	line_len = ft_strlen(line);
-	minishell->state = NORMAL;
 
 	// INITIALISATION DU TABLEAU ARGS
 	buffer = ft_calloc_gc(line_len + 1, sizeof(char), &minishell->gc);
@@ -116,7 +117,6 @@ int	ft_token_lst_create(t_minishell *minishell)
 	{
 		// ON DETECTE L'ETAT POUR POUVOIR DETERMINER QUOI FAIRE DU CHARACTERE
 		ft_state_detect(line[i], minishell);
-
 		// ON TRAITE line[i] EN FONCTION DE L'ETAT
 		// ON INTERPRETE L'ETAT POUR CREER LA CHAINE DE TOKENS
 		if (ft_state_interpret(line, &i, buffer, minishell))
