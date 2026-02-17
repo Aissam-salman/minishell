@@ -890,7 +890,7 @@ rl_clear_history();
 This is the same cleanup as `ft_exit`. Consider calling `ft_exit` instead.
 
 ### Tips
-- Exit status should be `code % 256` (bash wraps it). `ft_atoi` doesn't handle this.
+- Exit status should be `code % 256` (bash wraps it). `ft_atoi` doesn't handle this. [x]
 
 ---
 

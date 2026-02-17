@@ -18,11 +18,18 @@ void	ft_buildin_exit(t_minishell *minishell, char *code_exit)
 
 	code = 0;
 	if (code_exit)
+		//FIX: atoi_safe
 		code = ft_atoi(code_exit);
 	else
 		code = minishell->exit_status;
 	ft_gc_free_all(&minishell->gc);
 	rl_clear_history();
 	write(1, "exit\n", 5);
-	exit(code);
+	exit(code % 256);
+	/*
+	- `exit` → exit with status of last command
+	- `exit 42` → exit with code 42
+	- `exit abc` → `bash: exit: abc: numeric argument required` → exit 2
+	- `exit 1 2` → `bash: exit: too many arguments` → does NOT exit
+	*/
 }
