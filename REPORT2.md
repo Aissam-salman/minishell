@@ -825,10 +825,10 @@ Your implementation calls `ft_env_print` which prints `HOME=/home/user`. **Use a
 new = ft_env_new(minishell, str);
 ft_env_add(minishell, new);
 ```
-If the variable already exists, this creates a **duplicate**. Should find and update the existing entry first.
+If the variable already exists, this creates a **duplicate**. Should find and update the existing entry first. [x]
 
 ### Tips
-- Export without `=` (e.g., `export FOO`) should mark the variable as exported but with no value. Currently it creates a node with `content = NULL`, which is close but `env` should not print it.
+- Export without `=` (e.g., `export FOO`) should mark the variable as exported but with no value. Currently it creates a node with `content = NULL`, which is close but `env` should not print it. [x]
 
 ---
 
