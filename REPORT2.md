@@ -1,7 +1,6 @@
 # REPORT 2 — Full Code Audit: Readability, Dead Code, Simplifications & Bash Compliance
 
 *Generated on 2026-02-16 after full review of every `.c` and `.h` file in `src/`, `includes/`.*
-
 *Sections are ordered by **execution flow**: headers → initialization → lexing → parsing → command construction → execution → built-ins → post-execution → utilities.*
 
 ---
