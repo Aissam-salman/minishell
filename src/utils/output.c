@@ -24,6 +24,19 @@ void	ft_env_print(t_env *head, int fd)
 	}
 }
 
+void	ft_env_print_export_no_param(t_env *head, int fd)
+{
+	while (head)
+	{
+		ft_putstr_fd("export ", fd);
+		ft_putstr_fd(head->name, fd);
+		ft_putstr_fd("=", fd);
+		ft_putstr_fd(head->content, fd);
+		ft_putstr_fd("\n", fd);
+		head = head->next;
+	}
+}
+
 // IMPRIME TOUTES LES DATAS STRUCT CMD
 void	ft_cmd_print(t_cmd *head)
 {
