@@ -213,7 +213,7 @@ int					ft_export(t_minishell *minishell, int fd, char *str);
 void				ft_unset(t_env **head_env, char **args);
 
 // built_in/env.c
-void				ft_env(t_env *head_env, int outfd);
+void				ft_env(t_minishell *minishell, int outfd);
 
 // built_in/exit.c
 void				ft_buildin_exit(t_minishell *minishell, char *code_exit);
