@@ -12,7 +12,9 @@
 
 #include "../../includes/minishell.h"
 
-void	ft_env(t_env *head_env, int outfd)
+void	ft_env(t_minishell *minishell, int outfd)
 {
-	ft_env_print(head_env, outfd);
+	if (minishell->head_cmd && minishell->head_cmd->next)
+		return;
+	ft_env_print(minishell->head_env, outfd);
 }
