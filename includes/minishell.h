@@ -248,6 +248,7 @@ void				ft_heredoc(t_minishell *minishell, t_cmd *cmd,
 
 // utils/output.c
 void				ft_env_print(t_env *head, int fd);
+void				ft_env_print_export_no_param(t_env *head, int fd);
 void				ft_cmd_print(t_cmd *head);
 void				ft_tokens_print(t_token *head);
 void				ft_type_print(t_token *token);
