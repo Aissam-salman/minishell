@@ -838,7 +838,7 @@ If the variable already exists, this creates a **duplicate**. Should find and up
 The function itself is fine, but `ft_env_delone` (in `env_setup.c`) is broken — see that section.
 
 ### Missing: multiple argument support
-`unset VAR1 VAR2` should unset both. Currently only `cmd->args[1]` is used, ignoring any further arguments.
+`unset VAR1 VAR2` should unset both. Currently only `cmd->args[1]` is used, ignoring any further arguments. [x]
 
 ### Tips
 - Loop over all arguments: `int i = 1; while (cmd->args[i]) ft_unset(&head_env, cmd->args[i++]);`
@@ -857,7 +857,7 @@ void ft_env(t_env *head_env, int outfd)
 This is a one-line wrapper. Consider inlining it or keeping it if you plan to add `env` argument handling later.
 
 ### Missing: `env` should only print variables that have a value
-In bash, `env` only prints `NAME=VALUE` pairs. If an env variable was `export`ed without a value, it should NOT appear in `env` output (but should appear in `export` output).
+In bash, `env` only prints `NAME=VALUE` pairs. If an env variable was `export`ed without a value, it should NOT appear in `env` output (but should appear in `export` output). [x]
 
 ### Tips
 - `env` with arguments (e.g., `env ls`) should print an error or run the command in a modified environment. For minishell, you can ignore this.
