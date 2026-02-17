@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 13:04:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/17 13:11:44 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/17 17:54:34 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,8 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 	t_env	*path_env;
 
 	ft_bzero(buffer, BUFFER_SIZE);
-
 	// ON INCREMENTE POUR NE PAS PRENDRE LE $
 	(*start)++;
-
 	// ATTENTION A L'EXPAND POUR LA VALEUR DE RETOUR
 	if (str[*start] && str[*start] == '?')
 	{

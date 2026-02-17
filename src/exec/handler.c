@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 18:43:32 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/16 13:10:40 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/17 17:45:43 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void handler_signal_child()
 		perror("signal error default SIGINT");
 }
 
+// A MODIFIER : Gerer le cas cat > outfile 
+// Ne stocke par le cat dans outfile
 void	handler_first_cmd(int infd, int size_cmd, int pipe_fd)
 {
 	if (infd != 0)

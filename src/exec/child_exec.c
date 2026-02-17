@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 18:31:47 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/17 12:12:47 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/17 17:43:42 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,24 @@ void close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2])
 	if (is_built_in(cmd) == 1)
 	{
 		run_built_in(cmd, minishell);
-		exit(0);
+		ft_gc_free_all(&minishell->gc);
+		rl_clear_history();
+		_exit(0);
 	}
 	if (!cmd->path || access(cmd->path, X_OK) != 0)
 	{
-		ft_error(minishell, 127, cmd->args[0], ": command not found");
-		ft_exit(minishell, errno, NULL);
+		ft_error(minishell, CMD_NOT_FOUND, cmd->args[0], ": command not found");
+		ft_gc_free_all(&minishell->gc);
+		rl_clear_history();
+		_exit(CMD_NOT_FOUND);
 	}
 	if (execv(cmd->path, cmd->args) == -1)
-		ft_exit(minishell, errno, "EXECV");
+	{
+		ft_error(minishell, errno, "EXECV", NULL);
+		ft_gc_free_all(&minishell->gc);
+		rl_clear_history();
+		_exit(errno);
+	}
 }
 
 void child_process(t_minishell *minishell, t_cmd *cmd, t_child *child, int pipe_fd[2])
