@@ -40,7 +40,7 @@ void close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2])
 	close(pipe_fd[1]);
 	if (is_built_in(cmd) == 1)
 	{
-		run_built_in_piped(cmd, minishell);
+		run_built_in(cmd, minishell);
 		exit(0);
 	}
 	if (!cmd->path || access(cmd->path, X_OK) != 0)

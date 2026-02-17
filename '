@@ -695,21 +695,21 @@ If `outfd == 1` (no redirection), `prev_pipe` is **never closed**. Move `close(p
 ```c
 if (!cmd->args[0] || !cmd->args)
 ```
-Dereferences `cmd->args` (via `cmd->args[0]`) **before** checking if `cmd->args` is NULL. Should be: [x]
+Dereferences `cmd->args` (via `cmd->args[0]`) **before** checking if `cmd->args` is NULL. Should be:
 ```c
 if (!cmd->args || !cmd->args[0])
 ```
 
 ### `run_built_in` and `run_built_in_piped`: massive code duplication
-These two functions are 90% identical. Extract the common dispatch into a single function, with a parameter to control the differences (e.g., whether `exit`/`export`/`unset` should run). [x]
+These two functions are 90% identical. Extract the common dispatch into a single function, with a parameter to control the differences (e.g., whether `exit`/`export`/`unset` should run).
 
 ### `run_built_in`: inconsistent alignment
-Some `ft_strcmp` lines are indented differently. Align all conditions. [x]
+Some `ft_strcmp` lines are indented differently. Align all conditions.
 
 ### `run_built_in_piped`: missing `exit`/`export`/`unset`
 These built-ins are omitted from the piped version. In bash:
-- `exit` in a pipe subshell only exits that subshell ✅ (correct to omit from parent-side, but should work in child) [x]
-- `export`/`unset` in a pipe have no effect on the parent ✅ (but should still execute without error in the child) [x]
+- `exit` in a pipe subshell only exits that subshell ✅ (correct to omit from parent-side, but should work in child)
+- `export`/`unset` in a pipe have no effect on the parent ✅ (but should still execute without error in the child)
 
 ### Tips
 - Create a function pointer table indexed by built-in name to avoid the `ft_strcmp` chain.
