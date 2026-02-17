@@ -87,6 +87,7 @@ typedef struct	s_minishell
 	char			*line;
 	t_state			state;
 	int				exit_status;
+	int				cached_status;
 }					t_minishell;
 
 // STRUCTURE POUR EXEC CHILD

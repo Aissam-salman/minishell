@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 18:26:24 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/17 12:12:17 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/17 13:08:37 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,10 @@ int	handle_pipe(t_token *token, int *cmd_find)
 {
 	if (!ft_check_pipe(token->str))
 		return (ERR_HANDLE_PIPE);
+	if (*cmd_find == 0)
+		return (ft_error(NULL, ERR_SYNTAX, ERRS_SYNT_NEAR, "`|'"));
+	if (!token->next)
+		return (ft_error(NULL, ERR_SYNTAX, ERRS_SYNT_NEAR, "`|'"));
 	*cmd_find = 0;
 	return (SUCCESS);
 }
@@ -51,6 +55,7 @@ int	checker_token(t_minishell *minishell)
 
 	cmd_find = 0;
 	token = minishell->head_token;
+	// ft_tokens_print(minishell->head_token);
 	while (token)
 	{
 		ft_quotes_handle(minishell, token);

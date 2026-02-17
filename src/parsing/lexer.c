@@ -110,6 +110,7 @@ int	ft_token_lst_create(t_minishell *minishell)
 	line = minishell->line;
 	line_len = ft_strlen(line);
 	minishell->state = NORMAL;
+
 	// INITIALISATION DU TABLEAU ARGS
 	buffer = ft_calloc_gc(line_len + 1, sizeof(char), &minishell->gc);
 	if (!buffer)

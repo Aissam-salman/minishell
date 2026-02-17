@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 16:28:43 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/17 12:09:30 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/17 12:56:08 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ft_error(t_minishell *minishell, int error, char *str1, char *str2)
 		minishell->exit_status = error;
 	if (str1 || str2)
 	{
-		ft_putstr_fd("Minishell : ", 2);
+		ft_putstr_fd("bash : ", 2);
 		if (str1)
 			ft_putstr_fd(str1, STDERR_FILENO);
 		if (str2)
@@ -31,7 +31,7 @@ int	ft_error(t_minishell *minishell, int error, char *str1, char *str2)
 	}
 	else if (errno != 0)
 	{
-		perror("Minishell : ");
+		perror("bash : ");
 		return (errno);
 	}
 	return (error);

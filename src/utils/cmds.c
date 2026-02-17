@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:34:00 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/17 12:27:47 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/17 12:42:58 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ int	ft_token_word_count(t_token *current)
 			return (count);
 		else if (current->type == WORD || current->type == CMD
 			|| current->type == FLAG)
+		else
 			count++;
 		current = current->next;
 	}
@@ -91,6 +92,7 @@ int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr,
 	// if (!minishell || !cmd || !token)
 	// 	return ;
 	// SI WORD = AJOUTE A ARGS
+
 	next = NULL;
 	if (token->next)
 		next = token->next;
@@ -123,7 +125,8 @@ int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr,
 		else
 		{
 			// ft_tokens_print(next);
-			token->next->type = WORD;
+			if (token->next)
+				token->next->type = WORD;
 			// ft_tokens_print(minishell->head_token);
 			ft_heredoc_handle(minishell, cmd, token);
 			*token_ptr = next;
