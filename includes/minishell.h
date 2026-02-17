@@ -254,7 +254,7 @@ void				ft_state_print(char c, char *buffer,
 								t_minishell *minishell);
 
 // utils/errors.c
-int					ft_error(int error, char *str1, char *str2);
+int	ft_error(t_minishell *minishell, int error, char *str1, char *str2);
 void				ft_exit(t_minishell *minishell, int error, char *str);
 
 // utils/signal_core.c

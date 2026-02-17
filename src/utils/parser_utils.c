@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 13:04:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/16 17:21:00 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/17 12:23:31 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,15 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 	(*start)++;
 
 	// ATTENTION A L'EXPAND POUR LA VALEUR DE RETOUR
-	if (str[*start] == '?')
+	if (str[*start] && str[*start] == '?')
 	{
 		err_value = ft_itoa_gc(minishell->exit_status, &minishell->gc);
 		if (!err_value)
-			return (ft_error(MALLOC_FAIL, "Error malloc expands", NULL));
+			return (ft_error(minishell, MALLOC_FAIL, "Error malloc expands", NULL));
 
 		// SI TAILLE DU BUFFER TROP PETITE
 		if (ft_strlcat(usable_str, err_value, BUFFER_SIZE) > BUFFER_SIZE)
-			return (ft_error(BUFFER_FAIL, "Insufficient buffer size", NULL));
+			return (ft_error(minishell, BUFFER_FAIL, "Insufficient buffer size", NULL));
 		(*start)++;
 		return (0);
 	}
@@ -53,7 +53,7 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 	if (path_env && path_env->content)
 	{
 		if (ft_strlcat(usable_str, path_env->content, BUFFER_SIZE) > BUFFER_SIZE)
-			return (ft_error(BUFFER_FAIL, "Insufficient buffer size", NULL));
+			return (ft_error(minishell, BUFFER_FAIL, "Insufficient buffer size", NULL));
 	}
 	return (0);
 }
@@ -103,5 +103,5 @@ void	ft_quotes_handle(t_minishell *minishell, t_token *token)
 	// DUP DU BUFFER POUR REMPLACER STR DU TOKEN AVEC LES EXPENDS SI NECESSAIRE
 	token->str = ft_strdup_gc(usable_str, &minishell->gc);
 	if (!token->str)
-		ft_error(MALLOC_FAIL, "Error malloc end of quotes handling", NULL);
+		ft_error(minishell, MALLOC_FAIL, "Error malloc end of quotes handling", NULL);
 }

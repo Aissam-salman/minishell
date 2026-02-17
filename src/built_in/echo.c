@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 19:33:53 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/16 18:02:35 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/17 12:16:31 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void ft_echo(char **args)
 	if (!args || !*args)
 	{
 		if (write(1, "\n", 1) == -1)
-			ft_error(errno, "write",NULL);
+			ft_error(NULL, errno, "write",NULL);
 		return;
 	}
 	//FIX: handle -nnnnnnn -nnn -nnnnn flags
@@ -37,7 +37,7 @@ void ft_echo(char **args)
 		while (args[i])
 		{
 			if (write(1, args[i], ft_strlen(args[i])) == -1)
-				ft_error(errno, "write",NULL);
+				ft_error(NULL, errno, "write",NULL);
 			if (args[i + 1])
 				write(1, " ", 1);
 			i++;
@@ -48,9 +48,9 @@ void ft_echo(char **args)
 		while (args[i])
 		{
 			if (write(1, args[i], ft_strlen(args[i])) == -1)
-				ft_error(errno, "write",NULL);
+				ft_error(NULL, errno, "write",NULL);
 			if (write(1, " ", 1) == -1)
-				ft_error(errno, "write",NULL);
+				ft_error(NULL, errno, "write",NULL);
 			i++;
 		}
 	}

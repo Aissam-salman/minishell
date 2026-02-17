@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 19:49:15 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/14 15:02:36 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/17 12:16:55 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,14 @@ static void update_pwd(t_env **head_env, t_minishell *minishell)
 		if (!env_pwd)
 		{
 			free(buff);
-			ft_error(errno,"PWD not found",NULL);
+			ft_error(minishell, errno,"PWD not found",NULL);
 			return;
 		}
 		env_pwd->content = ft_strdup_gc(buff, &minishell->gc);
 		free(buff);
 		return;
 	}
-	ft_error(errno,"pwd",NULL);
+	ft_error(minishell, errno,"pwd",NULL);
 }
 
 static void update_old_pwd(t_env **head_env, char *old_pwd, t_minishell *minishell)
@@ -52,7 +52,7 @@ static char  *save_pwd()
 	opwd = getcwd(NULL, 0);
 	if (!opwd)
 	{
-		ft_error(errno,"pwd",NULL);
+		ft_error(NULL, errno,"pwd",NULL);
 		return (NULL);
 	}
 	return (opwd);
@@ -86,7 +86,7 @@ void ft_cd(t_minishell *minishell, char *path)
 			{
 				if (old_pwd)
 					free(old_pwd);
-				ft_error(errno,"cd", NULL);
+				ft_error(minishell, errno,"cd", NULL);
 				return ;
 			}
 			update_old_pwd(&minishell->head_env, old_pwd, minishell);
@@ -100,7 +100,7 @@ void ft_cd(t_minishell *minishell, char *path)
 	{
 		if (old_pwd)
 			free(old_pwd);
-		ft_error(errno,"cd", NULL);
+		ft_error(minishell, errno,"cd", NULL);
 		return ;
 	}
 	update_old_pwd(&minishell->head_env, old_pwd, minishell);

@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 18:26:24 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/17 11:57:12 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/17 12:12:17 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
 int	handle_redirection(t_token *token)
 {
 	if (ft_check_redirection(token->str) == 0)
-		return (ft_error(ERR_SYNTAX, ERRS_SYNT_NEAR, token->str));
+		return (ft_error(NULL, ERR_SYNTAX, ERRS_SYNT_NEAR, token->str));
 	if (!token->next)
-		return (ft_error(ERR_SYNTAX, ERRS_SYNT_NEAR, "`newline'"));
+		return (ft_error(NULL, ERR_SYNTAX, ERRS_SYNT_NEAR, "`newline'"));
 	if (is_redirection(token->next) || token->next->type == PIPE)
-		return (ft_error(ERR_SYNTAX, ERRS_SYNT_NEAR, token->next->str));
+		return (ft_error(NULL, ERR_SYNTAX, ERRS_SYNT_NEAR, token->next->str));
 	return (SUCCESS);
 }
 

@@ -40,11 +40,9 @@ int	main(int argc, char **argv, char **envp)
 			minishell.exit_status = ERR_SYNTAX;
 			continue ;
 		}
-		if (ft_cmd_lst_create(&minishell) != SUCCESS)
-		{
-			minishell.exit_status = ERR_SYNTAX;
-			continue ;
-		}
+		ft_cmd_lst_create(&minishell);
+		if (minishell.exit_status != 0)
+			continue;
 		ft_exec(&minishell);
 	}
 	ft_exit(&minishell, minishell.exit_status, NULL);
