@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:34:00 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/17 16:30:47 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/18 08:58:01 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,12 +106,8 @@ int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr,
 		|| token->type == IN_CHEVRON)
 	{
 		if (!next || !next->str || !next->str[0])
-<<<<<<< HEAD
-			return (ft_error(minishell, ERR_SYNTAX, "Syntax error near unexpected token `newline'", NULL));
-=======
 			return (ft_error(minishell, ERR_SYNTAX,
 					"Syntax error near unexpected token 'newline'", NULL));
->>>>>>> 511f726f641fd72befee6cccb25adbff85cd949c
 		// A MODIFIER : VALEUR DE RETOUR
 		if (ft_redirection_handler(minishell, cmd, token))
 			return (GENERAL_ERROR);
@@ -122,12 +118,8 @@ int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr,
 	else if (token->type == IN_DCHEVRON)
 	{
 		if (!next || !next->str)
-<<<<<<< HEAD
-			return (ft_error(minishell, ERR_SYNTAX, "Syntax error near unexpected token `newline'", NULL));
-=======
 			return (ft_error(minishell, ERR_SYNTAX,
 					"Syntax error near unexpected token 'newline'", NULL));
->>>>>>> 511f726f641fd72befee6cccb25adbff85cd949c
 		else
 		{
 			// ft_tokens_print(next);
@@ -137,11 +129,9 @@ int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr,
 			ft_heredoc_handle(minishell, cmd, token);
 			*token_ptr = next;
 		}
-<<<<<<< HEAD
-=======
+		// A MODIFIER : Traiter le cas d'erreur en dessous
 		// return (ft_error(SYNTAX_ERROR, "Syntax error near unexpected token ",
 				// next->str));
->>>>>>> 511f726f641fd72befee6cccb25adbff85cd949c
 	}
 	return (SUCCESS);
 }
