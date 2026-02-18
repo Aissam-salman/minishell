@@ -14,10 +14,10 @@
 
 void	ft_memswap(void *a, void *b, size_t size)
 {
-	unsigned char	*uns_a;
-	unsigned char	*uns_b;
-	unsigned char	tmp;
-	size_t			i;
+	unsigned char *uns_a;
+	unsigned char *uns_b;
+	unsigned char tmp;
+	size_t i;
 
 	if (!a || !b)
 		return ;

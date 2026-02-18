@@ -23,16 +23,16 @@ static size_t	ft_count_word(char const *s, char *charset)
 	count = 0;
 	while (s[i])
 	{
-		if (!ft_ischarset(s[i], charset) && (i == 0 || ft_ischarset(s[i - 1],
-					charset)))
+		if (!ft_ischarset(s[i], charset)
+			&& (i == 0 || ft_ischarset(s[i - 1], charset)))
 			count++;
 		i++;
 	}
 	return (count);
 }
 
-static char	*ft_cust_strdup_gc(const char *s, size_t start, size_t end,
-		t_list **gc_head)
+static char	*ft_cust_strdup_gc(const char *s, size_t start, size_t end, \
+	t_list **gc_head)
 {
 	char	*tmp;
 	size_t	range;
@@ -52,8 +52,8 @@ static char	*ft_cust_strdup_gc(const char *s, size_t start, size_t end,
 	return (tmp);
 }
 
-static char	**ft_exec_gc(char **arr, const char *s, char *charset,
-		size_t w_count, t_list **gc_head)
+static char	**ft_exec_gc(char **arr, const char *s, char *charset, \
+	size_t w_count, t_list **gc_head)
 {
 	size_t	index;
 	size_t	start;

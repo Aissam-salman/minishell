@@ -13,7 +13,7 @@
 #include "libft.h"
 #include <stdio.h>
 
-static void	free_tab(char **arr, size_t index)
+static	void	free_tab(char **arr, size_t index)
 {
 	size_t	i;
 

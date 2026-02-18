@@ -10,12 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_output.h"
+#include "libft.h"
 
 void	ft_putnbr_base(int nbr, char *base)
 {
 	long	nb;
-	size_t	len_base;
+	size_t len_base;
 
 	len_base = ft_strlen(base);
 	if (len_base < 2)

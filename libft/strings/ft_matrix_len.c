@@ -14,11 +14,11 @@
 
 size_t	ft_matrix_len(char **matrix)
 {
-	int	i;
+	int i;
 
 	if (!matrix || !*matrix)
 		return (0);
-	i = 0;
+	i = 0;	
 	while (matrix[i])
 		i++;
 	return (i);
