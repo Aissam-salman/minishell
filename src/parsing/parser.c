@@ -56,7 +56,7 @@ int	checker_token(t_minishell *minishell)
 	// ft_tokens_print(minishell->head_token);
 	while (token)
 	{
-		ft_quotes_handle( minishell, token);
+		ft_quotes_handle(minishell, token);
 		if (is_redirection(token))
 		{
 			if (handle_redirection(minishell, token))

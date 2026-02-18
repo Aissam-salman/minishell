@@ -12,7 +12,8 @@
 
 #include "libft.h"
 
-char	*ft_substr_gc(char const *s, unsigned int start, size_t len, t_list **gc_head)
+char	*ft_substr_gc(char const *s, unsigned int start, size_t len,
+		t_list **gc_head)
 {
 	char	*sub;
 

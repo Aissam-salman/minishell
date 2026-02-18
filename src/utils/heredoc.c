@@ -15,8 +15,8 @@
 // A MODIFIER : RAJOUTER LA GESTION DES SIGNAUX
 void	ft_heredoc(t_minishell *minishell, t_cmd *cmd, t_token *token, int mod)
 {
-	char *line;
-	int pipefd[2];
+	char	*line;
+	int		pipefd[2];
 	size_t	limiter_len;
 	size_t	line_len;
 
@@ -24,10 +24,10 @@ void	ft_heredoc(t_minishell *minishell, t_cmd *cmd, t_token *token, int mod)
 	// ON SECURISE L'OUVERTUR DU PIPE
 	if (pipe(pipefd))
 	{
-		ft_error(NULL, GENERAL_ERROR, "Heredoc error :", "Pipe creation failed");
-		return;
+		ft_error(NULL, GENERAL_ERROR, "Heredoc error :",
+			"Pipe creation failed");
+		return ;
 	}
-
 	// BOUCLE DE READ
 	while (1)
 	{
@@ -35,15 +35,14 @@ void	ft_heredoc(t_minishell *minishell, t_cmd *cmd, t_token *token, int mod)
 		line = readline("> ");
 		// ctrl-D
 		if (!line)
-			break;
+			break ;
 		else
 			ft_gc_add_node(&minishell->gc, line);
 		line_len = ft_strlen(line);
-
 		// SI HERE_DOC TROUVÉ
-		if (!ft_strncmp(line, token->str, limiter_len) && line_len == limiter_len)
-			break;
-
+		if (!ft_strncmp(line, token->str, limiter_len)
+			&& line_len == limiter_len)
+			break ;
 		// IMPRIME LA LINE DANS PIPE
 		ft_putstr_fd(line, pipefd[1]);
 		ft_putchar_fd('\n', pipefd[1]);
@@ -59,7 +58,7 @@ void	ft_heredoc(t_minishell *minishell, t_cmd *cmd, t_token *token, int mod)
 
 t_token	*ft_heredoc_find_last(t_token *token)
 {
-	t_token *last;
+	t_token	*last;
 
 	last = NULL;
 	while (token && token->type != PIPE)
@@ -78,7 +77,7 @@ t_token	*ft_heredoc_find_last(t_token *token)
 
 void	ft_heredoc_handle(t_minishell *minishell, t_cmd *cmd, t_token *token)
 {
-	t_token *last;
+	t_token	*last;
 
 	// TROUVER LE DERNIER HEREDOC
 	last = ft_heredoc_find_last(token);

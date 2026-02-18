@@ -57,6 +57,9 @@
 ### Reference
 32. [Return Value Reference Table](#32-return-value-reference-table)
 
+### What's Left
+33. [What Still Needs To Be Done (Mandatory)](#33-what-still-needs-to-be-done-mandatory)
+
 ---
 
 <!-- ═══════════════════════════════════════════════════ -->
@@ -728,7 +731,7 @@ while (args[i])
 ```
 Bash `echo hello world` prints `hello world\n`, not `hello\nworld\n`.
 
-**Fix:**
+**Fix:** [x]
 ```c
 i = 1;
 while (args[i])
@@ -746,7 +749,7 @@ if (!have_flag)
 Same issue for the `-n` branch.
 
 ### `echo` with no args: bash prints a single newline
-Currently, if `args[1]` is NULL, nothing is printed. Bash does: `echo` → `\n`. **Add a newline if no args and no `-n` flag.**
+Currently, if `args[1]` is NULL, nothing is printed. Bash does: `echo` → `\n`. **Add a newline if no args and no `-n` flag.** [x]
 
 ### Tips
 - `-n` flag detection should handle multiple `-n` args: `echo -n -n hello` is valid in bash.
@@ -767,7 +770,7 @@ if (ft_strcmp(path, "-") == 0)
     return;
 }
 ```
-In bash, `cd -` prints the **old** directory (the one you're going TO), not the current one. Functionally this is close since by the time `ft_pwd` runs, you've already chdir'd. But the `ft_pwd` call should only happen for `cd -`, which it does — this is correct.
+In bash, `cd -` prints the **old** directory (the one you're going TO), not the current one. Functionally this is close since by the time `ft_pwd` runs, you've already chdir'd. But the `ft_pwd` call should only happen for `cd -`, which it does — this is correct. [x]
 
 ### `update_old_pwd`: doesn't add to env if OLDPWD doesn't exist
 ```c
@@ -775,10 +778,10 @@ env_old_pwd = ft_env_find(*head_env, "OLDPWD");
 if (!env_old_pwd)
     env_old_pwd = ft_env_new(minishell, "OLDPWD");
 ```
-The new node is created but **never added to the list**. The `ft_env_add` call is missing. So if OLDPWD didn't exist before, it's created, modified, and then lost.
+The new node is created but **never added to the list**. The `ft_env_add` call is missing. So if OLDPWD didn't exist before, it's created, modified, and then lost. [x]
 
 ### Tips
-- Factor out the `free(old_pwd)` calls — there are 3 different paths that each `free` it.
+- Factor out the `free(old_pwd)` calls — there are 3 different paths that each `free` it. [x]
 
 ---
 
@@ -788,7 +791,7 @@ The new node is created but **never added to the list**. The `ft_env_add` call i
 ```c
 printf("%s\n", buff);
 ```
-Inconsistent with the rest of the codebase. Use `ft_putstr_fd(buff, STDOUT_FILENO)` + `ft_putchar_fd('\n', STDOUT_FILENO)`.
+Inconsistent with the rest of the codebase. Use `ft_putstr_fd(buff, STDOUT_FILENO)` + `ft_putchar_fd('\n', STDOUT_FILENO)`. [x]
 
 ### Tips
 - Clean and simple otherwise.
@@ -804,7 +807,7 @@ ft_printf("format: %s\n", str);
 **Remove** — this prints to stdout and corrupts output.
 
 ### `ft_env_format_check`: incomplete validation
-Only checks first character. In bash, identifiers can contain `_` and must not start with a digit. The check `!ft_isalpha(str[0]) || str[0] == '-'` is redundant (`'-'` is not alpha anyway).
+Only checks first character. In bash, identifiers can contain `_` and must not start with a digit. The check `!ft_isalpha(str[0]) || str[0] == '-'` is redundant (`'-'` is not alpha anyway). [x]
 
 **Correct validation:**
 ```c
@@ -818,17 +821,17 @@ Bash output of `export` is:
 declare -x HOME="/home/user"
 declare -x PATH="/usr/bin:..."
 ```
-Your implementation calls `ft_env_print` which prints `HOME=/home/user`. **Use a different format.**
+Your implementation calls `ft_env_print` which prints `HOME=/home/user`. **Use a different format.** [x]
 
 ### `ft_export`: doesn't check if variable already exists
 ```c
 new = ft_env_new(minishell, str);
 ft_env_add(minishell, new);
 ```
-If the variable already exists, this creates a **duplicate**. Should find and update the existing entry first.
+If the variable already exists, this creates a **duplicate**. Should find and update the existing entry first. [x]
 
 ### Tips
-- Export without `=` (e.g., `export FOO`) should mark the variable as exported but with no value. Currently it creates a node with `content = NULL`, which is close but `env` should not print it.
+- Export without `=` (e.g., `export FOO`) should mark the variable as exported but with no value. Currently it creates a node with `content = NULL`, which is close but `env` should not print it. [x]
 
 ---
 
@@ -838,7 +841,7 @@ If the variable already exists, this creates a **duplicate**. Should find and up
 The function itself is fine, but `ft_env_delone` (in `env_setup.c`) is broken — see that section.
 
 ### Missing: multiple argument support
-`unset VAR1 VAR2` should unset both. Currently only `cmd->args[1]` is used, ignoring any further arguments.
+`unset VAR1 VAR2` should unset both. Currently only `cmd->args[1]` is used, ignoring any further arguments. [x]
 
 ### Tips
 - Loop over all arguments: `int i = 1; while (cmd->args[i]) ft_unset(&head_env, cmd->args[i++]);`
@@ -857,10 +860,11 @@ void ft_env(t_env *head_env, int outfd)
 This is a one-line wrapper. Consider inlining it or keeping it if you plan to add `env` argument handling later.
 
 ### Missing: `env` should only print variables that have a value
-In bash, `env` only prints `NAME=VALUE` pairs. If an env variable was `export`ed without a value, it should NOT appear in `env` output (but should appear in `export` output).
+In bash, `env` only prints `NAME=VALUE` pairs. If an env variable was `export`ed without a value, it should NOT appear in `env` output (but should appear in `export` output). [x]
 
 ### Tips
-- `env` with arguments (e.g., `env ls`) should print an error or run the command in a modified environment. For minishell, you can ignore this.
+- `env` with arguments (e.g., `env ls`) should print an error or run the command in a modified environment. For minishell, you can ignore this. [ ] ??? > [!WARNING]
+> 
 
 ---
 
@@ -870,7 +874,7 @@ In bash, `env` only prints `NAME=VALUE` pairs. If an env variable was `export`ed
 ```c
 #include "includes/ft_conversion.h"
 ```
-This works but is inconsistent with the rest of the codebase which uses `../../includes/minishell.h` (and `minishell.h` includes `libft.h` which includes `ft_conversion.h`). **Remove this line** — `ft_atoi` is already available via `minishell.h`.
+This works but is inconsistent with the rest of the codebase which uses `../../includes/minishell.h` (and `minishell.h` includes `libft.h` which includes `ft_conversion.h`). **Remove this line** — `ft_atoi` is already available via `minishell.h`. [x] 
 
 ### `ft_buildin_exit`: no validation of argument
 Bash handles these cases:
@@ -879,7 +883,7 @@ Bash handles these cases:
 - `exit abc` → `bash: exit: abc: numeric argument required` → exit 2
 - `exit 1 2` → `bash: exit: too many arguments` → does NOT exit
 
-Currently your code does `ft_atoi(code_exit)` which silently returns 0 for non-numeric strings. **Add validation.**
+Currently your code does `ft_atoi(code_exit)` which silently returns 0 for non-numeric strings. **Add validation.** [x]
 
 ### `ft_buildin_exit`: duplicates cleanup from `ft_exit`
 ```c
@@ -889,7 +893,7 @@ rl_clear_history();
 This is the same cleanup as `ft_exit`. Consider calling `ft_exit` instead.
 
 ### Tips
-- Exit status should be `code % 256` (bash wraps it). `ft_atoi` doesn't handle this.
+- Exit status should be `code % 256` (bash wraps it). `ft_atoi` doesn't handle this. [x]
 
 ---
 
@@ -908,25 +912,25 @@ if (WIFSIGNALED(status))
         ft_printf("Error: %s\n", strerror(status));
 }
 ```
-`WIFSIGNALED` and `WIFEXITED` are **mutually exclusive**. A process either exited normally OR was killed by a signal, never both. This `WIFEXITED` check inside the `WIFSIGNALED` block will **never** be true. **Remove it.**
+`WIFSIGNALED` and `WIFEXITED` are **mutually exclusive**. A process either exited normally OR was killed by a signal, never both. This `WIFEXITED` check inside the `WIFSIGNALED` block will **never** be true. **Remove it.** [x]
 
 ### `handler_status`: `strerror(status)` is wrong
-`strerror` takes an `errno` value, not a `waitpid` status. Use `WTERMSIG(status)` to get the signal number, then `strsignal(sig)`.
+`strerror` takes an `errno` value, not a `waitpid` status. Use `WTERMSIG(status)` to get the signal number, then `strsignal(sig)`. [x]
 
 ### `handler_status`: accessing `cmd->args[1]` without NULL check
 ```c
-ft_printf(" %s %s\n", cmd->args[0], cmd->args[1]);
+ft_printf(" %s %s\n", cmd->args[0], cmd->args[1]); [x]
 ```
-If the command has no arguments (e.g., `sleep` killed by signal), `args[1]` is NULL → undefined behavior with `ft_printf`.
+If the command has no arguments (e.g., `sleep` killed by signal), `args[1]` is NULL → undefined behavior with `ft_printf`. [x]
 
 ### `ft_wait_subprocess`: variable declaration inside block
 ```c
-int i = 0;
+int i = 0; [x]
 ```
 42 norm requires declarations at the top of the function. Move it up.
 
 ### `ft_wait_subprocess`: doesn't save exit status
-The exit status of the **last** command should be saved to `minishell->exit_status` for `$?` support.
+The exit status of the **last** command should be saved to `minishell->exit_status` for `$?` support. [x]
 
 ### Tips
 - For proper `$?` support: `if (WIFEXITED(status)) minishell->exit_status = WEXITSTATUS(status); else if (WIFSIGNALED(status)) minishell->exit_status = 128 + WTERMSIG(status);`
@@ -936,9 +940,9 @@ The exit status of the **last** command should be saved to `minishell->exit_stat
 ## 30. `src/errors/errors.c`
 
 ### `ft_error`: commented-out code noise
-4 lines of commented-out code at the top. **Remove.**
+4 lines of commented-out code at the top. **Remove.** [x]
 
-### `ft_exit`: always prints newline even without error
+### `ft_exit`: always prints newline even without error [x]
 ```c
 if (str)
 {
@@ -946,10 +950,10 @@ if (str)
     ft_putchar_fd('\n', STDERR_FILENO);
 }
 ```
-If `str` is NULL, the function calls `exit()` silently, which is correct. But previously (before your recent edit) it always printed a newline. Make sure the version you use is the clean one.
+If `str` is NULL, the function calls `exit()` silently, which is correct. But previously (before your recent edit) it always printed a newline. Make sure the version you use is the clean one. [x]
 
 ### Tips
-- Consider making `ft_error` return the error code consistently so callers can do `return (ft_error(...))` in one line (already done in most places — good).
+- Consider making `ft_error` return the error code consistently so callers can do `return (ft_error(...))` in one line (already done in most places — good). 
 
 ---
 
@@ -963,7 +967,7 @@ while (current)
     current = current->next;
 }
 ```
-It iterates via `current` but always prints the **first** command (`head`). Should use `current` everywhere.
+It iterates via `current` but always prints the **first** command (`head`). Should use `current` everywhere. [x]
 
 ### `ft_cmd_print`, `ft_tokens_print`, `ft_type_print`, `ft_state_print`: **debug-only functions, never called in production**
 All call sites are commented out. These are useful for development but should be:
@@ -1046,6 +1050,332 @@ These are the exit codes that bash uses and that your minishell should match for
 | `src/main.c` | `if (*minishell.line == EOF)` block | Dead condition |
 | `src/main.c` | Code after `while(1)` | Unreachable |
 | All files | Commented-out code blocks | ~50 lines total |
+
+---
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- WHAT'S LEFT FOR MANDATORY                          -->
+<!-- ═══════════════════════════════════════════════════ -->
+
+## 33. What Still Needs To Be Done (Mandatory)
+
+*This section lists every remaining issue that must be fixed to pass the mandatory part of the evaluation. Items are grouped by priority.*
+
+---
+
+### CRITICAL — Will crash or fail basic tests
+
+#### A. Ctrl-D crash in `main.c`
+**File:** `src/main.c` line 27  
+**Problem:** `ft_buildin_exit(&minishell, 0)` passes `0` (an integer) as `char **args`. Inside `ft_buildin_exit`, the `while (args[i])` loop dereferences address `0x0` — **instant segfault**.  
+**Fix:** Replace with `ft_exit(&minishell, minishell.exit_status, NULL)` and print `"exit\n"` before calling it. Don't go through `ft_buildin_exit` — Ctrl-D is not the `exit` builtin.
+
+#### B. `execv` → `execve` — env not passed to children
+**File:** `src/exec/child_exec.c` line 50  
+**Problem:** `execv(cmd->path, cmd->args)` uses the **C-level environ**, not your internal `t_env` list. If the user does `export FOO=bar` then runs a command that reads `$FOO`, it won't see it.  
+**Fix:**
+1. Write a helper `char **ft_env_to_array(t_minishell *minishell)` that converts `head_env` to a `char **envp` array (each entry `"NAME=VALUE"`). Allocate via `ft_gc_malloc`.
+2. Replace `execv(cmd->path, cmd->args)` with `execve(cmd->path, cmd->args, envp)`.
+
+#### C. `unset` starts at `args[0]` instead of `args[1]`
+**File:** `src/built_in/unset.c` line 23  
+**Problem:** Loop starts at `i = 0`, so it tries to unset the string `"unset"` itself.  
+**Fix:** Change `i = 0` to `i = 1`.
+
+#### D. Debug `ft_printf` left in production code
+**Files & lines:**
+- `src/built_in/exit.c` line 46: `ft_printf("code atoi: %d\n", *res)` — corrupts stdout
+- `src/built_in/exit.c` line 58: `ft_printf("c\n")` — same
+
+**Fix:** Delete both lines.
+
+#### E. Zombie processes when first cmd is a builtin in a pipeline
+**File:** `src/exec/exec.c` lines 81–82  
+**Problem:** `if (!is_built_in(minishell->head_cmd)) ft_wait_subprocess(...)` — when the first cmd is a builtin (e.g., `echo foo | cat`), children are forked but **never waited on**. This creates zombie processes and `$?` is never set.  
+**Fix:** Always call `ft_wait_subprocess`. The single-builtin-no-pipe case is already handled earlier (the `if (is_built_in(cmd) && size_cmd == 1)` guard in `ft_pipe_and_fork`). Change the condition to:
+```c
+if (!(is_built_in(minishell->head_cmd) && ft_cmd_size(minishell->head_cmd) == 1))
+    ft_wait_subprocess(minishell, size_cmd, pids);
+```
+
+---
+
+### HIGH — Will fail specific mandatory tests
+
+#### F. `export` prints to stderr instead of stdout
+**File:** `src/built_in/is_built_in.c` line 47  
+**Problem:** `ft_export(minishell, 2, cmd->args[1])` — fd `2` is stderr. `export` with no args should print to stdout.  
+**Fix:** Change `2` to `1`.
+
+#### G. `export` only handles one argument
+**File:** `src/built_in/is_built_in.c` line 47, `src/built_in/export.c`  
+**Problem:** Only `cmd->args[1]` is passed. `export A=1 B=2` only sets `A`.  
+**Fix:** Loop over all args starting from index 1:
+```c
+i = 1;
+while (cmd->args[i])
+{
+    ft_export(minishell, 1, cmd->args[i]);
+    i++;
+}
+```
+Adjust `ft_export` to accept a single `str` as it already does — just call it in a loop from `run_built_in`.
+
+#### H. Single-command builtins ignore redirections
+**File:** `src/exec/exec.c` → `ft_pipe_and_fork`  
+**Problem:** When `size_cmd == 1 && is_built_in(cmd)`, `run_built_in` is called directly in the parent **without** applying `cmd->infd` / `cmd->outfd`. So `echo hello > file.txt` prints to terminal instead of the file.  
+**Fix:** Before calling `run_built_in` in the single-builtin path, save/redirect/restore fds:
+```c
+int saved_stdin = -1, saved_stdout = -1;
+if (cmd->infd != 0)
+{
+    saved_stdin = dup(STDIN_FILENO);
+    dup2(cmd->infd, STDIN_FILENO);
+    close(cmd->infd);
+}
+if (cmd->outfd != 1)
+{
+    saved_stdout = dup(STDOUT_FILENO);
+    dup2(cmd->outfd, STDOUT_FILENO);
+    close(cmd->outfd);
+}
+run_built_in(cmd, minishell);
+if (saved_stdin != -1) { dup2(saved_stdin, STDIN_FILENO); close(saved_stdin); }
+if (saved_stdout != -1) { dup2(saved_stdout, STDOUT_FILENO); close(saved_stdout); }
+```
+
+#### I. Heredoc `fd == -1` spurious error in `ft_redirection_handler`
+**File:** `src/exec/cntrl.c` lines 44–51  
+**Problem:** After the heredoc branch, `fd` remains `-1`, triggering `perror()`. Heredoc works but prints a bogus error.  
+**Fix:** Return early after the heredoc branch:
+```c
+else if (token->type == IN_DCHEVRON)
+{
+    ft_heredoc_handle(minishell, cmd, token);
+    return (SUCCESS);
+}
+```
+
+#### J. Signal handler needs a global variable for `$?`
+**File:** `src/utils/signal_core.c`  
+**Problem:** After Ctrl-C at the prompt, `$?` should be 130. But the signal handler has no way to communicate this to the main loop — `ft_printf`/`rl_redisplay` calls are also not async-signal-safe.  
+**Fix:**
+1. Declare **one** global variable: `volatile sig_atomic_t g_signal_received;`
+2. In the signal handler, **only** set `g_signal_received = sig` and call `rl_done = 1` (or `write(1, "\n", 1)` + `rl_on_new_line()` + `rl_replace_line("", 0)` + `rl_redisplay()` — the rl_ functions are commonly used in signal handlers even though technically not async-safe; this is standard practice for minishell).
+3. In the main loop (after `readline` returns), check `g_signal_received`:
+```c
+if (g_signal_received == SIGINT)
+{
+    minishell.exit_status = 130;
+    g_signal_received = 0;
+}
+```
+4. Remove `ft_printf("\n")` from the signal handler — use `write(1, "\n", 1)` instead (async-safe).
+
+#### K. `;` is not rejected
+**Problem:** The subject says "not interpret `;`". Currently `ls; pwd` tries to execute `ls;` as a single word → "command not found". This is wrong — bash prints `syntax error near unexpected token ';'`.  
+**Fix:** In the lexer or parser, detect `;` as an invalid character in `NORMAL` state. Either:
+- Add `;` to the operator set and reject it during `checker_token`, or
+- During `ft_type_affect`, if a token is just `";"`, set an error:
+```c
+if (ft_strcmp(current->str, ";") == 0)
+    return (ft_error(minishell, SYNTAX_ERROR,
+        "syntax error near unexpected token", "`;'"));
+```
+
+#### L. `exit` argument logic order is wrong
+**File:** `src/built_in/exit.c` lines 53–68  
+**Problem:** The code checks `ft_atoi_safe(args[1], &code)` before checking `i == 1` (no args). When `args[1]` is NULL, `ft_atoi_safe` returns `-1`, which falls through to the `else if (i == 1)` branch — this works by accident but is fragile and confusing.  
+**Fix:** Reorder the checks:
+```c
+if (i == 1)
+    code = minishell->exit_status;
+else if (ft_atoi_safe(args[1], &code) == GENERAL_ERROR)
+{
+    ft_error(minishell, 2, args[1], ": numeric argument required");
+    // cleanup and exit(2)
+}
+```
+
+#### M. `cd` silently does nothing for non-existent paths
+**File:** `src/built_in/cd.c` line 140  
+**Problem:** `if ((stat(...) == 0 && S_ISDIR(...)) && chdir(path) == -1)` — if `stat` fails (path does not exist) or path is not a directory, the whole condition is false, `chdir` is never called, and no error is printed.  
+**Fix:** Split the logic:
+```c
+if (stat(path, &stat_file) != 0)
+    return (ft_error(minishell, 1, "cd: ", strerror(errno)));
+if (!S_ISDIR(stat_file.st_mode))
+    return (ft_error(minishell, 1, "cd: ", "Not a directory"));
+if (chdir(path) == -1)
+    return (ft_error(minishell, 1, "cd: ", strerror(errno)));
+```
+
+---
+
+### MEDIUM — Will be caught by thorough testers
+
+#### N. Heredoc: no signal handling (Ctrl-C should cancel)
+**File:** `src/utils/heredoc.c`  
+**Problem:** The comment says it: `"A MODIFIER : RAJOUTER LA GESTION DES SIGNAUX"`. Ctrl-C inside heredoc should cancel input, discard the heredoc, and return to prompt with `$?` = 130.  
+**Tip:** The cleanest approach is to run heredoc in a **child process**:
+1. Fork before calling `readline("> ")`.
+2. In the child, set `SIGINT` to `SIG_DFL` so Ctrl-C kills the child.
+3. The parent waits — if child was killed by SIGINT, set `exit_status = 130` and skip execution.
+4. The child writes heredoc content to a pipe, parent reads `pipefd[0]`.
+
+Alternative (simpler): Use the global variable from fix J. In the heredoc readline loop, check `g_signal_received` after each line and break if set.
+
+#### O. Heredoc: no `$` expansion in body
+**Problem:** The subject says heredoc should expand `$VAR` unless the delimiter is quoted (`<<'EOF'` vs `<<EOF`).  
+**Fix:**
+1. When the delimiter has quotes (e.g., `<<'EOF'` or `<<"EOF"`), strip the quotes from the delimiter and **don't** expand.
+2. When the delimiter has no quotes, pass each line through your `ft_expend` function before writing to the pipe:
+```c
+// After reading `line`, before writing to pipe:
+if (should_expand)
+    line = ft_expand_heredoc_line(minishell, line);
+ft_putstr_fd(line, pipefd[1]);
+```
+
+#### P. `exit` overflow: should accept `long long` range, not just `int`
+**File:** `src/built_in/exit.c`  
+**Problem:** `ft_atoi_safe` rejects values outside `[-2147483648, 2147483647]`, but bash accepts the full `long long` range. `exit 9999999999` should work (wraps to `exit_code % 256`).  
+**Fix:** Change `ft_atoi_safe` to use `long long` for `nbr` and check against `LLONG_MIN`/`LLONG_MAX`. Return the value modulo 256 for the actual exit code.
+
+#### Q. `export` identifier validation is incomplete
+**File:** `src/built_in/export.c` — `ft_env_format_check`  
+**Problem:** `_VAR` should be valid (underscore is a valid first char). Digits are valid after position 0. Currently only `ft_isalpha(str[0])` is checked.  
+**Fix:**
+```c
+int ft_env_format_check(char *str)
+{
+    int i;
+
+    if (!str || (!ft_isalpha(str[0]) && str[0] != '_'))
+        return (GENERAL_ERROR);
+    i = 1;
+    while (str[i] && str[i] != '=')
+    {
+        if (!ft_isalnum(str[i]) && str[i] != '_')
+            return (GENERAL_ERROR);
+        i++;
+    }
+    return (SUCCESS);
+}
+```
+
+#### R. `export` without `=` should be visible in `export` output
+**File:** `src/utils/output.c` — `ft_env_print_export_no_param`  
+**Problem:** Entries with `content == NULL` (exported without value) are skipped. They should show as `declare -x VAR` (without `=`).  
+**Fix:** In the print loop, add a branch:
+```c
+if (head->content)
+    ft_printf("declare -x %s=\"%s\"\n", head->name, head->content);
+else
+    ft_printf("declare -x %s\n", head->name);
+```
+
+#### S. `export` output should use `declare -x` and be sorted alphabetically
+**Problem:** `export` with no args should print `declare -x NAME="value"` (with quotes around value), sorted alphabetically.  
+**Tip:** Since you can't sort a linked list easily in-place, copy the names to an array, sort the array with a simple bubble sort, then print in order by looking up each name.
+
+#### T. `cd` with too many arguments should print error
+**Problem:** `cd a b` silently uses `a` and ignores `b`. Bash prints `cd: too many arguments`.  
+**Fix:** In `ft_cd`, before doing anything:
+```c
+// Count args in run_built_in and pass count, or check in ft_cd
+// Simplest: check in run_built_in before calling
+if (cmd->args[1] && cmd->args[2])
+{
+    ft_error(minishell, 1, "cd:", " too many arguments");
+    return;
+}
+```
+
+#### U. `exit_status` not set by builtins in parent
+**Problem:** Most builtins don't set `minishell->exit_status` on failure. For example, `cd /nonexistent` should set `$?` to 1, but `ft_cd` returns an int that is sometimes captured (`minishell->exit_status = ft_export(...)`) and sometimes not (`ft_cd(minishell, ...)` return value is ignored).  
+**Fix:** In `run_built_in`, capture the return value from every builtin:
+```c
+else if (ft_strcmp(str, "cd") == 0)
+    minishell->exit_status = ft_cd(minishell, cmd->args[1]);
+else if (ft_strcmp(str, "pwd") == 0)
+    minishell->exit_status = ft_pwd();
+```
+Make sure each builtin returns `0` on success and `1` (or appropriate code) on failure.
+
+#### V. `handler_status` uses `WEXITSTATUS` inside `WIFSIGNALED` block
+**File:** `src/exec/wait.c` line 24  
+**Problem:** `minishell->exit_status = WEXITSTATUS(status)` inside the `WIFSIGNALED` branch is wrong — `WEXITSTATUS` is only defined when `WIFEXITED` is true. The correct value is already set a few lines later (`128 + WTERMSIG(status)`), but this line may clobber it.  
+**Fix:** Remove line 24 (`minishell->exit_status = WEXITSTATUS(status)` inside `WIFSIGNALED`).
+
+---
+
+### LOW — Edge cases that good testers check
+
+#### W. `$` at end of string or `$` followed by non-alphanumeric
+**Problem:** `echo $` should print `$`. `echo $!` or `echo $@` should print `$!` / `$@` (or nothing — bash behavior varies). Currently `ft_expend` increments `start` past the `$`, then if the next char is not in `SEPARATORS` and not `?`, it reads into a buffer. If the next char is `\0`, the buffer is empty and nothing is appended — so `echo $` prints nothing instead of `$`.  
+**Fix:** In `ft_expend`, after incrementing past `$`, check if the next char is a valid variable name start:
+```c
+if (!str[*start] || (!ft_isalpha(str[*start]) && str[*start] != '_' && str[*start] != '?'))
+{
+    ft_buffer_add(usable_str, '$');
+    return (0);
+}
+```
+
+#### X. Empty string after quote removal should still be a valid argument
+**Problem:** `echo ""` should print an empty line (empty string is a valid argument). If quote removal produces an empty `token->str`, make sure it's still included in `cmd->args`. Test: `echo "" | cat -e` should show `$` (empty line).
+
+#### Y. `env` variables with no value should not appear in `env` output
+**Status:** Already handled — `ft_env_print` only prints entries with `content != NULL`. Just verify it stays that way.
+
+#### Z. Multiple redirections: only last one of each type should take effect
+**Example:** `< a < b cmd` should read from `b` (last input). `> a > b cmd` should write to `b` (last output). But `> a` should still **create** `a` (truncated to empty).  
+**Problem:** Currently `ft_redirection_exec` closes the previous fd before assigning the new one, which is correct for the fd. But `ft_open` for `> a` creates the file even if `> b` comes after — this is actually **correct** bash behavior. Just make sure the flow doesn't error out on the first redirection.
+
+#### AA. `$?` after a builtin
+**Problem:** `$?` after `export BADNAME!` or `cd /nonexistent` should be `1`. Since builtins run in the parent, `ft_wait_subprocess` is not called — `exit_status` must be set directly in `run_built_in` (see fix U).
+
+#### AB. Multiple heredocs across pipes
+**Example:** `cat << A | cat << B` — each pipe segment should have its own heredoc. Currently `ft_heredoc_find_last` only searches until the next `PIPE` token, which is correct. But make sure the heredoc prompting happens in the right order (left to right, all heredocs collected before any execution starts).  
+**Tip (bash behavior):** All heredocs are read **before** any command in the pipeline executes. Your current implementation reads heredocs during `ft_cmd_lst_create` which is before `ft_exec` — this is correct ordering.
+
+---
+
+### Summary Checklist
+
+| # | Fix | Priority | Effort |
+|---|-----|----------|--------|
+| A | Ctrl-D crash | CRITICAL | 5 min |
+| B | `execv` → `execve` | CRITICAL | 30 min |
+| C | `unset` args[0] | CRITICAL | 1 min |
+| D | Remove debug printfs | CRITICAL | 2 min |
+| E | Zombie processes | CRITICAL | 5 min |
+| F | `export` fd 2→1 | HIGH | 1 min |
+| G | `export` multi-arg | HIGH | 10 min |
+| H | Builtin redirections | HIGH | 20 min |
+| I | Heredoc spurious error | HIGH | 5 min |
+| J | Signal global + `$?=130` | HIGH | 30 min |
+| K | Reject `;` | HIGH | 10 min |
+| L | `exit` arg order | HIGH | 10 min |
+| M | `cd` error handling | HIGH | 10 min |
+| N | Heredoc signals | MEDIUM | 45 min |
+| O | Heredoc `$` expansion | MEDIUM | 30 min |
+| P | `exit` long long range | MEDIUM | 15 min |
+| Q | `export` identifier check | MEDIUM | 10 min |
+| R | `export` no-value display | MEDIUM | 10 min |
+| S | `export` sorted+declare-x | MEDIUM | 20 min |
+| T | `cd` too many args | MEDIUM | 5 min |
+| U | Builtin exit status | MEDIUM | 15 min |
+| V | `WEXITSTATUS` in signal block | MEDIUM | 2 min |
+| W | `$` edge cases | LOW | 10 min |
+| X | Empty string arg | LOW | 10 min |
+| Z | Multiple redirections | LOW | verify only |
+| AA | `$?` after builtin | LOW | see U |
+| AB | Multi-heredoc ordering | LOW | verify only |
+
+**Estimated total: ~6–8 hours of focused work.**  
+Tackle CRITICAL items first (< 1 hour), then HIGH items (~ 2 hours), then MEDIUM (~ 3 hours). LOW items are polish.
 
 ---
 

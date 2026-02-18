@@ -23,49 +23,49 @@ t_env	*ft_env_last(t_env *head_env)
 }
 
 // DEL ONE NODE
-void ft_env_delone(t_env **head_env, char *target_name)
+void	ft_env_delone(t_env **head_env, char *target_name)
 {
-	// PATH => HOME => PWD
-	t_env *head;
-	t_env *prev;
-	t_env *nxt;
+	t_env	*head;
+	t_env	*prev;
+	t_env	*nxt;
 
+	// PATH => HOME => PWD
 	prev = NULL;
 	head = *head_env;
 	nxt = head->next;
 	while (head)
 	{
 		// if first element is target remove
-		if (ft_strcmp(head->name, target_name) == 0 &&
-			ft_strcmp(head->name, (*head_env)->name) == 0)
+		if (ft_strcmp(head->name, target_name) == 0 && ft_strcmp(head->name,
+				(*head_env)->name) == 0)
 		{
-			//NOTE: free ?? 
+			// NOTE: free ??
 			head->name = NULL;
 			head->content = NULL;
 			*head_env = nxt;
 			head->next = NULL;
-			return;
+			return ;
 		}
 		else if (ft_strcmp(head->name, target_name) == 0)
 		{
-			//NOTE: free ?? 
+			// NOTE: free ??
 			head->name = NULL;
 			head->content = NULL;
 			head->next = NULL;
 			prev->next = nxt;
-			return;
+			return ;
 		}
 		prev = head;
 		head = head->next;
 		if (head && head->next)
 			nxt = head->next;
-		else 
+		else
 			nxt = NULL;
 	}
 }
 
 // CREER UN NOUVEAU NOEUD T_ENV
-t_env *ft_env_new(t_minishell *minishell, char *str)
+t_env	*ft_env_new(t_minishell *minishell, char *str)
 {
 	t_env	*new;
 	char	*string_trunc;
@@ -108,7 +108,7 @@ t_env *ft_env_new(t_minishell *minishell, char *str)
 // AJOUTE LE NOEUD ENV A LA LISTE
 int	ft_env_add(t_minishell *minishell, t_env *new_env)
 {
-	t_env *last;
+	t_env	*last;
 
 	if (!minishell || !new_env)
 		return (GENERAL_ERROR);
@@ -123,7 +123,7 @@ int	ft_env_add(t_minishell *minishell, t_env *new_env)
 }
 
 // TROUVE UN ENV A PARTIR DU NOM
-t_env	*ft_env_find(t_env	*head_env, char *to_find)
+t_env	*ft_env_find(t_env *head_env, char *to_find)
 {
 	while (head_env)
 	{
@@ -137,7 +137,7 @@ t_env	*ft_env_find(t_env	*head_env, char *to_find)
 // INITIALISE ENV AU DEMARRAGE
 void	ft_env_setup(t_minishell *minishell, char **envp)
 {
-	int i;
+	int		i;
 	t_env	*new;
 
 	i = 0;

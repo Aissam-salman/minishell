@@ -34,9 +34,9 @@ t_cmd	*ft_cmd_last(t_cmd *cmd_head)
 	return (cmd_head);
 }
 
-int   ft_cmd_size(t_cmd *cmd_head)
+int	ft_cmd_size(t_cmd *cmd_head)
 {
-	int len;
+	int	len;
 
 	len = 0;
 	while (cmd_head != NULL)
@@ -80,12 +80,16 @@ int	ft_token_word_count(t_token *current)
 	return (count);
 }
 
-int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr, int *i)
+int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr,
+		int *i)
 {
-	t_token *next;
-	t_token *token;
+	t_token	*next;
+	t_token	*token;
 
 	token = *token_ptr;
+	// if (!minishell || !cmd || !token)
+	// 	return ;
+	// SI WORD = AJOUTE A ARGS
 
 	next = NULL;
 	if (token->next)
@@ -102,7 +106,12 @@ int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr, int
 		|| token->type == IN_CHEVRON)
 	{
 		if (!next || !next->str || !next->str[0])
+<<<<<<< HEAD
 			return (ft_error(minishell, ERR_SYNTAX, "Syntax error near unexpected token `newline'", NULL));
+=======
+			return (ft_error(minishell, ERR_SYNTAX,
+					"Syntax error near unexpected token 'newline'", NULL));
+>>>>>>> 511f726f641fd72befee6cccb25adbff85cd949c
 		// A MODIFIER : VALEUR DE RETOUR
 		if (ft_redirection_handler(minishell, cmd, token))
 			return (GENERAL_ERROR);
@@ -113,7 +122,12 @@ int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr, int
 	else if (token->type == IN_DCHEVRON)
 	{
 		if (!next || !next->str)
+<<<<<<< HEAD
 			return (ft_error(minishell, ERR_SYNTAX, "Syntax error near unexpected token `newline'", NULL));
+=======
+			return (ft_error(minishell, ERR_SYNTAX,
+					"Syntax error near unexpected token 'newline'", NULL));
+>>>>>>> 511f726f641fd72befee6cccb25adbff85cd949c
 		else
 		{
 			// ft_tokens_print(next);
@@ -123,6 +137,11 @@ int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr, int
 			ft_heredoc_handle(minishell, cmd, token);
 			*token_ptr = next;
 		}
+<<<<<<< HEAD
+=======
+		// return (ft_error(SYNTAX_ERROR, "Syntax error near unexpected token ",
+				// next->str));
+>>>>>>> 511f726f641fd72befee6cccb25adbff85cd949c
 	}
 	return (SUCCESS);
 }
@@ -143,7 +162,6 @@ int	ft_cmd_lst_create(t_minishell *minishell)
 		// INITIALISE LE NOUVEAU NOEUD
 		cmd_new = ft_cmd_new(minishell);
 		count = ft_token_word_count(tok_current);
-
 		// ALLOUE LE NOMBRE DE WORDS
 		cmd_new->args = ft_calloc_gc(count + 1, sizeof(char *), &minishell->gc);
 		while (tok_current && tok_current->type != PIPE)
@@ -151,7 +169,6 @@ int	ft_cmd_lst_create(t_minishell *minishell)
 			// AFFEECT LES DIFFERENTES PARTIES DE CMD A CHAQUE TOKEN
 			if (ft_token_affect(minishell, cmd_new, &tok_current, &i))
 				return (GENERAL_ERROR);
-
 			// DOIT SAUTER LE NOEUD D'APRES
 			// if (tok_current) already moved in ft_token_affect if redirs used
 			if (tok_current)
@@ -159,15 +176,12 @@ int	ft_cmd_lst_create(t_minishell *minishell)
 		}
 		// SET LE DERNIER NOEUD A NULL
 		cmd_new->args[i] = NULL;
-
 		// SI PAS DE PATH
 		if (!cmd_new->path)
 			cmd_new->path = cmd_new->args[0];
-		
 		// ON AJOUTE LA STRUCT COMMAND A LA LISTE
 		ft_cmd_add(minishell, cmd_new);
-		//WARN: no use the return value
-
+		// WARN: no use the return value
 		// PASSER AU NOEUD SUIVANT TOKEN
 		if (tok_current)
 			tok_current = tok_current->next;
@@ -175,4 +189,3 @@ int	ft_cmd_lst_create(t_minishell *minishell)
 	ft_cmd_add(minishell, NULL);
 	return (SUCCESS);
 }
-

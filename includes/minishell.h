@@ -201,7 +201,7 @@ void				run_built_in(t_cmd *cmd, t_minishell *minishell);
 void				ft_echo(char **args);
 
 // built_in/cd.c
-void				ft_cd(t_minishell *minishell, char *path);
+int				ft_cd(t_minishell *minishell, char *path);
 
 // built_in/pwd.c
 int					ft_pwd(void);
@@ -210,13 +210,13 @@ int					ft_pwd(void);
 int					ft_export(t_minishell *minishell, int fd, char *str);
 
 // built_in/unset.c
-void				ft_unset(t_env **head_env, char *target_name);
+void				ft_unset(t_env **head_env, char **args);
 
 // built_in/env.c
-void				ft_env(t_env *head_env, int outfd);
+void				ft_env(t_minishell *minishell, int outfd);
 
 // built_in/exit.c
-void				ft_buildin_exit(t_minishell *minishell, char *code_exit);
+void				ft_buildin_exit(t_minishell *minishell, char **args);
 
 // ── UTILS ───────────────────────────────────────────
 
@@ -248,6 +248,7 @@ void				ft_heredoc(t_minishell *minishell, t_cmd *cmd,
 
 // utils/output.c
 void				ft_env_print(t_env *head, int fd);
+void				ft_env_print_export_no_param(t_env *head, int fd);
 void				ft_cmd_print(t_cmd *head);
 void				ft_tokens_print(t_token *head);
 void				ft_type_print(t_token *token);
