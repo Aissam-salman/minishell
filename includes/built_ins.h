@@ -35,7 +35,7 @@ int		ft_pwd(void);
 //------
 
 //BUILT_IN/EXPORT.C
-int		ft_export(t_minishell *minishell, int fd, char *str);
+int		ft_export(t_minishell *minishell, int fd, char **args);
 //------
 
 //BUILT_IN/UNSET.C
