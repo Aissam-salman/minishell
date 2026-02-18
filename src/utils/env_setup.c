@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 // ACCEDE AU DERNIER ENV
 t_env	*ft_env_last(t_env *head_env)

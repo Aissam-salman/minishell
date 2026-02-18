@@ -7,8 +7,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
-#include "errors.h"
+#include "minishell.h"
 
 // TRAITER LES CHANGEMENTS D'ETAT
 /*

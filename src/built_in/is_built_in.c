@@ -6,11 +6,11 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 14:15:59 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/17 16:46:37 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/18 10:03:03 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 int	is_built_in(t_cmd *cmd)
 {
@@ -45,7 +45,7 @@ void	run_built_in(t_cmd *cmd, t_minishell *minishell)
 	else if (ft_strcmp(str, "unset") == 0)
 		ft_unset(&minishell->head_env, cmd->args);
 	else if (ft_strcmp(str, "env") == 0)
-		ft_env(minishell, 1);
+		ft_env(minishell);
 	else if (ft_strcmp(str, "echo") == 0)
 		ft_echo(cmd->args);
 	else if (ft_strcmp(str, "pwd") == 0)

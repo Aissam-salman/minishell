@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   signal_core.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 14:09:27 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/15 14:11:18 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/18 10:23:37 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 void	signal_callback_handler(int sig)
 {

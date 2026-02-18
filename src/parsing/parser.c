@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
-#include "errors.h"
+#include "minishell.h"
 
 int	handle_redirection(t_minishell *minishell, t_token *token)
 {

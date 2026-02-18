@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <stdlib.h>
-#include <string.h>
 
 void	handler_status(int status, t_cmd *cmd, t_minishell *minishell)
 {

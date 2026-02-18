@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   errors.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 16:31:44 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/16 17:56:29 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/18 10:15:57 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,3 +32,4 @@ typedef enum e_errors {
 # define ERRS_SYNT_NEAR "Syntax error near unexpected token "
 
 #endif
+//------

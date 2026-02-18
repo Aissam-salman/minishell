@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 #include <string.h>
 
 void	child_set(t_child *child, int i, int prev_pipe, int size_cmd)
