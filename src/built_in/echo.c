@@ -3,42 +3,70 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 19:33:53 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/14 15:01:05 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/18 09:46:30 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
-void ft_echo(char **args, int have_flag)
+int	ft_is_flag(char *str)
 {
-	int i;
-	
-	// -n  == 1
-	if (have_flag)
-	{
-		i = 2;
-		while (args[i])
-		{
-			if (write(1, args[i], ft_strlen(args[i])) == -1)
-				ft_error(errno, "write",NULL);
-			i++;
-		}
-	}
-	else
-	{
-		i = 1;
-		while (args[i])
-		{
-			if (write(1, args[i], ft_strlen(args[i])) == -1)
-				ft_error(errno, "write",NULL);
-			if (write(1, "\n", 1) == -1)
-				ft_error(errno, "write",NULL);
-			i++;
-		}
+	int	j;
 
+	j = 0;
+	if (str[j] && str[j] == '-')
+		j++;
+	else
+		return (0);
+	while (str[j] && str[j] == 'n')
+		j++;
+	if (!str[j])
+		return (1);
+	return (0);
+}
+
+// A MODIFIER : A LA PLACE DE 1, mettre STDOUT_FILENO
+void	ft_write_safe(char *str, int len)
+{
+	if (write(STDOUT_FILENO, str, len) == -1)
+		ft_error(NULL, errno, "write", NULL);
+}
+
+int	have_flag_first(char *str)
+{
+	if (str[0] == '-' && str[1] == 'n')
+		return (1);
+	return (0);
+}
+
+void	ft_echo(char **args)
+{
+	int	i;
+
+	if (!args || !*args || !args[1])
+		return (ft_write_safe("\n", 1));
+	if (args[1][0] == '-' && !args[1][1])
+		return (ft_write_safe("-", 1), ft_write_safe("\n", 1));
+	i = 1;
+	if (have_flag_first(args[1]))
+	{
+		while (args[i])
+		{
+			if (!ft_is_flag(args[i]))
+				break ;
+			i++;
+		}
 	}
-	//TODO: handle \n from readline maybe
+	while (args[i])
+	{
+		ft_write_safe(args[i], ft_strlen(args[i]));
+		if (args[i] && args[i + 1])
+			ft_write_safe(" ", 1);
+		i++;
+	}
+	if (!have_flag_first(args[1]))
+		ft_write_safe("\n", 1);
 }

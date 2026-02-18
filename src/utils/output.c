@@ -10,15 +10,32 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 void	ft_env_print(t_env *head, int fd)
 {
 	while (head)
 	{
+		if (head->content)
+		{
+			ft_putstr_fd(head->name, fd);
+			ft_putstr_fd("=", fd);
+			ft_putstr_fd(head->content, fd);
+			ft_putstr_fd("\n", fd);
+		}
+		head = head->next;
+	}
+}
+
+void	ft_env_print_export_no_param(t_env *head, int fd)
+{
+	while (head)
+	{
+		ft_putstr_fd("export ", fd);
 		ft_putstr_fd(head->name, fd);
 		ft_putstr_fd("=", fd);
-		ft_putstr_fd(head->content, fd);
+		if (head->content)
+			ft_putstr_fd(head->content, fd);
 		ft_putstr_fd("\n", fd);
 		head = head->next;
 	}
@@ -34,13 +51,13 @@ void	ft_cmd_print(t_cmd *head)
 	while (current)
 	{
 		i = 0;
-		if (head->path)
-			ft_printf("|{PATH = %s}|\n", head->path);
+		if (current->path)
+			ft_printf("|{PATH = %s}|\n", current->path);
 		else
 			ft_printf("|{NO PATH YET}|");
-		while (head->args[i++])
-			ft_printf("[ARGV[%d] = %s]\n", i - 1, head->args[i - 1]);
-		ft_printf("|[OUTFILE = %d || INFILE = %d]|\n", head->outfd, head->infd);
+		while (current->args[i++])
+			ft_printf("[ARGV[%d] = %s]\n", i - 1, current->args[i - 1]);
+		ft_printf("|[OUTFILE = %d || INFILE = %d]|\n", current->outfd, current->infd);
 		current = current->next;
 	}
 }

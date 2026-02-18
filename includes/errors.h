@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   errors.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fardeau <fardeau@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 16:31:44 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/12 18:43:48 by fardeau          ###   ########.fr       */
+/*   Updated: 2026/02/18 10:15:57 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,11 @@
 typedef enum e_errors {
 	SUCCESS = 0,
 	GENERAL_ERROR = 1,
-	NO_SUCH_FILE_O_DIR = 2,
-	SYNTAX_ERROR = 3,
+	ERR_SYNTAX = 2,
+	NO_SUCH_FILE_O_DIR = 3,
+	ERR_CHECK_TOKEN = 4,
+	ERR_HANDLE_PIPE = 5,
+	ERR_REDIRECTION = 6,
 	PARSING_FAIL = 50,
 	BUFFER_FAIL = 98,
 	MALLOC_FAIL = 99,
@@ -26,4 +29,7 @@ typedef enum e_errors {
 	SIGNAL = 128,
 } t_errors ;
 
+# define ERRS_SYNT_NEAR "Syntax error near unexpected token "
+
 #endif
+//------

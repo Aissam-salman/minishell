@@ -10,11 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
-void ft_unset(t_env **head_env, char *target_name)
+void	ft_unset(t_env **head_env, char **args)
 {
-	if (!target_name)
-		return;
-	ft_env_delone(head_env, target_name);
+	int	i;
+
+	if (!args || !*args || !args[1])
+		return ;
+	i = 0;
+	while (args[i])
+	{
+		ft_env_delone(head_env, args[i]);
+		i++;
+	}
 }

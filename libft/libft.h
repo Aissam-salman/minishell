@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 18:19:51 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/06 13:33:45 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/18 10:31:36 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@
 # include "includes/ft_list.h"
 # include "includes/ft_gnl.h"
 # include "includes/ft_output.h"
-# include "includes/sorting.h"
 # include "includes/ft_gc.h"
-
 
 #endif

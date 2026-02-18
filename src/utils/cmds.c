@@ -6,11 +6,11 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:34:00 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/13 18:33:12 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/18 11:53:53 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 t_cmd	*ft_cmd_new(t_minishell *minishell)
 {
@@ -34,9 +34,9 @@ t_cmd	*ft_cmd_last(t_cmd *cmd_head)
 	return (cmd_head);
 }
 
-int   ft_cmd_size(t_cmd *cmd_head)
+int	ft_cmd_size(t_cmd *cmd_head)
 {
-	int len;
+	int	len;
 
 	len = 0;
 	while (cmd_head != NULL)
@@ -73,20 +73,23 @@ int	ft_token_word_count(t_token *current)
 	{
 		if (current->type == PIPE)
 			return (count);
-		else if (current->type == WORD || current->type == CMD)
+		else
 			count++;
 		current = current->next;
 	}
 	return (count);
 }
 
-int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token *token, int *i)
+int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr,
+		int *i)
 {
-	t_token *next;
+	t_token	*next;
+	t_token	*token;
+
+	token = *token_ptr;
 	// if (!minishell || !cmd || !token)
 	// 	return ;
 	// SI WORD = AJOUTE A ARGS
-
 	next = NULL;
 	if (token->next)
 		next = token->next;
@@ -101,29 +104,31 @@ int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token *token, int *i)
 	else if (token->type == OUT_CHEVRON || token->type == OUT_DCHEVRON
 		|| token->type == IN_CHEVRON)
 	{
-		ft_redirection_handler(minishell, cmd, token);
+		if (!next || !next->str || !next->str[0])
+			return (ft_error(minishell, ERR_SYNTAX,
+					"Syntax error near unexpected token 'newline'", NULL));
+		ft_quotes_handle(minishell, next);
+		// A MODIFIER : VALEUR DE RETOUR
+		if (ft_redirection_handler(minishell, cmd, token))
+			return (GENERAL_ERROR);
+		if (token->next)
+			*token_ptr = token->next;
 	}
 	// GESTION DES HERE_DOC
 	else if (token->type == IN_DCHEVRON)
 	{
 		if (!next || !next->str)
-			return (ft_error(SYNTAX_ERROR, "Syntax error near unexpected token 'newline'", NULL));
-		else if (next->type != WORD)
+			return (ft_error(minishell, ERR_SYNTAX,
+					"Syntax error near unexpected token 'newline'", NULL));
+		else
 		{
-			// ft_tokens_print(next);
-			return (ft_error(SYNTAX_ERROR, "Syntax error near unexpected token ", next->str));
-		}
-		else 
+			if (token->next)
+				token->next->type = WORD;
 			ft_heredoc_handle(minishell, cmd, token);
+			*token_ptr = next;
+		}
 	}
 	return (SUCCESS);
-
-	// SI OUTFILE => REMPLIR OUTFD
-	// {
-	// 	cmd->outfd = fopen(token->str,)
-	// }
-	// SI INFILE => REMPLIR INFD
-	// else if (token->type == INFILE)
 }
 
 // CREER UNE LISTE DE COMMANDE A PARTIR DES TOKENS
@@ -142,28 +147,26 @@ int	ft_cmd_lst_create(t_minishell *minishell)
 		// INITIALISE LE NOUVEAU NOEUD
 		cmd_new = ft_cmd_new(minishell);
 		count = ft_token_word_count(tok_current);
-
 		// ALLOUE LE NOMBRE DE WORDS
 		cmd_new->args = ft_calloc_gc(count + 1, sizeof(char *), &minishell->gc);
 		while (tok_current && tok_current->type != PIPE)
 		{
 			// AFFEECT LES DIFFERENTES PARTIES DE CMD A CHAQUE TOKEN
-			if (ft_token_affect(minishell, cmd_new, tok_current, &i))
+			if (ft_token_affect(minishell, cmd_new, &tok_current, &i))
 				return (GENERAL_ERROR);
-
 			// DOIT SAUTER LE NOEUD D'APRES
-			tok_current = tok_current->next;
+			// if (tok_current) already moved in ft_token_affect if redirs used
+			if (tok_current)
+				tok_current = tok_current->next;
 		}
 		// SET LE DERNIER NOEUD A NULL
 		cmd_new->args[i] = NULL;
-
 		// SI PAS DE PATH
 		if (!cmd_new->path)
 			cmd_new->path = cmd_new->args[0];
-		
 		// ON AJOUTE LA STRUCT COMMAND A LA LISTE
 		ft_cmd_add(minishell, cmd_new);
-
+		// WARN: no use the return value
 		// PASSER AU NOEUD SUIVANT TOKEN
 		if (tok_current)
 			tok_current = tok_current->next;
@@ -171,4 +174,3 @@ int	ft_cmd_lst_create(t_minishell *minishell)
 	ft_cmd_add(minishell, NULL);
 	return (SUCCESS);
 }
-
