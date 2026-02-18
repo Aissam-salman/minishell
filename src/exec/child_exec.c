@@ -63,8 +63,8 @@ void	child_process(t_minishell *minishell, t_cmd *cmd, t_child *child,
 	if (child->index == 0)
 		handler_first_cmd(cmd->infd, cmd->outfd, child->size_cmd, pipe_fd[1]);
 	else if (child->index == child->size_cmd - 1)
-		handler_last_cmd(child->prev_pipe, cmd->outfd);
+		handler_last_cmd(cmd->infd, child->prev_pipe, cmd->outfd);
 	else
-		handler_mid_cmd(child->prev_pipe, cmd->outfd, pipe_fd[1]);
+		handler_mid_cmd(cmd->infd, child->prev_pipe, cmd->outfd, pipe_fd[1]);
 	close_pipe_and_exec(cmd, minishell, pipe_fd);
 }

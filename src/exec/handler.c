@@ -22,7 +22,7 @@ void	handler_signal_child(void)
 
 void	handler_first_cmd(int infd, int outfd, int size_cmd, int pipe_fd)
 {
-	if (infd != 0)
+	if (infd != STDIN_FILENO)
 	{
 		dup2(infd, STDIN_FILENO);
 		close(infd);
@@ -32,13 +32,19 @@ void	handler_first_cmd(int infd, int outfd, int size_cmd, int pipe_fd)
 		dup2(outfd, STDOUT_FILENO);
 		close(outfd);
 	}
-	else if (size_cmd > 1)
+	else if (size_cmd > STDOUT_FILENO)
 		dup2(pipe_fd, STDOUT_FILENO);
 }
 
-void	handler_last_cmd(int prev_pipe, int outfd)
+void	handler_last_cmd(int infd, int prev_pipe, int outfd)
 {
-	dup2(prev_pipe, STDIN_FILENO);
+	if (infd != STDIN_FILENO)
+	{
+		dup2(infd, STDIN_FILENO);
+		close(infd);
+	}
+	else
+		dup2(prev_pipe, STDIN_FILENO);
 	close(prev_pipe);
 	if (outfd != 1)
 	{
@@ -47,9 +53,15 @@ void	handler_last_cmd(int prev_pipe, int outfd)
 	}
 }
 
-void	handler_mid_cmd(int prev_pipe, int outfd, int pipe_fd)
+void	handler_mid_cmd(int infd, int prev_pipe, int outfd, int pipe_fd)
 {
-	dup2(prev_pipe, STDIN_FILENO);
+	if (infd != STDIN_FILENO)
+	{
+		dup2(infd, STDIN_FILENO);
+		close(infd);
+	}
+	else
+		dup2(prev_pipe, STDIN_FILENO);
 	close(prev_pipe);
 	if (outfd != STDOUT_FILENO)
 	{
