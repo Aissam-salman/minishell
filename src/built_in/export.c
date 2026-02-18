@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 20:27:53 by fardeau           #+#    #+#             */
-/*   Updated: 2026/02/18 09:51:28 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/18 11:50:58 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_env_format_check(char *str)
 {
-	if (!ft_isalpha(str[0]) || str[0] != '_')
+	if (!ft_isalpha(str[0]) && str[0] != '_')
 		return (GENERAL_ERROR);
 	return (SUCCESS);
 }

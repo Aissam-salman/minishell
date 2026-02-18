@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 18:43:32 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/18 09:02:19 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/18 12:05:31 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ void	handler_first_cmd(int infd, int outfd, int size_cmd, int pipe_fd)
 		dup2(infd, STDIN_FILENO);
 		close(infd);
 	}
-	if (size_cmd > 1)
-		dup2(pipe_fd, STDOUT_FILENO);
-	else if (outfd != STDOUT_FILENO)
+	if (outfd != STDOUT_FILENO)
 	{
 		dup2(outfd, STDOUT_FILENO);
 		close(outfd);
 	}
+	else if (size_cmd > 1)
+		dup2(pipe_fd, STDOUT_FILENO);
 }
 
 void	handler_last_cmd(int prev_pipe, int outfd)
@@ -47,9 +47,15 @@ void	handler_last_cmd(int prev_pipe, int outfd)
 	}
 }
 
-void	handler_mid_cmd(int prev_pipe, int pipe_fd)
+void	handler_mid_cmd(int prev_pipe, int outfd, int pipe_fd)
 {
 	dup2(prev_pipe, STDIN_FILENO);
 	close(prev_pipe);
-	dup2(pipe_fd, STDOUT_FILENO);
+	if (outfd != STDOUT_FILENO)
+	{
+		dup2(outfd, STDOUT_FILENO);
+		close(outfd);
+	}
+	else
+		dup2(pipe_fd, STDOUT_FILENO);
 }

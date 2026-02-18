@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 18:31:47 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/18 08:54:04 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/18 12:06:17 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,6 @@ void	child_process(t_minishell *minishell, t_cmd *cmd, t_child *child,
 	else if (child->index == child->size_cmd - 1)
 		handler_last_cmd(child->prev_pipe, cmd->outfd);
 	else
-		handler_mid_cmd(child->prev_pipe, pipe_fd[1]);
+		handler_mid_cmd(child->prev_pipe, cmd->outfd, pipe_fd[1]);
 	close_pipe_and_exec(cmd, minishell, pipe_fd);
 }
