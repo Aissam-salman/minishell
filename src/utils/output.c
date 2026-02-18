@@ -31,14 +31,12 @@ void	ft_env_print_export_no_param(t_env *head, int fd)
 {
 	while (head)
 	{
+		ft_putstr_fd("export ", fd);
+		ft_putstr_fd(head->name, fd);
+		ft_putstr_fd("=", fd);
 		if (head->content)
-		{
-			ft_putstr_fd("export ", fd);
-			ft_putstr_fd(head->name, fd);
-			ft_putstr_fd("=", fd);
 			ft_putstr_fd(head->content, fd);
-			ft_putstr_fd("\n", fd);
-		}
+		ft_putstr_fd("\n", fd);
 		head = head->next;
 	}
 }

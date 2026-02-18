@@ -41,7 +41,7 @@ int	ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token)
 	if (token->type != IN_DCHEVRON)
 		fd = ft_open(token->next->str, token->type);
 	else if (token->type == IN_DCHEVRON)
-		return (ft_heredoc_handle(minishell, cmd, token));
+		return (ft_heredoc_handle(minishell, cmd, token), 0);
 	if (fd == -1)
 	{
 		perror(token->next->str);
