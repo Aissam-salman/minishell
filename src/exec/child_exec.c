@@ -60,7 +60,7 @@ void	child_process(t_minishell *minishell, t_cmd *cmd, t_child *child,
 {
 	handler_signal_child();
 	if (child->index == 0)
-		handler_first_cmd(cmd->infd, child->size_cmd, pipe_fd[1]);
+		handler_first_cmd(cmd->infd, cmd->outfd, child->size_cmd, pipe_fd[1]);
 	else if (child->index == child->size_cmd - 1)
 		handler_last_cmd(child->prev_pipe, cmd->outfd);
 	else
