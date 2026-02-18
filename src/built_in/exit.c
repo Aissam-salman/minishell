@@ -6,13 +6,11 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 19:44:40 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/16 17:38:22 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/18 09:45:49 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
-#include "errors.h"
-#include "includes/ft_output.h"
+#include "minishell.h"
 
 int	ft_atoi_safe(const char *nptr, int *res)
 {
@@ -41,10 +39,12 @@ int	ft_atoi_safe(const char *nptr, int *res)
 	if (nbr * sign < -2147483648 || nbr * sign > 2147483647)
 		return (GENERAL_ERROR);
 	*res = (int)nbr  * sign;
-	ft_printf("code atoi: %d\n", *res);
+	// ft_printf("code atoi: %d\n", *res);
 	return (SUCCESS);
 }
 
+// A MODIFIER : echo hello | exit 255 doesn´t print anything
+// A MODIFIER : Peut prendre jusqu'a long long et renvoyer le result % 256
 void	ft_buildin_exit(t_minishell *minishell, char **args)
 {
 	int	code;
@@ -56,7 +56,7 @@ void	ft_buildin_exit(t_minishell *minishell, char **args)
 	write(1, "exit\n", 5);
 	if (i > 2)
 	{
-		ft_error(minishell, 1, "exit:", "too many arguments");
+		ft_error(minishell, 1, "exit: ", "too many arguments");
 		return;
 	}
 	else if (ft_atoi_safe(args[1], &code) == GENERAL_ERROR)

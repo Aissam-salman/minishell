@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
-#include <unistd.h>
+#include "minishell.h"
 
 // ERROR + MSG SUR SORTIE ERREUR
 int	ft_error(t_minishell *minishell, int error, char *str1, char *str2)

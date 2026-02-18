@@ -6,20 +6,20 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 20:27:53 by fardeau           #+#    #+#             */
-/*   Updated: 2026/02/17 12:15:15 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/18 09:51:28 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
-#include "errors.h"
+#include "minishell.h"
 
 int	ft_env_format_check(char *str)
 {
-	if (!ft_isalpha(str[0]))
+	if (!ft_isalpha(str[0]) || str[0] != '_')
 		return (GENERAL_ERROR);
 	return (SUCCESS);
 }
 
+// A MODIFIER : Doit pouvoir prendre en compte plusieurs exports dans la meme commande
 int	ft_export(t_minishell *minishell, int fd, char *str)
 {
 	t_env	*new;

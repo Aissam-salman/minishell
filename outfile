@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 void	ft_minishell_reset(t_minishell *minishell)
 {

@@ -6,11 +6,11 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 15:04:28 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/17 12:17:37 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/18 10:20:35 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 // A MODIFIER : RAJOUTER LA GESTION DES SIGNAUX
 void	ft_heredoc(t_minishell *minishell, t_cmd *cmd, t_token *token, int mod)

@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
-#include "errors.h"
+#include "minishell.h"
 
 // RECUPERE LE DERNIER TOKEN
 t_token	*ft_token_last(t_token *token)

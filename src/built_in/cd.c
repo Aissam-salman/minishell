@@ -10,12 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
-#include "errors.h"
-#include "includes/ft_gc.h"
-#include <errno.h>
-#include <fcntl.h>
-#include <sys/stat.h>
+#include "minishell.h"
 
 static void	update_pwd(t_env **head_env, t_minishell *minishell)
 {
