@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "errors.h"
 #include "minishell.h"
 
 t_cmd	*ft_cmd_new(t_minishell *minishell)
@@ -109,7 +110,7 @@ int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr,
 					"Syntax error near unexpected token 'newline'", NULL));
 		ft_quotes_handle(minishell, next);
 		// A MODIFIER : VALEUR DE RETOUR
-		if (ft_redirection_handler(minishell, cmd, token))
+		if (ft_redirection_handler(minishell, cmd, token) == GENERAL_ERROR)
 			return (GENERAL_ERROR);
 		if (token->next)
 			*token_ptr = token->next;

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <asm-generic/errno-base.h>
 
 // ERROR + MSG SUR SORTIE ERREUR
 int	ft_error(t_minishell *minishell, int error, char *str1, char *str2)
@@ -30,7 +31,7 @@ int	ft_error(t_minishell *minishell, int error, char *str1, char *str2)
 	else if (errno != 0)
 	{
 		perror("bash : ");
-		return (errno);
+		return (errno == EACCES ? 126 : errno);
 	}
 	return (error);
 }
@@ -48,5 +49,5 @@ void	ft_exit(t_minishell *minishell, int error, char *str)
 		ft_putstr_fd(str, STDERR_FILENO);
 		ft_putchar_fd('\n', STDERR_FILENO);
 	}
-	exit(error);
+	exit(error == EACCES ? 126 : error);
 }

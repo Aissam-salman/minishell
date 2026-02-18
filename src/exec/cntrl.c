@@ -10,7 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "errors.h"
 #include "minishell.h"
+#include "utils.h"
+#include <string.h>
 
 void	ft_redirection_exec(int new_fd, int *old_fd)
 {
@@ -44,8 +47,9 @@ int	ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token)
 		return (ft_heredoc_handle(minishell, cmd, token), 0);
 	if (fd == -1)
 	{
-		perror(token->next->str);
-		return (GENERAL_ERROR);
+		// perror(token->next->str);
+		// return (GENERAL_ERROR);
+		return (ft_error(minishell, GENERAL_ERROR, strerror(errno), NULL));
 	}
 	if (fd > 2 && token->type == IN_CHEVRON)
 		ft_redirection_exec(fd, &cmd->infd);

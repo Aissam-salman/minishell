@@ -35,7 +35,7 @@ void	run_built_in(t_cmd *cmd, t_minishell *minishell)
 	char	*str;
 
 	if (!cmd->args || !cmd->args[0])
-		return ;
+		return;
 	str = cmd->args[0];
 	minishell->exit_status = 0;
 	if (ft_strcmp(str, "exit") == 0)
@@ -51,7 +51,7 @@ void	run_built_in(t_cmd *cmd, t_minishell *minishell)
 	else if (ft_strcmp(str, "pwd") == 0)
 		ft_pwd();
 	else if (ft_strcmp(str, "cd") == 0)
-		ft_cd(minishell, cmd->args[1]);
+		ft_cd(minishell, cmd->args);
 	else if (ft_strcmp(str, "!") == 0)
 		ft_extra_bin(minishell, 1);
 	else if (ft_strcmp(str, ":") == 0)

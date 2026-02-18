@@ -37,20 +37,21 @@ void	close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2])
 {
 	close(pipe_fd[0]);
 	close(pipe_fd[1]);
-	if (is_built_in(cmd) == 1)
+	if (is_built_in(cmd))
 	{
 		run_built_in(cmd, minishell);
 		ft_gc_free_all(&minishell->gc);
 		rl_clear_history();
-		_exit(0);
+		exit(0);
 	}
-	if (!cmd->path || access(cmd->path, X_OK) != 0)
-	{
-		ft_error(minishell, CMD_NOT_FOUND, cmd->args[0], ": command not found");
-		ft_gc_free_all(&minishell->gc);
-		rl_clear_history();
-		_exit(CMD_NOT_FOUND);
-	}
+	if (!cmd->path || access(cmd->path, X_OK) == -1)
+		ft_exit(minishell, CMD_NOT_FOUND, strerror(CMD_NOT_FOUND));
+	// {
+	// 	// ft_error(minishell, CMD_NOT_FOUND, cmd->args[0], ": command not found");
+	// 	// ft_gc_free_all(&minishell->gc);
+	// 	// rl_clear_history();
+	// 	// exit(CMD_NOT_FOUND);
+	// }
 	if (execv(cmd->path, cmd->args) == -1)
 		ft_exit(minishell, errno, strerror(errno));
 }

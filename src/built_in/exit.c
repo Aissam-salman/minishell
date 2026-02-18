@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	ft_atoi_safe(const char *nptr, int *res)
+long	ft_atoi_safe(const char *nptr, long *res)
 {
 	long long	nbr;
 	int			sign;
@@ -36,9 +36,7 @@ int	ft_atoi_safe(const char *nptr, int *res)
 		nbr = nbr * 10 + (*nptr - '0');
 		nptr++;
 	}
-	if (nbr * sign < -2147483648 || nbr * sign > 2147483647)
-		return (GENERAL_ERROR);
-	*res = (int)nbr  * sign;
+	*res = (long)nbr  * sign;
 	// ft_printf("code atoi: %d\n", *res);
 	return (SUCCESS);
 }
@@ -47,7 +45,7 @@ int	ft_atoi_safe(const char *nptr, int *res)
 // A MODIFIER : Peut prendre jusqu'a long long et renvoyer le result % 256
 void	ft_buildin_exit(t_minishell *minishell, char **args)
 {
-	int	code;
+	long	code;
 	int i;
 
 	i = 0;
@@ -61,7 +59,6 @@ void	ft_buildin_exit(t_minishell *minishell, char **args)
 	}
 	else if (ft_atoi_safe(args[1], &code) == GENERAL_ERROR)
 	{
-		ft_printf("c\n");
 		ft_error(minishell, 2, args[1], ": numeric argument required");
 		rl_clear_history();
 		ft_gc_free_all(&minishell->gc);

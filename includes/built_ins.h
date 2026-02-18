@@ -19,7 +19,7 @@
 
 //BUILT_IN/IS_BUILT_IN.C
 int		is_built_in(t_cmd *cmd);
-void	run_built_in(t_cmd *cmd, t_minishell *minishell);
+void		run_built_in(t_cmd *cmd, t_minishell *minishell);
 //------
 
 //BUILT_IN/ECHO.C
@@ -27,7 +27,7 @@ void	ft_echo(char **args);
 //------
 
 //BUILT_IN/CD.C
-int		ft_cd(t_minishell *minishell, char *path);
+int		ft_cd(t_minishell *minishell, char **args);
 //------
 
 //BUILT_IN/PWD.C

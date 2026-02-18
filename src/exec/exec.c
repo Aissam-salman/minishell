@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "built_ins.h"
 #include "minishell.h"
 #include <string.h>
 
@@ -70,13 +71,11 @@ void	ft_exec(t_minishell *minishell)
 	size_cmd = ft_cmd_size(minishell->head_cmd);
 	if (!size_cmd)
 		return ;
-	// ft_printf("Size CMD = %d\n", size_cmd);
 	pids = ft_gc_malloc(sizeof(int) * size_cmd, &minishell->gc);
 	if (!pids)
 		return ;
-	// NOTE: if size == 1 and build in qui touche a l'env separer le bordel
-	// handle if only export KEY=VALUE  ft_export,
 	ft_pipe_and_fork(minishell, size_cmd, pipe_fd, pids);
-	if (!is_built_in(minishell->head_cmd))
-		ft_wait_subprocess(minishell, size_cmd, pids);
+	if (is_built_in(minishell->head_cmd) && size_cmd == 1)
+		return;
+	ft_wait_subprocess(minishell, size_cmd, pids);
 }
