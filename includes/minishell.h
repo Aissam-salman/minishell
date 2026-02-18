@@ -57,7 +57,7 @@ typedef struct	s_cmd
 	char			**args;
 	int				infd;
 	int				outfd;
-	// int				pipefd[2];
+	int				error_file;
 	struct s_cmd	*next;
 }					t_cmd;
 

@@ -13,7 +13,9 @@
 #include "errors.h"
 #include "minishell.h"
 #include "utils.h"
+#include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 void	ft_redirection_exec(int new_fd, int *old_fd)
 {
@@ -22,15 +24,20 @@ void	ft_redirection_exec(int new_fd, int *old_fd)
 	*old_fd = new_fd;
 }
 
+
+
 int	ft_open(char *path, t_types mod)
 {
+	int fd;
+
+	fd = -1;
 	if (mod == IN_CHEVRON)
-		return (open(path, O_RDONLY));
-	if (mod == OUT_CHEVRON)
-		return (open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644));
-	if (mod == OUT_DCHEVRON)
-		return (open(path, O_WRONLY | O_CREAT | O_APPEND, 0644));
-	return (-1);
+		fd = open(path, O_RDONLY);
+	else if (mod == OUT_CHEVRON)
+		fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	else if (mod == OUT_DCHEVRON)
+		fd = open(path, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	return (fd);
 }
 
 int	ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token)
@@ -38,23 +45,22 @@ int	ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token)
 	int	fd;
 
 	// A MODIFIER : Les valeurs de retour, SET en fonction du cas
-	fd = -1;
 	if (token->next == NULL)
 		return (GENERAL_ERROR);
-	if (token->type != IN_DCHEVRON)
-		fd = ft_open(token->next->str, token->type);
-	else if (token->type == IN_DCHEVRON)
+	if (token->type == IN_DCHEVRON)
 		return (ft_heredoc_handle(minishell, cmd, token), 0);
+	fd = ft_open(token->next->str, token->type);
 	if (fd == -1)
 	{
-		// perror(token->next->str);
-		// return (GENERAL_ERROR);
-		return (ft_error(minishell, GENERAL_ERROR, strerror(errno), NULL));
+		cmd->error_file = 1;
+		perror(token->next->str);
+		minishell->exit_status = GENERAL_ERROR;
+		return (GENERAL_ERROR);
 	}
 	if (fd > 2 && token->type == IN_CHEVRON)
 		ft_redirection_exec(fd, &cmd->infd);
 	else if (fd > 2 && (token->type == OUT_CHEVRON
 			|| token->type == OUT_DCHEVRON))
 		ft_redirection_exec(fd, &cmd->outfd);
-	return (0);
+	return (SUCCESS);
 }

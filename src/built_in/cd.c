@@ -14,6 +14,8 @@
 #include "minishell.h"
 #include "utils.h"
 #include <asm-generic/errno-base.h>
+#include <errno.h>
+#include <string.h>
 
 static void	update_pwd(t_env **head_env, t_minishell *minishell)
 {
@@ -138,11 +140,11 @@ int ft_try_cd(char *path, t_minishell *minishell)
 	struct stat	stat_file;
 
 	if (stat(path, &stat_file) != 0)
-		return (ft_error(minishell, GENERAL_ERROR, "cd: ", "No such file or directory"));
+		return (ft_error(minishell, GENERAL_ERROR, strerror(errno), NULL));
 	if (!S_ISDIR(stat_file.st_mode))
 		return (ft_error(minishell, ENOTDIR, "cd: ", ft_strjoin_gc(path, ": Not a directory", &minishell->gc)));
 	if (chdir(path) == -1)
-		return (ft_error(minishell, errno, "cd", path));
+		return (ft_error(minishell, errno, strerror(errno), NULL));
 	return (SUCCESS);
 }
 

@@ -20,8 +20,8 @@ void	close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2]);
 // EXEC/HANDLER.C
 void	handler_signal_child(void);
 void	handler_first_cmd(int infd, int outfd, int size_cmd, int pipe_fd);
-void	handler_last_cmd(int prev_pipe, int outfd);
-void	handler_mid_cmd(int prev_pipe, int outfd, int pipe_fd);
+void	handler_last_cmd(int infd, int prev_pipe, int outfd);
+void	handler_mid_cmd(int infd, int prev_pipe, int outfd, int pipe_fd);
 //------
 
 // EXEC/WAIT.C

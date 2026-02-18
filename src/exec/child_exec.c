@@ -10,7 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "errors.h"
 #include "minishell.h"
+#include "utils.h"
 #include <string.h>
 
 void	child_set(t_child *child, int i, int prev_pipe, int size_cmd)
@@ -37,23 +39,19 @@ void	close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2])
 {
 	close(pipe_fd[0]);
 	close(pipe_fd[1]);
+	if (cmd->outfd == -1 || cmd->infd == -1 || cmd->error_file == 1)
+		exit(GENERAL_ERROR);
 	if (is_built_in(cmd))
 	{
 		run_built_in(cmd, minishell);
 		ft_gc_free_all(&minishell->gc);
 		rl_clear_history();
-		exit(0);
+		exit(SUCCESS);
 	}
 	if (!cmd->path || access(cmd->path, X_OK) == -1)
 		ft_exit(minishell, CMD_NOT_FOUND, strerror(CMD_NOT_FOUND));
-	// {
-	// 	// ft_error(minishell, CMD_NOT_FOUND, cmd->args[0], ": command not found");
-	// 	// ft_gc_free_all(&minishell->gc);
-	// 	// rl_clear_history();
-	// 	// exit(CMD_NOT_FOUND);
-	// }
 	if (execv(cmd->path, cmd->args) == -1)
-		ft_exit(minishell, errno, strerror(errno));
+		ft_error(minishell, errno, strerror(errno), NULL);
 }
 
 void	child_process(t_minishell *minishell, t_cmd *cmd, t_child *child,
@@ -63,8 +61,8 @@ void	child_process(t_minishell *minishell, t_cmd *cmd, t_child *child,
 	if (child->index == 0)
 		handler_first_cmd(cmd->infd, cmd->outfd, child->size_cmd, pipe_fd[1]);
 	else if (child->index == child->size_cmd - 1)
-		handler_last_cmd(child->prev_pipe, cmd->outfd);
+		handler_last_cmd(cmd->infd, child->prev_pipe, cmd->outfd);
 	else
-		handler_mid_cmd(child->prev_pipe, cmd->outfd, pipe_fd[1]);
+		handler_mid_cmd(cmd->infd, child->prev_pipe, cmd->outfd, pipe_fd[1]);
 	close_pipe_and_exec(cmd, minishell, pipe_fd);
 }
