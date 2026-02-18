@@ -35,7 +35,7 @@ void	run_built_in(t_cmd *cmd, t_minishell *minishell)
 	char	*str;
 
 	if (!cmd->args || !cmd->args[0])
-		return ;
+		return;
 	str = cmd->args[0];
 	minishell->exit_status = 0;
 	if (ft_strcmp(str, "exit") == 0)
