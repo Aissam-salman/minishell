@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fardeau <fardeau@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 14:01:23 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/12 17:30:13 by fardeau          ###   ########.fr       */
+/*   Updated: 2026/02/18 10:32:35 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,9 @@ static char	*ft_found_newline(char **arr)
 
 char	*get_next_line(int fd)
 {
-	static char	*arr_s[1024];
-	char		buf[1];
-	char		*tmp;
+	static char		*arr_s[1024];
+	char			buf[1];
+	char			*tmp;
 
 	if (fd < 0 || BUFFER_SIZE_GNL <= 0 || read(fd, buf, 0) < 0)
 	{

@@ -17,7 +17,7 @@ void	*ft_calloc_gc(size_t count, size_t size, t_list **gc_head)
 	void	*ptr;
 	size_t	total_size;
 
-	if (size != 0 && count > (size_t)-1 / size)
+	if (size != 0 && count > (size_t) - 1 / size)
 		return (NULL);
 	total_size = count * size;
 	ptr = malloc(total_size);

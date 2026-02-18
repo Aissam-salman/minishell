@@ -10,12 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../libft.h"
 
 int	ft_get_max(int *arr, int arr_len)
 {
-	int	i;
-	int	max;
+	int		i;
+	int		max;
 
 	i = 0;
 	max = 0;
