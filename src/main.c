@@ -24,7 +24,8 @@ int	main(int argc, char **argv, char **envp)
 		ft_minishell_reset(&minishell);
 		minishell.line = readline("foo$> ");
 		if (!minishell.line)
-			ft_buildin_exit(&minishell, 0);
+			ft_exit(&minishell, minishell.exit_status, NULL);
+			// ft_buildin_exit(&minishell, 0);
 		if (!*minishell.line)
 		{
 			free(minishell.line);

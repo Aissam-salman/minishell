@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 17:17:28 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/16 13:08:13 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/18 12:02:01 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ void	ft_exec(t_minishell *minishell)
 	size_cmd = ft_cmd_size(minishell->head_cmd);
 	if (!size_cmd)
 		return ;
+	// ft_printf("Size CMD = %d\n", size_cmd);
 	pids = ft_gc_malloc(sizeof(int) * size_cmd, &minishell->gc);
 	if (!pids)
 		return ;

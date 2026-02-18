@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 13:04:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/18 10:41:27 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/18 11:57:42 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,20 +79,8 @@ void	ft_quotes_handle(t_minishell *minishell, t_token *token)
 			continue ;
 		}
 		// CONDITIONS POUR RAJOUTER MALGRE LES STATES OU LES SEPARATORS (A JOLIFIER)
-		// A MODIFIER : REVOIR VU QUE C'EST PAS BEAU
-		// C moche
-
-		else if (token->str[i] == '\'' && minishell->state == IN_DQUOTE)
-		{
-			if (ft_buffer_add(usable_str, token->str[i]))
-				return ;
-		}
-		else if (token->str[i] == '\"' && minishell->state == IN_QUOTE)
-		{
-			if (ft_buffer_add(usable_str, token->str[i]))
-				return ;
-		}
-		else if (token->str[i] != '\'' && token->str[i] != '\"')
+		else if ((token->str[i] != '\'' || minishell->state == IN_DQUOTE)
+				&& (token->str[i] != '\"' || minishell->state == IN_QUOTE))
 		{
 			if (ft_buffer_add(usable_str, token->str[i]))
 				return ;
