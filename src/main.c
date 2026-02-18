@@ -43,5 +43,5 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		ft_exec(&minishell);
 	}
-	ft_exit(&minishell, minishell.exit_status, NULL);
+	ft_exit(&minishell, minishell.cached_status, NULL);
 }
