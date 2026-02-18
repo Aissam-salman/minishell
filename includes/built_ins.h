@@ -27,7 +27,7 @@ void	ft_echo(char **args);
 //------
 
 //BUILT_IN/CD.C
-int		ft_cd(t_minishell *minishell, char *path);
+int		ft_cd(t_minishell *minishell, char **args);
 //------
 
 //BUILT_IN/PWD.C

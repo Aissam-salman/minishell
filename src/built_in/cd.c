@@ -10,7 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "errors.h"
 #include "minishell.h"
+#include "utils.h"
+#include <asm-generic/errno-base.h>
 
 static void	update_pwd(t_env **head_env, t_minishell *minishell)
 {
@@ -117,22 +120,51 @@ char	*ft_expand_home(t_minishell *minishell, char *path)
 	return (NULL);
 }
 
-int	ft_cd(t_minishell *minishell, char *path)
+char *ft_define_path(t_minishell *minishell, char **args)
 {
-	char	*old_pwd;
+	char *path;
+
+	if (!args[1]  || ft_strcmp(args[1], "~") == 0)
+		path = ft_no_path(minishell->head_env);
+	else if (ft_strchr(args[1], '~') && args[1][1])
+		path = ft_expand_home(minishell, args[1]);
+	else
+		path = args[1];
+	return (path);
+}
+
+int ft_try_cd(char *path, t_minishell *minishell)
+{
 	struct stat	stat_file;
 
-	old_pwd = save_pwd();
-	if (!old_pwd)
-		return (GENERAL_ERROR);
-	if (!path || !*path || ft_strcmp(path, "~") == 0)
-		path = ft_no_path(minishell->head_env);
-	else if (ft_strcmp(path, "-") == 0)
+	if (stat(path, &stat_file) != 0)
+		return (ft_error(minishell, GENERAL_ERROR, "cd: ", "No such file or directory"));
+	if (!S_ISDIR(stat_file.st_mode))
+		return (ft_error(minishell, ENOTDIR, "cd: ", ft_strjoin_gc(path, ": Not a directory", &minishell->gc)));
+	if (chdir(path) == -1)
+		return (ft_error(minishell, errno, "cd", path));
+	return (SUCCESS);
+}
+
+int		ft_cd(t_minishell *minishell, char **args)
+{
+	char	*old_pwd;
+	char *path;
+	int res;
+
+	if (args[1] && args[2])
+		return (ft_error(minishell, GENERAL_ERROR, "cd: ", "too many arguments"));
+	if (ft_strcmp(args[1], "-") == 0)
+	{
+		old_pwd = save_pwd();
 		return (ft_cd_back(minishell, old_pwd));
-	if (ft_strchr(path, '~'))
-		path = ft_expand_home(minishell, path);
-	if ((stat(path, &stat_file) == 0 && S_ISDIR(stat_file.st_mode)) && chdir(path) == -1)
-		return (ft_error(minishell, errno, "cd", NULL));
+	}
+	else
+		path = ft_define_path(minishell, args);
+	res = ft_try_cd(path, minishell);
+	if (res != SUCCESS)
+		return (res);
+	old_pwd = save_pwd();
 	update_old_pwd(&minishell->head_env, old_pwd, minishell);
 	free(old_pwd);
 	update_pwd(&minishell->head_env, minishell);
