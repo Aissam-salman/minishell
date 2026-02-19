@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_core.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
+/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 14:09:27 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/19 10:17:40 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 14:12:13 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	signal_callback_handler(int sig)
 	// C-C
 	if (sig == SIGINT)
 	{
+		g_signal_glob = sig;
 		ft_printf("\n");
 		rl_on_new_line();
 		rl_replace_line("", 0);
@@ -29,6 +30,8 @@ void	signal_callback_handler(int sig)
 void	setup_signal(void)
 {
 	struct sigaction	sa;
+
+	g_signal_glob = 0;
 
 	ft_bzero(&sa, sizeof(sa));
 	sa.sa_handler = &signal_callback_handler;

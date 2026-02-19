@@ -13,7 +13,8 @@
 #ifndef ERRORS_H
 # define ERRORS_H
 
-typedef enum e_errors {
+typedef enum e_errors
+{
 	SUCCESS = 0,
 	GENERAL_ERROR = 1,
 	ERR_SYNTAX = 2,
@@ -29,9 +30,10 @@ typedef enum e_errors {
 	IS_DIRECTORY = 126,
 	CMD_NOT_FOUND = 127,
 	SIGNAL = 128,
-} t_errors ;
+}	t_errors;
 
 # define ERRS_SYNT_NEAR "Syntax error near unexpected token "
 
 #endif
+
 //------

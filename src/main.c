@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+int g_signal_glob = 0;
+
 void	ft_minishell_reset(t_minishell *minishell)
 {
 	if (STDOUT_FILENO != 1)
