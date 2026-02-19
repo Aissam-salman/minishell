@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 18:26:24 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/19 12:25:48 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 22:33:29 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ int	handle_redirection(t_minishell *minishell, t_token *token)
 	if (!token->next)
 		return (ft_error(minishell, ERR_SYNTAX, ERRS_SYNT_NEAR, "`newline'"));
 	if (is_redirection(token->next) || token->next->type == PIPE)
-		return (ft_error(minishell, ERR_SYNTAX, ERRS_SYNT_NEAR, token->next->str));
+		return (ft_error(minishell, ERR_SYNTAX, ERRS_SYNT_NEAR,
+				token->next->str));
 	return (SUCCESS);
 }
 

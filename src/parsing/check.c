@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:57:07 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/16 17:01:31 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 22:32:14 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ int	ft_check_flags(char *str)
 	return (1);
 }
 
-// REGARDE SI LA STRING EST UN OPERATEUR VALIDE (<, <<, >, >>)
 int	ft_check_redirection(char *str)
 {
 	if (!str)
