@@ -8,6 +8,7 @@
 //UTILS/TOKENS.C
 t_token	*ft_token_create(t_minishell *minishell, char *buffer);
 int		ft_token_add(t_minishell *minishell, t_token *to_add);
+int	ft_find_token(t_types type, t_token *head);
 //------
 
 //UTILS/CMDS.C

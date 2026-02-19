@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 15:49:08 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/19 09:54:00 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 10:06:16 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,9 @@ int	ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token)
 	{
 		cmd->error_file = 1;
 		perror(token->next->str);
-		minishell->exit_status = GENERAL_ERROR;
+		// SI A UN PIPE DERRIERE
+		if (!ft_find_token(PIPE, token))
+			minishell->exit_status = GENERAL_ERROR;
 	}
 	if (fd > 2 && token->type == IN_CHEVRON)
 		ft_redirection_exec(fd, &cmd->infd);

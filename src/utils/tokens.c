@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 14:14:33 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/13 14:14:34 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 10:02:07 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,15 @@ int	ft_token_add(t_minishell *minishell, t_token *to_add)
 	last = ft_token_last(minishell->head_token);
 	last->next = to_add;
 	return (SUCCESS);
+}
+
+int	ft_find_token (t_types type, t_token *head)
+{
+	while (head)
+	{
+		if (head->type == type)
+			return (1);
+		head = head->next;
+	}
+	return (0);
 }
