@@ -51,6 +51,9 @@ $(OBJ_DIR)/%.o: %.c
 
 -include $(OBJS:.o=.d)
 
+test: all
+	cd minishell_tester/ && ./tester
+
 clean:
 	rm -rf $(OBJ_DIR)
 	make clean -C $(LIBFT_DIR)

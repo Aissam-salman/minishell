@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 15:49:08 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/18 12:08:03 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 09:54:00 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ void	ft_redirection_exec(int new_fd, int *old_fd)
 		close(*old_fd);
 	*old_fd = new_fd;
 }
-
-
 
 int	ft_open(char *path, t_types mod)
 {
@@ -55,7 +53,6 @@ int	ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token)
 		cmd->error_file = 1;
 		perror(token->next->str);
 		minishell->exit_status = GENERAL_ERROR;
-		return (GENERAL_ERROR);
 	}
 	if (fd > 2 && token->type == IN_CHEVRON)
 		ft_redirection_exec(fd, &cmd->infd);

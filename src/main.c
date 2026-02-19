@@ -33,14 +33,11 @@ int	main(int argc, char **argv, char **envp)
 		}
 		ft_gc_add_node(&minishell.gc, minishell.line);
 		add_history(minishell.line);
-		ft_tokenize(&minishell);
-		if (minishell.exit_status != 0)
+		if (ft_tokenize(&minishell) == GENERAL_ERROR)
 			continue;
-		checker_token(&minishell);
-		if (minishell.exit_status != 0)
+		if (checker_token(&minishell) == GENERAL_ERROR)
 			continue;
-		ft_cmd_lst_create(&minishell);
-		if (minishell.exit_status != 0)
+		if (ft_cmd_lst_create(&minishell) == GENERAL_ERROR)
 			continue ;
 		ft_exec(&minishell);
 	}

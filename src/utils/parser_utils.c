@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
+/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 13:04:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/18 11:57:42 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 09:07:41 by alamjad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,20 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 	// char *expension;
 	ft_bzero(buffer, BUFFER_SIZE);
 	// ON INCREMENTE POUR NE PAS PRENDRE LE $
-	(*start)++;
 	// ATTENTION A L'EXPAND POUR LA VALEUR DE RETOUR
+	if (ft_ischarset(str[*start + 1],SEPARATORS) || !str[*start + 1])
+	{
+		// CA C'EST GOOD
+		(*start)++;
+		if (ft_buffer_add(usable_str, '$') != 0)
+			return (ft_error(minishell, BUFFER_FAIL, "Insufficient buffer size",
+					NULL));
+		if (ft_strlcat(usable_str, buffer, BUFFER_SIZE) > BUFFER_SIZE)
+			return (ft_error(minishell, BUFFER_FAIL, "Insufficient buffer size",
+					NULL));
+		return (0);
+	}
+	(*start)++;
 	if (str[*start] && str[*start] == '?')
 	{
 		err_value = ft_itoa_gc(minishell->cached_status, &minishell->gc);
@@ -36,6 +48,7 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 		(*start)++;
 		return (0);
 	}
+
 	// ON PARCOURT STR JUSQU'A " ou ' ou $ ou SPACES
 	while (str[*start] && !ft_ischarset(str[*start], SEPARATORS))
 	{
@@ -66,11 +79,14 @@ void	ft_quotes_handle(t_minishell *minishell, t_token *token)
 	i = 0;
 	minishell->state = NORMAL;
 	// ON BOUCLE SUR CHAQUE ELEMENT DE TOKEN->STR
+	// ft_printf("TOKEN CONTENT = %s\n", token->str);
 	ft_bzero(usable_str, BUFFER_SIZE);
+	// ft_tokens_print(minishell->head_token);
 	while (token->str[i])
 	{
 		// ON AFFECTE L'ETAT ET ON GARDE LE PRECEDENT EN MEMOIRE
 		ft_state_detect(token->str[i], minishell);
+
 		// SI ON TROUVE UN DOLLAR
 		if (token->str[i] == '$' && minishell->state != IN_QUOTE)
 		{

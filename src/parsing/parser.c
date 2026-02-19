@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 18:26:24 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/17 16:44:21 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 08:58:24 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ int	checker_token(t_minishell *minishell)
 
 	cmd_find = 0;
 	token = minishell->head_token;
-	// ft_tokens_print(minishell->head_token);
 	while (token)
 	{
 		ft_quotes_handle(minishell, token);

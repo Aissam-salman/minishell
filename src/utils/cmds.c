@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:34:00 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/18 11:53:53 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 09:57:33 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,8 @@ int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr,
 					"Syntax error near unexpected token 'newline'", NULL));
 		ft_quotes_handle(minishell, next);
 		// A MODIFIER : VALEUR DE RETOUR
-		if (ft_redirection_handler(minishell, cmd, token) == GENERAL_ERROR)
+		ft_redirection_handler(minishell, cmd, token);
+		if (minishell->exit_status != ERR_OPEN && minishell->exit_status != 0)
 			return (GENERAL_ERROR);
 		if (token->next)
 			*token_ptr = token->next;

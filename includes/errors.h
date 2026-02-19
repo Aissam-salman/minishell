@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 16:31:44 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/18 10:15:57 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 09:51:06 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ typedef enum e_errors {
 	ERR_CHECK_TOKEN = 4,
 	ERR_HANDLE_PIPE = 5,
 	ERR_REDIRECTION = 6,
+	ERR_OPEN = 7,
 	PARSING_FAIL = 50,
 	BUFFER_FAIL = 98,
 	MALLOC_FAIL = 99,
