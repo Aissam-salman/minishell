@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:34:00 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/19 09:57:33 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 12:25:48 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ t_cmd	*ft_cmd_new(t_minishell *minishell)
 	new = ft_calloc_gc(1, sizeof(t_cmd), &minishell->gc);
 	if (!new)
 		return (NULL);
+	new->args = NULL;
 	new->next = NULL;
 	new->infd = STDIN_FILENO;
 	new->outfd = STDOUT_FILENO;
@@ -74,7 +75,7 @@ int	ft_token_word_count(t_token *current)
 	{
 		if (current->type == PIPE)
 			return (count);
-		else
+		else if (current->type != GARBAGE) 
 			count++;
 		current = current->next;
 	}
@@ -88,14 +89,13 @@ int	ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token_ptr,
 	t_token	*token;
 
 	token = *token_ptr;
-	// if (!minishell || !cmd || !token)
-	// 	return ;
 	// SI WORD = AJOUTE A ARGS
 	next = NULL;
 	if (token->next)
 		next = token->next;
 	if (token->type == WORD || token->type == FLAG)
 		cmd->args[(*i)++] = token->str;
+
 	// SI CMD => REMPLIR PATH ET ARGV[0]
 	else if (token->type == CMD)
 	{
@@ -156,6 +156,7 @@ int	ft_cmd_lst_create(t_minishell *minishell)
 			// AFFEECT LES DIFFERENTES PARTIES DE CMD A CHAQUE TOKEN
 			if (ft_token_affect(minishell, cmd_new, &tok_current, &i))
 				return (GENERAL_ERROR);
+
 			// DOIT SAUTER LE NOEUD D'APRES
 			// if (tok_current) already moved in ft_token_affect if redirs used
 			if (tok_current)
@@ -166,6 +167,13 @@ int	ft_cmd_lst_create(t_minishell *minishell)
 		// SI PAS DE PATH
 		if (!cmd_new->path)
 			cmd_new->path = cmd_new->args[0];
+		if (!cmd_new->args[0] || !cmd_new->args[0][0])
+		{
+			if (tok_current)
+				tok_current = tok_current->next;
+			continue;
+
+		}
 		// ON AJOUTE LA STRUCT COMMAND A LA LISTE
 		ft_cmd_add(minishell, cmd_new);
 		// WARN: no use the return value

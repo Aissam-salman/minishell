@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 16:31:44 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/19 09:51:06 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 12:25:48 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef enum e_errors {
 	BUFFER_FAIL = 98,
 	MALLOC_FAIL = 99,
 	PERMISSION_DENIED = 126,
+	IS_DIRECTORY = 126,
 	CMD_NOT_FOUND = 127,
 	SIGNAL = 128,
 } t_errors ;

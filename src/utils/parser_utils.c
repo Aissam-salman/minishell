@@ -78,10 +78,8 @@ void	ft_quotes_handle(t_minishell *minishell, t_token *token)
 
 	i = 0;
 	minishell->state = NORMAL;
-	// ON BOUCLE SUR CHAQUE ELEMENT DE TOKEN->STR
-	// ft_printf("TOKEN CONTENT = %s\n", token->str);
 	ft_bzero(usable_str, BUFFER_SIZE);
-	// ft_tokens_print(minishell->head_token);
+	// ON BOUCLE SUR CHAQUE ELEMENT DE TOKEN->STR
 	while (token->str[i])
 	{
 		// ON AFFECTE L'ETAT ET ON GARDE LE PRECEDENT EN MEMOIRE
@@ -99,7 +97,10 @@ void	ft_quotes_handle(t_minishell *minishell, t_token *token)
 				&& (token->str[i] != '\"' || minishell->state == IN_QUOTE))
 		{
 			if (ft_buffer_add(usable_str, token->str[i]))
+			{
+				ft_error(NULL, 0, "Buffer too small", NULL);
 				return ;
+			}
 		}
 		i++;
 	}

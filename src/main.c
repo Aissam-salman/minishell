@@ -2,6 +2,17 @@
 
 void	ft_minishell_reset(t_minishell *minishell)
 {
+	if (STDOUT_FILENO != 1)
+	{
+		close(STDOUT_FILENO);
+		dup2(1, STDOUT_FILENO);
+	}
+	if (STDIN_FILENO != 0)
+	{
+		close(STDIN_FILENO);
+		dup2(0, STDIN_FILENO);
+	}
+	minishell->head_token = NULL;
 	minishell->head_token = NULL;
 	minishell->head_cmd = NULL;
 	minishell->state = NORMAL;
@@ -35,11 +46,12 @@ int	main(int argc, char **argv, char **envp)
 		add_history(minishell.line);
 		if (ft_tokenize(&minishell) == GENERAL_ERROR)
 			continue;
-		if (checker_token(&minishell) == GENERAL_ERROR)
+		if (checker_token(&minishell) == ERR_SYNTAX)
 			continue;
 		if (ft_cmd_lst_create(&minishell) == GENERAL_ERROR)
 			continue ;
-		ft_exec(&minishell);
+		if (minishell.head_cmd)
+			ft_exec(&minishell);
 	}
 	ft_exit(&minishell, minishell.cached_status, NULL);
 }

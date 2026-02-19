@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 18:26:24 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/19 08:58:24 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 12:25:48 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,6 @@ void	handle_word(t_token *token, t_minishell *minishell, int *cmd_find)
 
 int	handle_pipe(t_minishell *minishell, t_token *token, int *cmd_find)
 {
-	// if (!ft_check_pipe(token->str))
-	// 	return (ERR_HANDLE_PIPE);
 	if (*cmd_find == 0 || !token->next || token->next->type == PIPE)
 		return (ft_error(minishell, ERR_SYNTAX, ERRS_SYNT_NEAR, token->str));
 	*cmd_find = 0;
@@ -55,6 +53,8 @@ int	checker_token(t_minishell *minishell)
 	while (token)
 	{
 		ft_quotes_handle(minishell, token);
+		if (!token->str || !token->str[0])
+			token->type = GARBAGE;
 		if (is_redirection(token))
 		{
 			if (handle_redirection(minishell, token))

@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 17:17:28 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/18 12:02:01 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 12:37:54 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,16 @@ void	ft_pipe_and_fork(t_minishell *minishell, int size_cmd, int pipe_fd[2],
 	{
 		child_set(child, i, prev_pipe, size_cmd);
 		if (is_built_in(cmd) && size_cmd == 1)
+		{
+			int saved_stdout;
+
+			saved_stdout = dup(STDOUT_FILENO);
+			if (cmd->outfd != STDOUT_FILENO)
+				dup2(cmd->outfd, STDOUT_FILENO);
 			run_built_in(cmd, minishell);
+			dup2(saved_stdout, STDOUT_FILENO);
+			close(saved_stdout);
+		}
 		else
 		{
 			if (pipe(pipe_fd) == -1)

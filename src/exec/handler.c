@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 18:43:32 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/18 12:05:31 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 11:13:34 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	handler_first_cmd(int infd, int outfd, int size_cmd, int pipe_fd)
 		dup2(outfd, STDOUT_FILENO);
 		close(outfd);
 	}
-	else if (size_cmd > STDOUT_FILENO)
+	else if (size_cmd > 1)
 		dup2(pipe_fd, STDOUT_FILENO);
 }
 
@@ -46,7 +46,7 @@ void	handler_last_cmd(int infd, int prev_pipe, int outfd)
 	else
 		dup2(prev_pipe, STDIN_FILENO);
 	close(prev_pipe);
-	if (outfd != 1)
+	if (outfd != STDOUT_FILENO)
 	{
 		dup2(outfd, STDOUT_FILENO);
 		close(outfd);

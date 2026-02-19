@@ -6,11 +6,24 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 14:14:33 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/19 10:02:07 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 10:53:40 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ft_tokens_count(t_token *head)
+{
+	int i;
+
+	i = 0;
+	while(head)
+	{
+		i++;
+		head = head->next;
+	}
+	return (i);
+}
 
 // RECUPERE LE DERNIER TOKEN
 t_token	*ft_token_last(t_token *token)
@@ -56,7 +69,7 @@ int	ft_token_add(t_minishell *minishell, t_token *to_add)
 	return (SUCCESS);
 }
 
-int	ft_find_token (t_types type, t_token *head)
+int	ft_find_token(t_types type, t_token *head)
 {
 	while (head)
 	{

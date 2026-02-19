@@ -6,12 +6,12 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 14:09:27 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/18 10:48:59 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 10:17:40 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-# include <signal.h>
+#include <signal.h>
 
 // A MODIFIER : Attention a ft_printf et readline dans les fonctions de signaux
 void	signal_callback_handler(int sig)

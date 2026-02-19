@@ -21,7 +21,7 @@
 # define BUFFER_SIZE 5000
 
 # define OPERATORS "|<>"
-# define SEPARATORS " $\'\"\t"
+# define SEPARATORS " $\'\"\t0"
 
 // ENUM TYPES ELEMENTS
 typedef enum	e_type
@@ -34,6 +34,7 @@ typedef enum	e_type
 	OUT_DCHEVRON,
 	WORD,
 	CMD,
+	GARBAGE,
 	// LAST_HEREDOC,
 	// R_FILE,
 	FLAG,

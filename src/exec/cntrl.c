@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 15:49:08 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/19 10:06:16 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 10:17:40 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,17 +42,18 @@ int	ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token)
 {
 	int	fd;
 
-	// A MODIFIER : Les valeurs de retour, SET en fonction du cas
 	if (token->next == NULL)
 		return (GENERAL_ERROR);
+	if (cmd->error_file)
+		return (SUCCESS);
 	if (token->type == IN_DCHEVRON)
 		return (ft_heredoc_handle(minishell, cmd, token), 0);
 	fd = ft_open(token->next->str, token->type);
 	if (fd == -1)
 	{
 		cmd->error_file = 1;
+		ft_putstr_fd("bash : ", STDERR_FILENO);
 		perror(token->next->str);
-		// SI A UN PIPE DERRIERE
 		if (!ft_find_token(PIPE, token))
 			minishell->exit_status = GENERAL_ERROR;
 	}

@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 18:31:47 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/18 12:06:17 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 11:44:16 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,12 @@ t_child	*ft_child_new(t_minishell *minishell)
 
 void	close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2])
 {
+	struct stat	path_stat;
 	close(pipe_fd[0]);
 	close(pipe_fd[1]);
 	if (cmd->outfd == -1 || cmd->infd == -1 || cmd->error_file == 1)
 		exit(GENERAL_ERROR);
+
 	if (is_built_in(cmd))
 	{
 		run_built_in(cmd, minishell);
@@ -48,10 +50,35 @@ void	close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2])
 		rl_clear_history();
 		exit(SUCCESS);
 	}
-	if (!cmd->path || access(cmd->path, X_OK) == -1)
-		ft_exit(minishell, CMD_NOT_FOUND, strerror(CMD_NOT_FOUND));
+	
+	if (!cmd->path)
+		ft_exit(minishell, CMD_NOT_FOUND, " command not found");
+	if (access(cmd->path, X_OK) == -1)
+	{
+		if (errno == EACCES)
+		{
+			if (ft_strchr(cmd->path, '/'))
+				ft_exit(minishell, PERMISSION_DENIED, " Permission denied");
+			else
+				ft_exit(minishell, CMD_NOT_FOUND, " command not found");
+		}
+		else if (!ft_strchr(cmd->path, '/'))
+			ft_exit(minishell, CMD_NOT_FOUND, " command not found");
+		else
+			ft_exit(minishell, CMD_NOT_FOUND, " No such file or directory");
+	}
+	if (stat(cmd->path, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
+	{
+		if (ft_strchr(cmd->path, '/'))
+			ft_exit(minishell, 126, " Is a directory");
+		else
+			ft_exit(minishell, 127, " command not found");
+	}
 	if (execv(cmd->path, cmd->args) == -1)
+	{
 		ft_error(minishell, errno, strerror(errno), NULL);
+		exit(errno);
+	}
 }
 
 void	child_process(t_minishell *minishell, t_cmd *cmd, t_child *child,

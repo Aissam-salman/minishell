@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 16:28:43 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/17 16:34:07 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 11:34:42 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ int	ft_error(t_minishell *minishell, int error, char *str1, char *str2)
 	else if (errno != 0)
 	{
 		perror("bash : ");
-		return (errno == EACCES ? 126 : errno);
+		if (errno == EACCES)
+			return (126);
+		// return (errno);
 	}
 	return (error);
 }
@@ -49,5 +51,5 @@ void	ft_exit(t_minishell *minishell, int error, char *str)
 		ft_putstr_fd(str, STDERR_FILENO);
 		ft_putchar_fd('\n', STDERR_FILENO);
 	}
-	exit(error == EACCES ? 126 : error);
+	exit(error);
 }

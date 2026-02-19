@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fardeau <fardeau@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 12:00:44 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/12 17:42:53 by fardeau          ###   ########.fr       */
+/*   Updated: 2026/02/19 12:25:48 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,16 +65,14 @@ int	ft_cmd_find_path(t_minishell *minishell, t_token *token)
 		return (GENERAL_ERROR);
 	if (token->str[0] == '/' && !token->str[1])
 		return (GENERAL_ERROR);
-	if (stat(token->str, &stat_file) == 0 && S_ISREG(stat_file.st_mode))
+	if (ft_strchr(token->str, '/'))
 	{
-		if (access(token->str, X_OK) == 0)
+		if (stat(token->str, &stat_file) == 0 && S_ISREG(stat_file.st_mode))
 		{
 			token->path = token->str;
-			// FIX: return 126
 			return (SUCCESS);
 		}
-		else
-			return (GENERAL_ERROR);
+		return (GENERAL_ERROR);
 	}
 	envp = ft_get_path(minishell);
 	if (!envp)
