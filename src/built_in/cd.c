@@ -6,78 +6,11 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 19:49:15 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/17 12:16:55 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 21:13:59 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "errors.h"
 #include "minishell.h"
-#include "utils.h"
-#include <asm-generic/errno-base.h>
-#include <errno.h>
-#include <string.h>
-
-static void	update_pwd(t_env **head_env, t_minishell *minishell)
-{
-	char	*buff;
-	t_env	*env_pwd;
-
-	// auto par la function
-	buff = getcwd(NULL, 0);
-	if (buff)
-	{
-		env_pwd = ft_env_find(*head_env, "PWD");
-		if (!env_pwd)
-		{
-			free(buff);
-			ft_error(minishell, errno, "PWD not found", NULL);
-			return ;
-		}
-		env_pwd->content = ft_strdup_gc(buff, &minishell->gc);
-		free(buff);
-		return ;
-	}
-	ft_error(minishell, errno, "pwd", NULL);
-}
-
-static void	update_old_pwd(t_env **head_env, char *old_pwd,
-		t_minishell *minishell)
-{
-	t_env	*env_old_pwd;
-
-	env_old_pwd = ft_env_find(*head_env, "OLDPWD");
-	if (!env_old_pwd)
-	{
-		env_old_pwd = ft_env_new(minishell, "OLDPWD");
-		if (!env_old_pwd)
-			return ;
-		ft_env_add(minishell, env_old_pwd);
-	}
-	env_old_pwd->content = ft_strdup_gc(old_pwd, &minishell->gc);
-}
-
-static char	*save_pwd(void)
-{
-	char	*opwd;
-
-	opwd = getcwd(NULL, 0);
-	if (!opwd)
-	{
-		ft_error(NULL, errno, "pwd", NULL);
-		return (NULL);
-	}
-	return (opwd);
-}
-
-char	*ft_no_path(t_env *head_env)
-{
-	t_env	*tmp;
-
-	tmp = ft_env_find(head_env, "HOME");
-	if (!tmp)
-		return (NULL);
-	return (tmp->content);
-}
 
 int	ft_cd_back(t_minishell *minishell, char *old_pwd)
 {
@@ -122,11 +55,11 @@ char	*ft_expand_home(t_minishell *minishell, char *path)
 	return (NULL);
 }
 
-char *ft_define_path(t_minishell *minishell, char **args)
+char	*ft_define_path(t_minishell *minishell, char **args)
 {
-	char *path;
+	char	*path;
 
-	if (!args[1]  || ft_strcmp(args[1], "~") == 0)
+	if (!args[1] || ft_strcmp(args[1], "~") == 0)
 		path = ft_no_path(minishell->head_env);
 	else if (ft_strchr(args[1], '~') && args[1][1])
 		path = ft_expand_home(minishell, args[1]);
@@ -135,27 +68,29 @@ char *ft_define_path(t_minishell *minishell, char **args)
 	return (path);
 }
 
-int ft_try_cd(char *path, t_minishell *minishell)
+static int	ft_try_cd(char *path, t_minishell *minishell)
 {
 	struct stat	stat_file;
 
 	if (stat(path, &stat_file) != 0)
 		return (ft_error(minishell, GENERAL_ERROR, strerror(errno), NULL));
 	if (!S_ISDIR(stat_file.st_mode))
-		return (ft_error(minishell, ENOTDIR, "cd: ", ft_strjoin_gc(path, ": Not a directory", &minishell->gc)));
+		return (ft_error(minishell, ENOTDIR, "cd: ", ft_strjoin_gc(path,
+					": Not a directory", &minishell->gc)));
 	if (chdir(path) == -1)
 		return (ft_error(minishell, errno, strerror(errno), NULL));
 	return (SUCCESS);
 }
 
-int		ft_cd(t_minishell *minishell, char **args)
+int	ft_cd(t_minishell *minishell, char **args)
 {
 	char	*old_pwd;
-	char *path;
-	int res;
+	char	*path;
+	int		res;
 
 	if (args[1] && args[2])
-		return (ft_error(minishell, GENERAL_ERROR, "cd: ", "too many arguments"));
+		return (ft_error(minishell, GENERAL_ERROR, "cd: ",
+				"too many arguments"));
 	if (ft_strcmp(args[1], "-") == 0)
 	{
 		old_pwd = save_pwd();

@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 14:15:59 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/18 10:03:03 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 21:19:22 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	run_built_in(t_cmd *cmd, t_minishell *minishell)
 	char	*str;
 
 	if (!cmd->args || !cmd->args[0])
-		return;
+		return ;
 	str = cmd->args[0];
 	minishell->exit_status = 0;
 	if (ft_strcmp(str, "exit") == 0)

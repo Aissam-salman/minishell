@@ -6,14 +6,14 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 10:40:00 by githubcopil       #+#    #+#             */
-/*   Updated: 2026/02/18 10:17:28 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 20:55:52 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSING_H
 # define PARSING_H
 
-# include "minishell.h"
+# include "struct.h"
 
 // ── PARSING ─────────────────────────────────────────
 

@@ -6,14 +6,14 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 13:20:04 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/19 13:20:12 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/19 20:57:17 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTILS_H
 # define UTILS_H
 
-# include "minishell.h"
+# include "struct.h"
 
 // ── UTILS ───────────────────────────────────────────
 

@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 19:44:40 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/18 09:45:49 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 21:17:59 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,14 @@ long	ft_atoi_safe(const char *nptr, long *res)
 		nbr = nbr * 10 + (*nptr - '0');
 		nptr++;
 	}
-	*res = (long)nbr  * sign;
-	// ft_printf("code atoi: %d\n", *res);
+	*res = (long)nbr * sign;
 	return (SUCCESS);
 }
 
-// A MODIFIER : echo hello | exit 255 doesn´t print anything
-// A MODIFIER : Peut prendre jusqu'a long long et renvoyer le result % 256
 void	ft_buildin_exit(t_minishell *minishell, char **args)
 {
 	long	code;
-	int i;
+	int		i;
 
 	i = 0;
 	while (args[i])
@@ -55,7 +52,7 @@ void	ft_buildin_exit(t_minishell *minishell, char **args)
 	if (i > 2)
 	{
 		ft_error(minishell, 1, "exit: ", "too many arguments");
-		return;
+		return ;
 	}
 	else if (ft_atoi_safe(args[1], &code) == GENERAL_ERROR)
 	{

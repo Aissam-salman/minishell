@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 19:33:53 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/18 09:46:30 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 21:17:09 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	ft_is_flag(char *str)
 	return (0);
 }
 
-// A MODIFIER : A LA PLACE DE 1, mettre STDOUT_FILENO
 void	ft_write_safe(char *str, int len)
 {
 	if (write(STDOUT_FILENO, str, len) == -1)

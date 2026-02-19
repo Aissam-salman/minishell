@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 20:22:25 by fardeau           #+#    #+#             */
-/*   Updated: 2026/02/18 09:55:20 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 21:20:28 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,5 +18,4 @@ void	ft_env(t_minishell *minishell)
 		ft_env_print(minishell->head_env, STDOUT_FILENO);
 	else
 		minishell->exit_status = GENERAL_ERROR;
-	//WARN: handle if env cmd, error or execve the next
 }

@@ -6,14 +6,14 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 13:20:21 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/19 13:20:22 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/19 20:55:16 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXEC_H
 # define EXEC_H
 
-# include "minishell.h"
+# include "struct.h"
 
 // ── EXEC ────────────────────────────────────────────
 
@@ -42,9 +42,9 @@ void	ft_wait_subprocess(t_minishell *minishell, int size_cmd, int *pids);
 //------
 
 // EXEC/CNTRL.C
+void	ft_redirection_exec(int new_fd, int *old_fd);
 int		ft_redirection_handler(t_minishell *minishell, t_cmd *cmd,
 			t_token *token);
-void	ft_redirection_exec(int new_fd, int *old_fd);
 int		ft_open(char *path, t_types mod);
 //------
 

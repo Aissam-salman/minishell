@@ -17,6 +17,7 @@ SRCS = src/main.c \
 		src/built_in/echo.c \
 		src/built_in/exit.c \
 		src/built_in/cd.c \
+		src/built_in/cd_utils.c \
 		src/built_in/unset.c \
 		src/built_in/is_built_in.c \
 		src/utils/cmds.c \
@@ -50,9 +51,6 @@ $(OBJ_DIR)/%.o: %.c
 	@$(CC) -MMD -MP $(INCS) -c $< -o $@
 
 -include $(OBJS:.o=.d)
-
-test: all
-	cd minishell_tester/ && ./tester
 
 clean:
 	rm -rf $(OBJ_DIR)

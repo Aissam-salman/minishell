@@ -6,14 +6,15 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 09:56:55 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/18 10:23:12 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 21:12:01 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUILT_INS_H
 # define BUILT_INS_H
 
-# include "minishell.h"
+# include "struct.h"
+
 
 // ── BUILT-INS ───────────────────────────────────────
 
@@ -28,6 +29,12 @@ void	ft_echo(char **args);
 
 // BUILT_IN/CD.C
 int		ft_cd(t_minishell *minishell, char **args);
+// BUILT_IN/CD_UTILS.C
+
+void	update_pwd(t_env **head_env, t_minishell *minishell);
+void	update_old_pwd(t_env **head_env, char *old_pwd, t_minishell *minishell);
+char	*save_pwd(void);
+char	*ft_no_path(t_env *head_env);
 //------
 
 // BUILT_IN/PWD.C
