@@ -6,7 +6,7 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 13:20:21 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/19 20:55:16 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/19 22:25:47 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,14 @@ void	ft_exec(t_minishell *minishell);
 void	child_set(t_child *child, int i, int prev_pipe, int size_cmd);
 void	child_process(t_minishell *minishell, t_cmd *cmd, t_child *child,
 			int pipe_fd[2]);
-t_child	*ft_child_new(t_minishell *minishell);
 void	close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2]);
 //------
+
+// EXEC/CHILD_EXEC_UTILS.C
+void	child_set(t_child *child, int i, int prev_pipe, int size_cmd);
+t_child	*ft_child_new(t_minishell *minishell, int size_cmd);
+
+//
 
 // EXEC/HANDLER.C
 void	handler_signal_child(void);

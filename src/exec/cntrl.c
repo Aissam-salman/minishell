@@ -6,16 +6,11 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 15:49:08 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/19 10:17:40 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 21:45:14 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "errors.h"
 #include "minishell.h"
-#include "utils.h"
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
 
 void	ft_redirection_exec(int new_fd, int *old_fd)
 {
@@ -26,7 +21,7 @@ void	ft_redirection_exec(int new_fd, int *old_fd)
 
 int	ft_open(char *path, t_types mod)
 {
-	int fd;
+	int	fd;
 
 	fd = -1;
 	if (mod == IN_CHEVRON)
@@ -36,6 +31,15 @@ int	ft_open(char *path, t_types mod)
 	else if (mod == OUT_DCHEVRON)
 		fd = open(path, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	return (fd);
+}
+
+void	ft_open_error(t_token *token, t_cmd *cmd, t_minishell *minishell)
+{
+	cmd->error_file = 1;
+	ft_putstr_fd("bash : ", STDERR_FILENO);
+	perror(token->next->str);
+	if (!ft_find_token(PIPE, token))
+		minishell->exit_status = GENERAL_ERROR;
 }
 
 int	ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token)
@@ -50,13 +54,7 @@ int	ft_redirection_handler(t_minishell *minishell, t_cmd *cmd, t_token *token)
 		return (ft_heredoc_handle(minishell, cmd, token), 0);
 	fd = ft_open(token->next->str, token->type);
 	if (fd == -1)
-	{
-		cmd->error_file = 1;
-		ft_putstr_fd("bash : ", STDERR_FILENO);
-		perror(token->next->str);
-		if (!ft_find_token(PIPE, token))
-			minishell->exit_status = GENERAL_ERROR;
-	}
+		ft_open_error(token, cmd, minishell);
 	if (fd > 2 && token->type == IN_CHEVRON)
 		ft_redirection_exec(fd, &cmd->infd);
 	else if (fd > 2 && (token->type == OUT_CHEVRON

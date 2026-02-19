@@ -6,43 +6,43 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 18:46:29 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/16 18:05:52 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/19 22:31:19 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	ft_core_cump(int status, t_cmd *cmd)
+{
+	int	i;
+
+	ft_printf("Quit");
+	if (WCOREDUMP(status))
+	{
+		ft_printf("\t\t\t\t%s", "(core dumped)");
+	}
+	i = 0;
+	while (cmd->args[i])
+	{
+		ft_printf(" %s", cmd->args[i]);
+		i++;
+	}
+	ft_printf("\n");
+}
+
 void	handler_status(int status, t_cmd *cmd, t_minishell *minishell)
 {
 	int	sig;
-	int i;
 
 	if (WIFSIGNALED(status))
 	{
 		minishell->exit_status = WEXITSTATUS(status);
 		sig = WTERMSIG(status);
 		if (sig == SIGQUIT)
-		{
-			ft_printf("Quit");
-			if (WCOREDUMP(status))
-			{
-				ft_printf("\t\t\t\t%s", "(core dumped)");
-			}
-			i= 0;
-			while (cmd->args[i])
-			{
-				ft_printf(" %s", cmd->args[i]);
-				i++;
-			}
-			ft_printf("\n");
-		}
+			ft_core_cump(status, cmd);
 		else if (sig == SIGINT)
-		{
 			ft_printf("\n");
-		}
 	}
-	// if (WIFEXITED(status) > 0)
-	// 	ft_error(minishell, WEXITSTATUS(status), strerror(WEXITSTATUS(status)), NULL);
 }
 
 void	ft_wait_subprocess(t_minishell *minishell, int size_cmd, int *pids)

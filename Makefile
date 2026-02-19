@@ -7,6 +7,7 @@ SRCS = src/main.c \
 		src/parsing/check2.c \
 		src/exec/exec.c \
 		src/exec/child_exec.c \
+		src/exec/child_exec_utils.c \
 		src/exec/handler.c \
 		src/exec/wait.c \
 		src/exec/cntrl.c \

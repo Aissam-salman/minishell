@@ -6,67 +6,62 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 18:31:47 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/19 11:44:16 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/19 21:42:28 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "errors.h"
 #include "minishell.h"
+#include "struct.h"
 #include "utils.h"
+#include <errno.h>
 #include <string.h>
 
-void	child_set(t_child *child, int i, int prev_pipe, int size_cmd)
+void	ft_exec_built_in(t_cmd *cmd, t_minishell *minishell)
 {
-	child->prev_pipe = prev_pipe;
-	child->index = i;
-	child->size_cmd = size_cmd;
+	run_built_in(cmd, minishell);
+	ft_gc_free_all(&minishell->gc);
+	rl_clear_history();
+	exit(SUCCESS);
 }
 
-t_child	*ft_child_new(t_minishell *minishell)
+void	ft_exec_not_xok(t_cmd *cmd, t_minishell *minishell)
 {
-	t_child	*child;
+	if (errno == EACCES)
+	{
+		if (ft_strchr(cmd->path, '/'))
+			ft_exit(minishell, PERMISSION_DENIED, " Permission denied");
+		else
+			ft_exit(minishell, CMD_NOT_FOUND, " command not found");
+	}
+	else if (!ft_strchr(cmd->path, '/'))
+		ft_exit(minishell, CMD_NOT_FOUND, " command not found");
+	else
+		ft_exit(minishell, CMD_NOT_FOUND, " No such file or directory");
+}
 
-	child = ft_gc_malloc(sizeof(t_child), &minishell->gc);
-	if (!child)
-		return (NULL);
-	child->index = 0;
-	child->prev_pipe = 0;
-	child->size_cmd = 0;
-	return (child);
+void	ft_exec_no_dir(t_cmd *cmd, t_minishell *minishell)
+{
+	if (ft_strchr(cmd->path, '/'))
+		ft_exit(minishell, 126, " Is a directory");
+	else
+		ft_exit(minishell, 127, " command not found");
 }
 
 void	close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2])
 {
 	struct stat	path_stat;
+
 	close(pipe_fd[0]);
 	close(pipe_fd[1]);
 	if (cmd->outfd == -1 || cmd->infd == -1 || cmd->error_file == 1)
 		exit(GENERAL_ERROR);
-
 	if (is_built_in(cmd))
-	{
-		run_built_in(cmd, minishell);
-		ft_gc_free_all(&minishell->gc);
-		rl_clear_history();
-		exit(SUCCESS);
-	}
-	
+		ft_exec_built_in(cmd, minishell);
 	if (!cmd->path)
 		ft_exit(minishell, CMD_NOT_FOUND, " command not found");
 	if (access(cmd->path, X_OK) == -1)
-	{
-		if (errno == EACCES)
-		{
-			if (ft_strchr(cmd->path, '/'))
-				ft_exit(minishell, PERMISSION_DENIED, " Permission denied");
-			else
-				ft_exit(minishell, CMD_NOT_FOUND, " command not found");
-		}
-		else if (!ft_strchr(cmd->path, '/'))
-			ft_exit(minishell, CMD_NOT_FOUND, " command not found");
-		else
-			ft_exit(minishell, CMD_NOT_FOUND, " No such file or directory");
-	}
+		ft_exec_not_xok(cmd, minishell);
 	if (stat(cmd->path, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
 	{
 		if (ft_strchr(cmd->path, '/'))
@@ -75,10 +70,7 @@ void	close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2])
 			ft_exit(minishell, 127, " command not found");
 	}
 	if (execv(cmd->path, cmd->args) == -1)
-	{
-		ft_error(minishell, errno, strerror(errno), NULL);
-		exit(errno);
-	}
+		ft_exit(minishell, errno, strerror(errno));
 }
 
 void	child_process(t_minishell *minishell, t_cmd *cmd, t_child *child,

@@ -6,7 +6,7 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 20:49:28 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/19 20:56:07 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/19 22:00:58 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ typedef struct s_child
 	int				index;
 	int				prev_pipe;
 	int				size_cmd;
+	int				pipe_fd[2];
 }					t_child;
 
 #endif
