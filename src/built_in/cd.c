@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 19:49:15 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/20 18:32:32 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/20 18:36:31 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ char	*ft_expand_home(t_minishell *minishell, char *path)
 		if (!tmp)
 			return (NULL);
 		new_path = ft_strjoin_gc(tmp->content, "/", &minishell->gc);
-		if (!new_path)
 			return (NULL);
 		new_path = ft_strjoin_gc(new_path, path + 1, &minishell->gc);
 		if (!new_path)

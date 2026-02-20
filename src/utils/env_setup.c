@@ -6,13 +6,12 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 19:32:38 by fardeau           #+#    #+#             */
-/*   Updated: 2026/02/20 18:03:30 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/20 18:36:31 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// ACCEDE AU DERNIER ENV
 t_env	*ft_env_last(t_env *head_env)
 {
 	if (!head_env)
@@ -33,13 +32,10 @@ t_env	*ft_env_new(t_minishell *minishell, char *str)
 		ft_error(NULL, MALLOC_FAIL, "Error malloc setup env", NULL);
 		return (NULL);
 	}
-	// string_trunc = RECUPERER JUSQU'A =
 	string_trunc = ft_strchr(str, '=');
 	if (string_trunc)
 	{
-		// AFFECTER new_name A *name;
 		new->name = ft_substr_gc(str, 0, string_trunc - str, &minishell->gc);
-		// AFFECTER new_contet A *content;
 		new->content = ft_strdup_gc(string_trunc + 1, &minishell->gc);
 		if (!new->name || !new->content)
 		{
@@ -47,7 +43,6 @@ t_env	*ft_env_new(t_minishell *minishell, char *str)
 			return (NULL);
 		}
 	}
-	// SINON TOUT RENTRER DANS NAME
 	else
 	{
 		new->name = ft_strdup_gc(str, &minishell->gc);
