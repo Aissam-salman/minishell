@@ -6,7 +6,7 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 13:20:04 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/19 20:57:17 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/20 10:30:47 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,13 @@ int		ft_token_affect(t_minishell *minishell, t_cmd *cmd, t_token **token,
 			int *i);
 int		ft_cmd_lst_create(t_minishell *minishell);
 int		ft_cmd_size(t_cmd *cmd_head);
+//------
+
+// UTILS/CMDS_UTILS.C
+t_cmd	*ft_cmd_new(t_minishell *minishell);
+t_cmd	*ft_cmd_last(t_cmd *cmd_head);
+int		ft_cmd_size(t_cmd *cmd_head);
+int		ft_cmd_add(t_minishell *minishell, t_cmd *to_add);
 //------
 
 // UTILS/ENV_SETUP.C
