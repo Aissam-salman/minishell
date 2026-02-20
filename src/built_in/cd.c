@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 19:49:15 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/19 21:13:59 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/20 11:20:31 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,15 +68,22 @@ char	*ft_define_path(t_minishell *minishell, char **args)
 	return (path);
 }
 
+// A MODIFIER : PROTEGER LE MALLOC DE FT_STRJOIN_GC
 static int	ft_try_cd(char *path, t_minishell *minishell)
 {
 	struct stat	stat_file;
+	char *msg_error;
 
 	if (stat(path, &stat_file) != 0)
 		return (ft_error(minishell, GENERAL_ERROR, strerror(errno), NULL));
 	if (!S_ISDIR(stat_file.st_mode))
-		return (ft_error(minishell, ENOTDIR, "cd: ", ft_strjoin_gc(path,
-					": Not a directory", &minishell->gc)));
+	{
+		msg_error = ft_strjoin_gc(path, ERRS_CD_NOTDIR, &minishell->gc);
+		if (!msg_error)
+				return (ft_error(minishell, MALLOC_FAIL, ERRS_MALLOC_INTERP, NULL));
+		return (ft_error(minishell, ENOTDIR, ERRS_CD_PRE, ft_strjoin_gc(path,
+					ERRS_CD_NOTDIR, &minishell->gc)));
+	}
 	if (chdir(path) == -1)
 		return (ft_error(minishell, errno, strerror(errno), NULL));
 	return (SUCCESS);
@@ -89,8 +96,8 @@ int	ft_cd(t_minishell *minishell, char **args)
 	int		res;
 
 	if (args[1] && args[2])
-		return (ft_error(minishell, GENERAL_ERROR, "cd: ",
-				"too many arguments"));
+		return (ft_error(minishell, GENERAL_ERROR, ERRS_CD_PRE,
+				ERRS_CD_ARGS));
 	if (ft_strcmp(args[1], "-") == 0)
 	{
 		old_pwd = save_pwd();

@@ -26,13 +26,13 @@ int	ft_create_or_update_env(t_minishell *minishell, char *str)
 
 	new = ft_env_new(minishell, str);
 	if (!new)
-		return (ft_error(minishell, MALLOC_FAIL, "Error malloc with export",
+		return (ft_error(minishell, MALLOC_FAIL, ERRS_MALLOC_EXPORT,
 				NULL));
 	old = ft_env_find(minishell->head_env, new->name);
 	if (!old)
 	{
 		if (ft_env_add(minishell, new) == GENERAL_ERROR)
-			return (ft_error(minishell, GENERAL_ERROR, "Error adding to export",
+			return (ft_error(minishell, GENERAL_ERROR, ERRS_EXPORT_ADD,
 					NULL));
 	}
 	else
@@ -61,7 +61,7 @@ int	ft_export(t_minishell *minishell, int fd, char **args)
 	if (!args || !*args || !args[1])
 		ft_env_print_export_no_param(minishell->head_env, fd);
 	else if (!args[1][0])
-		return (ft_error(minishell, GENERAL_ERROR, "export:",
+		return (ft_error(minishell, GENERAL_ERROR, ERRS_EXPORT_PRE,
 				"`': not a valid identifier"));
 	i = 1;
 	while (args[i])
@@ -69,7 +69,7 @@ int	ft_export(t_minishell *minishell, int fd, char **args)
 		if (ft_is_valid_key_env(args[i]) == 1 || ft_is_only(args[i], ft_isdigit)
 			|| (args[i][0] == '=' && !args[i][1]))
 			return (ft_error(minishell, GENERAL_ERROR, ft_strjoin_gc("export: ",
-						args[i], &minishell->gc), ": not a valid identifier"));
+						args[i], &minishell->gc), ERRS_EXPORT_INV));
 		else if (!ft_env_format_check(args[i]))
 			return (ft_create_or_update_env(minishell, args[i]));
 		i++;

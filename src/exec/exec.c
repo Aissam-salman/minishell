@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 17:17:28 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/19 22:29:13 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/20 11:24:53 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,15 @@ void	ft_ex(t_minishell *minishell, int size_cmd, int pipe_fd[2], int *pids)
 	t_cmd	*cmd;
 	t_child	*child;
 
+	
 	child = ft_child_new(minishell, size_cmd);
+	if (!child)
+		return;
 	cmd = minishell->head_cmd;
-	while (++child->index < size_cmd)
+	while (++child->index < child->size_cmd)
 	{
-		if (is_built_in(cmd) && size_cmd == 1)
+		//FIX: need cmd, child, minishell, pipe_fd, pids
+		if (is_built_in(cmd) && child->size_cmd == 1)
 			ft_exec_only_built_in(minishell, cmd);
 		else if (pipe(pipe_fd) != -1)
 		{

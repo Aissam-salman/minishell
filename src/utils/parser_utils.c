@@ -27,10 +27,10 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 		// CA C'EST GOOD
 		(*start)++;
 		if (ft_buffer_add(usable_str, '$') != 0)
-			return (ft_error(minishell, BUFFER_FAIL, "Insufficient buffer size",
+			return (ft_error(minishell, BUFFER_FAIL, ERRS_BUF_SMALL,
 					NULL));
 		if (ft_strlcat(usable_str, buffer, BUFFER_SIZE) > BUFFER_SIZE)
-			return (ft_error(minishell, BUFFER_FAIL, "Insufficient buffer size",
+			return (ft_error(minishell, BUFFER_FAIL, ERRS_BUF_SMALL,
 					NULL));
 		return (0);
 	}
@@ -39,11 +39,11 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 	{
 		err_value = ft_itoa_gc(minishell->cached_status, &minishell->gc);
 		if (!err_value)
-			return (ft_error(minishell, MALLOC_FAIL, "Error malloc expands",
+			return (ft_error(minishell, MALLOC_FAIL, ERRS_MALLOC_EXP,
 					NULL));
 		// SI TAILLE DU BUFFER TROP PETITE
 		if (ft_strlcat(usable_str, err_value, BUFFER_SIZE) > BUFFER_SIZE)
-			return (ft_error(minishell, BUFFER_FAIL, "Insufficient buffer size",
+			return (ft_error(minishell, BUFFER_FAIL, ERRS_BUF_SMALL,
 					NULL));
 		(*start)++;
 		return (0);
@@ -64,7 +64,7 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 	{
 		if (ft_strlcat(usable_str, path_env->content,
 				BUFFER_SIZE) > BUFFER_SIZE)
-			return (ft_error(minishell, BUFFER_FAIL, "Insufficient buffer size",
+			return (ft_error(minishell, BUFFER_FAIL, ERRS_BUF_SMALL,
 					NULL));
 	}
 	return (0);
@@ -98,7 +98,7 @@ void	ft_quotes_handle(t_minishell *minishell, t_token *token)
 		{
 			if (ft_buffer_add(usable_str, token->str[i]))
 			{
-				ft_error(NULL, 0, "Buffer too small", NULL);
+				ft_error(NULL, 0, ERRS_BUF_TOO_SM, NULL);
 				return ;
 			}
 		}
@@ -107,6 +107,6 @@ void	ft_quotes_handle(t_minishell *minishell, t_token *token)
 	// DUP DU BUFFER POUR REMPLACER STR DU TOKEN AVEC LES EXPENDS SI NECESSAIRE
 	token->str = ft_strdup_gc(usable_str, &minishell->gc);
 	if (!token->str)
-		ft_error(minishell, MALLOC_FAIL, "Error malloc end of quotes handling",
+		ft_error(minishell, MALLOC_FAIL, ERRS_MALLOC_QUOT,
 			NULL);
 }

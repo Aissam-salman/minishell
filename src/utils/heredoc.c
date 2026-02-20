@@ -33,8 +33,8 @@ void	ft_heredoc(t_minishell *minishell, t_cmd *cmd, t_token *token, int mod)
 	// ON SECURISE L'OUVERTUR DU PIPE
 	if (pipe(pipefd))
 	{
-		ft_error(NULL, GENERAL_ERROR, "Heredoc error :",
-			"Pipe creation failed");
+		ft_error(NULL, GENERAL_ERROR, ERRS_HDOC_PIPE,
+			ERRS_HDOC_PFAIL);
 		return ;
 	}
 	saved_stdin = dup(STDIN_FILENO);

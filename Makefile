@@ -23,6 +23,7 @@ SRCS = src/main.c \
 		src/built_in/is_built_in.c \
 		src/utils/cmds.c \
 		src/utils/cmds_utils.c \
+		src/utils/lexer_utils.c \
 		src/utils/output.c \
 		src/utils/tokens.c \
 		src/utils/heredoc.c \

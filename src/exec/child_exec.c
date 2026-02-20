@@ -30,22 +30,22 @@ void	ft_exec_not_xok(t_cmd *cmd, t_minishell *minishell)
 	if (errno == EACCES)
 	{
 		if (ft_strchr(cmd->path, '/'))
-			ft_exit(minishell, PERMISSION_DENIED, " Permission denied");
+			ft_exit(minishell, PERMISSION_DENIED, ERRS_PERM_DENIED);
 		else
-			ft_exit(minishell, CMD_NOT_FOUND, " command not found");
+			ft_exit(minishell, CMD_NOT_FOUND, ERRS_CMD_NOTFOUND);
 	}
 	else if (!ft_strchr(cmd->path, '/'))
-		ft_exit(minishell, CMD_NOT_FOUND, " command not found");
+		ft_exit(minishell, CMD_NOT_FOUND, ERRS_CMD_NOTFOUND);
 	else
-		ft_exit(minishell, CMD_NOT_FOUND, " No such file or directory");
+		ft_exit(minishell, CMD_NOT_FOUND, ERRS_NO_FILE_DIR);
 }
 
 void	ft_exec_no_dir(t_cmd *cmd, t_minishell *minishell)
 {
 	if (ft_strchr(cmd->path, '/'))
-		ft_exit(minishell, 126, " Is a directory");
+		ft_exit(minishell, 126, ERRS_IS_DIR);
 	else
-		ft_exit(minishell, 127, " command not found");
+		ft_exit(minishell, 127, ERRS_CMD_NOTFOUND);
 }
 
 void	close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2])
@@ -59,15 +59,15 @@ void	close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2])
 	if (is_built_in(cmd))
 		ft_exec_built_in(cmd, minishell);
 	if (!cmd->path)
-		ft_exit(minishell, CMD_NOT_FOUND, " command not found");
+		ft_exit(minishell, CMD_NOT_FOUND, ERRS_CMD_NOTFOUND);
 	if (access(cmd->path, X_OK) == -1)
 		ft_exec_not_xok(cmd, minishell);
 	if (stat(cmd->path, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
 	{
 		if (ft_strchr(cmd->path, '/'))
-			ft_exit(minishell, 126, " Is a directory");
+			ft_exit(minishell, 126, ERRS_IS_DIR);
 		else
-			ft_exit(minishell, 127, " command not found");
+			ft_exit(minishell, 127, ERRS_CMD_NOTFOUND);
 	}
 	if (execv(cmd->path, cmd->args) == -1)
 		ft_exit(minishell, errno, strerror(errno));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 13:20:04 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/20 10:30:47 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/20 10:52:22 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,7 @@ void	signal_callback_handler(int sig);
 void	setup_signal(void);
 //------
 
+// UTILS/LEXER_UTILS.C
+int	ft_buffer_add(char *buffer, char c);
+//------
 #endif

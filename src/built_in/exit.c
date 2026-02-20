@@ -51,12 +51,12 @@ void	ft_buildin_exit(t_minishell *minishell, char **args)
 	write(1, "exit\n", 5);
 	if (i > 2)
 	{
-		ft_error(minishell, 1, "exit: ", "too many arguments");
+		ft_error(minishell, 1, ERRS_EXIT_PRE, ERRS_EXIT_ARGS);
 		return ;
 	}
 	else if (ft_atoi_safe(args[1], &code) == GENERAL_ERROR)
 	{
-		ft_error(minishell, 2, args[1], ": numeric argument required");
+		ft_error(minishell, 2, args[1], ERRS_EXIT_NUM);
 		rl_clear_history();
 		ft_gc_free_all(&minishell->gc);
 		exit(2);

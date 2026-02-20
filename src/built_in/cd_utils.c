@@ -24,7 +24,7 @@ void	update_pwd(t_env **head_env, t_minishell *minishell)
 		if (!env_pwd)
 		{
 			free(buff);
-			ft_error(minishell, errno, "PWD not found", NULL);
+			ft_error(minishell, errno, ERRS_PWD_NOTFOUND, NULL);
 			return ;
 		}
 		env_pwd->content = ft_strdup_gc(buff, &minishell->gc);
