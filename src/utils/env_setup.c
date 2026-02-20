@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 19:32:38 by fardeau           #+#    #+#             */
-/*   Updated: 2026/02/17 12:18:01 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/20 18:03:30 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,49 +22,6 @@ t_env	*ft_env_last(t_env *head_env)
 	return (head_env);
 }
 
-// DEL ONE NODE
-void	ft_env_delone(t_env **head_env, char *target_name)
-{
-	t_env	*head;
-	t_env	*prev;
-	t_env	*nxt;
-
-	// PATH => HOME => PWD
-	prev = NULL;
-	head = *head_env;
-	nxt = head->next;
-	while (head)
-	{
-		// if first element is target remove
-		if (ft_strcmp(head->name, target_name) == 0 && ft_strcmp(head->name,
-				(*head_env)->name) == 0)
-		{
-			// NOTE: free ??
-			head->name = NULL;
-			head->content = NULL;
-			*head_env = nxt;
-			head->next = NULL;
-			return ;
-		}
-		else if (ft_strcmp(head->name, target_name) == 0)
-		{
-			// NOTE: free ??
-			head->name = NULL;
-			head->content = NULL;
-			head->next = NULL;
-			prev->next = nxt;
-			return ;
-		}
-		prev = head;
-		head = head->next;
-		if (head && head->next)
-			nxt = head->next;
-		else
-			nxt = NULL;
-	}
-}
-
-// CREER UN NOUVEAU NOEUD T_ENV
 t_env	*ft_env_new(t_minishell *minishell, char *str)
 {
 	t_env	*new;
@@ -134,14 +91,18 @@ t_env	*ft_env_find(t_env *head_env, char *to_find)
 	return (NULL);
 }
 
-// INITIALISE ENV AU DEMARRAGE
-void	ft_env_setup(t_minishell *minishell, char **envp)
+int	ft_env_setup(t_minishell *minishell, char **envp)
 {
 	int		i;
 	t_env	*new;
 
 	i = 0;
-	// CLASSICO CLASSIQUE BOUCLE D'INITIALISATION DE LISTE CHAINEE
+	if (!envp || !*envp)
+	{
+		ft_env_add(minishell, ft_env_new(minishell, "_=/usr/bin/env"));
+		ft_env_add(minishell, ft_env_new(minishell, ft_strjoin_free("PWD=", getcwd (NULL, 0), SECOND)));
+		return (SUCCESS);
+	}
 	while (envp[i])
 	{
 		new = ft_env_new(minishell, envp[i]);
@@ -151,5 +112,5 @@ void	ft_env_setup(t_minishell *minishell, char **envp)
 			ft_exit(minishell, GENERAL_ERROR, "Error setting up env");
 		i++;
 	}
-	// ft_env_print(minishell->head_env);
+	return (SUCCESS);
 }

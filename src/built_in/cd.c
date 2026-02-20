@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 19:49:15 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/20 12:38:46 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/20 18:32:32 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	ft_cd_back(t_minishell *minishell, char *old_pwd)
 	update_old_pwd(&minishell->head_env, old_pwd, minishell);
 	update_pwd(&minishell->head_env, minishell);
 	free(old_pwd);
-	ft_pwd();
+	ft_pwd(minishell);
 	return (SUCCESS);
 }
 
@@ -72,7 +72,7 @@ static int	ft_try_cd(char *path, t_minishell *minishell)
 {
 	struct stat	stat_file;
 
-	if (stat(path, &stat_file) != 0)
+	if (stat(path, &stat_file) != 0 )
 		return (ft_error(minishell, GENERAL_ERROR, strerror(errno), NULL));
 	if (!S_ISDIR(stat_file.st_mode))
 		return (ft_error(minishell, ENOTDIR, "cd: ", ft_strjoin_gc(path,
@@ -88,22 +88,39 @@ int	ft_cd(t_minishell *minishell, char **args)
 	char	*path;
 	int		res;
 
-	if (args[1] && args[2])
+	if (args[2])
 		return (ft_error(minishell, GENERAL_ERROR, "cd: ",
 				"too many arguments"));
-	if (ft_strcmp(args[1], "-") == 0)
+	if (args[1] && ft_strcmp(args[1], "-") == 0)
 	{
 		old_pwd = save_pwd();
 		return (ft_cd_back(minishell, old_pwd));
 	}
 	else
 		path = ft_define_path(minishell, args);
+	if (!path)
+		return (ft_error(minishell, GENERAL_ERROR, "cd: ", "HOME not set"));
+	old_pwd = save_pwd();
 	res = ft_try_cd(path, minishell);
 	if (res != SUCCESS)
 		return (res);
-	old_pwd = save_pwd();
 	update_old_pwd(&minishell->head_env, old_pwd, minishell);
 	free(old_pwd);
 	update_pwd(&minishell->head_env, minishell);
 	return (SUCCESS);
 }
+
+// ON LANCE MINISHELL
+// ON CREE CURRENT ET OLD A LA POSITION ACTUELLE (dans env_setup)
+// SI args[2]
+	// TROP D'ARGUMENTS
+// SI [cd] ou [cd ~]
+	// OLD = CURRENT
+	// CURRENT = HOME
+// SINON SI [cd -]
+	// OLD = CURRENT
+	// CURRENT = OLD
+// SINON SI [cd *str]
+	// OLD = CURRENT
+	// CURRENT = str
+// ft_try_cd(CURRENT->str, minishell)

@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 20:27:53 by fardeau           #+#    #+#             */
-/*   Updated: 2026/02/20 12:38:46 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/20 18:03:30 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 int	ft_env_format_check(char *str)
 {
-	if (!ft_isalpha(str[0]) && str[0] != '_')
+	if (str[0] == '_')
+		return (SUCCESS);
+	if (!ft_isalpha(str[0]))
 		return (GENERAL_ERROR);
 	return (SUCCESS);
 }
@@ -66,12 +68,12 @@ int	ft_export(t_minishell *minishell, int fd, char **args)
 	i = 1;
 	while (args[i])
 	{
-		if (ft_is_valid_key_env(args[i]) == 1 || ft_is_only(args[i], ft_isdigit)
-			|| (args[i][0] == '=' && !args[i][1]))
+		if (args[i] && (ft_is_valid_key_env(args[i]) == 1 || ft_is_only(args[i], ft_isdigit)
+			|| (args[i][0] == '=' && !args[i][1])))
 			return (ft_error(minishell, GENERAL_ERROR, ft_strjoin_gc("export: ",
 						args[i], &minishell->gc), ": not a valid identifier"));
-		else if (!ft_env_format_check(args[i]))
-			return (ft_create_or_update_env(minishell, args[i]));
+		else if (ft_env_format_check(args[i]) == SUCCESS)
+			ft_create_or_update_env(minishell, args[i]);
 		i++;
 	}
 	return (SUCCESS);

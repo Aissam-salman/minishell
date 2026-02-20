@@ -32,7 +32,7 @@ SRCS = src/main.c \
 
 OBJ_DIR = objs
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
-CC = cc -Wall -Wextra -Werror -fsanitize=address -g3
+CC = cc -Wall -Wextra -Werror -g3
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 INCS = -I. -Iincludes -I$(LIBFT_DIR)
@@ -62,4 +62,12 @@ fclean: clean
 	make fclean -C $(LIBFT_DIR)
 
 re: fclean all
+
+leaks: $(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes \
+ 		--suppressions=readline.supp --track-origins=yes ./$(NAME)
+
+leaksnoenv: $(NAME)
+	env -i valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes \
+ 		--suppressions=readline.supp --track-origins=yes ./$(NAME)
 

@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 14:15:59 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/19 21:19:22 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/20 18:03:30 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	run_built_in(t_cmd *cmd, t_minishell *minishell)
 	else if (ft_strcmp(str, "echo") == 0)
 		ft_echo(cmd->args);
 	else if (ft_strcmp(str, "pwd") == 0)
-		ft_pwd();
+		ft_pwd(minishell);
 	else if (ft_strcmp(str, "cd") == 0)
 		ft_cd(minishell, cmd->args);
 	else if (ft_strcmp(str, "!") == 0)

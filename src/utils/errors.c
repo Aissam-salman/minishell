@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 16:28:43 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/20 12:38:46 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/20 18:05:02 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 #include <asm-generic/errno-base.h>
 
 // ERROR + MSG SUR SORTIE ERREUR
+// PENSER  A PRENDRE EN COMPTRE STRERRRNO PLUS SIMPLE POUR LA GESTION
 int	ft_error(t_minishell *minishell, int error, char *str1, char *str2)
 {
-	// PENSER  A PRENDRE EN COMPTRE STRERRRNO PLUS SIMPLE POUR LA GESTION
 	if (minishell)
 		minishell->exit_status = error;
 	if (str1 || str2)
@@ -33,7 +33,6 @@ int	ft_error(t_minishell *minishell, int error, char *str1, char *str2)
 		perror("bash : ");
 		if (errno == EACCES)
 			return (126);
-		// return (errno);
 	}
 	return (error);
 }
@@ -41,11 +40,9 @@ int	ft_error(t_minishell *minishell, int error, char *str1, char *str2)
 // FONCTION DE FIN DE PROGRAMME, EXIT AVEC VALEUR CODE ERROR
 void	ft_exit(t_minishell *minishell, int error, char *str)
 {
-	// FREE / LIBERE TOUT
 	ft_gc_free_all(&minishell->gc);
 	rl_clear_history();
 	minishell->exit_status = error;
-	// IMPRIME ERREUR
 	if (str)
 	{
 		ft_putstr_fd(str, STDERR_FILENO);

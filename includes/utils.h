@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 13:20:04 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/19 20:57:17 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/20 18:03:30 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,7 @@ int		ft_cmd_size(t_cmd *cmd_head);
 t_env	*ft_env_new(t_minishell *minishell, char *str);
 int		ft_env_add(t_minishell *minishell, t_env *new_env);
 t_env	*ft_env_find(t_env *head_env, char *to_find);
-void	ft_env_setup(t_minishell *minishell, char **envp);
-void	ft_env_delone(t_env **head_env, char *target_name);
+int	ft_env_setup(t_minishell *minishell, char **envp);
 //------
 
 // UTILS/HEREDOC.C

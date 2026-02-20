@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 09:56:55 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/19 21:12:01 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/20 18:13:23 by tibras           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,14 @@ void	ft_echo(char **args);
 int		ft_cd(t_minishell *minishell, char **args);
 // BUILT_IN/CD_UTILS.C
 
+char	*ft_no_path(t_env *head_env);
 void	update_pwd(t_env **head_env, t_minishell *minishell);
 void	update_old_pwd(t_env **head_env, char *old_pwd, t_minishell *minishell);
 char	*save_pwd(void);
-char	*ft_no_path(t_env *head_env);
 //------
 
 // BUILT_IN/PWD.C
-int		ft_pwd(void);
+int		ft_pwd(t_minishell *minishell);
 //------
 
 // BUILT_IN/EXPORT.C
