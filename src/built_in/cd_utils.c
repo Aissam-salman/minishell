@@ -34,8 +34,7 @@ void	update_pwd(t_env **head_env, t_minishell *minishell)
 	ft_error(minishell, errno, "pwd", NULL);
 }
 
-void	update_old_pwd(t_env **head_env, char *old_pwd,
-		t_minishell *minishell)
+void	update_old_pwd(t_env **head_env, char *old_pwd, t_minishell *minishell)
 {
 	t_env	*env_old_pwd;
 

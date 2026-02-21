@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 20:42:27 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/20 18:03:30 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/21 17:37:45 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	ft_env_delone(t_env **head_env, char *target_name)
 	}
 }
 
-void ft_unset(t_env **head_env, char **args)
+void	ft_unset(t_env **head_env, char **args)
 {
 	int	i;
 

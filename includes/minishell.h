@@ -17,6 +17,18 @@
 # include "../libft/libft.h"
 # include "errors.h"
 
+// ── PARSING ─────────────────────────────────────────
+# include "parsing.h"
+
+// ── EXEC ────────────────────────────────────────────
+# include "exec.h"
+
+// ── BUILT-INS ───────────────────────────────────────
+# include "built_ins.h"
+
+// ── UTILS ───────────────────────────────────────────
+# include "utils.h"
+
 // PRODUITS IMPORTES
 # include <errno.h>
 # include <fcntl.h>
@@ -35,18 +47,6 @@
 # define SEPARATORS " $\'\"\t0"
 
 extern int	g_signal_glob;
-
-// ── PARSING ─────────────────────────────────────────
-# include "parsing.h"
-
-// ── EXEC ────────────────────────────────────────────
-# include "exec.h"
-
-// ── BUILT-INS ───────────────────────────────────────
-# include "built_ins.h"
-
-// ── UTILS ───────────────────────────────────────────
-# include "utils.h"
 
 void		print_header(void);
 

@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 20:27:53 by fardeau           #+#    #+#             */
-/*   Updated: 2026/02/20 18:03:30 by tibras           ###   ########.fr       */
+/*   Updated: 2026/02/21 17:24:34 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ int	ft_export(t_minishell *minishell, int fd, char **args)
 	i = 1;
 	while (args[i])
 	{
-		if (args[i] && (ft_is_valid_key_env(args[i]) == 1 || ft_is_only(args[i], ft_isdigit)
-			|| (args[i][0] == '=' && !args[i][1])))
+		if (args[i] && (ft_is_valid_key_env(args[i]) == 1 || ft_is_only(args[i],
+					ft_isdigit) || (args[i][0] == '=' && !args[i][1])))
 			return (ft_error(minishell, GENERAL_ERROR, ft_strjoin_gc("export: ",
 						args[i], &minishell->gc), ": not a valid identifier"));
 		else if (ft_env_format_check(args[i]) == SUCCESS)
