@@ -35,7 +35,7 @@ int		ft_cmd_size(t_cmd *cmd_head);
 t_env	*ft_env_new(t_minishell *minishell, char *str);
 int		ft_env_add(t_minishell *minishell, t_env *new_env);
 t_env	*ft_env_find(t_env *head_env, char *to_find);
-int	ft_env_setup(t_minishell *minishell, char **envp);
+int		ft_env_setup(t_minishell *minishell, char **envp);
 //------
 
 // UTILS/HEREDOC.C

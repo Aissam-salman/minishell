@@ -31,8 +31,7 @@ void	close_pipe_and_exec(t_cmd *cmd, t_minishell *minishell, int pipe_fd[2]);
 // EXEC/CHILD_EXEC_UTILS.C
 void	child_set(t_child *child, int i, int prev_pipe, int size_cmd);
 t_child	*ft_child_new(t_minishell *minishell, int size_cmd);
-
-//
+//------
 
 // EXEC/HANDLER.C
 void	handler_signal_child(void);

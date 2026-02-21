@@ -45,6 +45,7 @@ char	*ft_expand_home(t_minishell *minishell, char *path)
 		if (!tmp)
 			return (NULL);
 		new_path = ft_strjoin_gc(tmp->content, "/", &minishell->gc);
+		if (!new_path)
 			return (NULL);
 		new_path = ft_strjoin_gc(new_path, path + 1, &minishell->gc);
 		if (!new_path)
@@ -71,7 +72,7 @@ static int	ft_try_cd(char *path, t_minishell *minishell)
 {
 	struct stat	stat_file;
 
-	if (stat(path, &stat_file) != 0 )
+	if (stat(path, &stat_file) != 0)
 		return (ft_error(minishell, GENERAL_ERROR, strerror(errno), NULL));
 	if (!S_ISDIR(stat_file.st_mode))
 		return (ft_error(minishell, ENOTDIR, "cd: ", ft_strjoin_gc(path,
@@ -112,14 +113,14 @@ int	ft_cd(t_minishell *minishell, char **args)
 // ON LANCE MINISHELL
 // ON CREE CURRENT ET OLD A LA POSITION ACTUELLE (dans env_setup)
 // SI args[2]
-	// TROP D'ARGUMENTS
+// TROP D'ARGUMENTS
 // SI [cd] ou [cd ~]
-	// OLD = CURRENT
-	// CURRENT = HOME
+// OLD = CURRENT
+// CURRENT = HOME
 // SINON SI [cd -]
-	// OLD = CURRENT
-	// CURRENT = OLD
+// OLD = CURRENT
+// CURRENT = OLD
 // SINON SI [cd *str]
-	// OLD = CURRENT
-	// CURRENT = str
+// OLD = CURRENT
+// CURRENT = str
 // ft_try_cd(CURRENT->str, minishell)

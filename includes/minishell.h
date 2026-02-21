@@ -20,10 +20,10 @@
 // PRODUITS IMPORTES
 # include <errno.h>
 # include <fcntl.h>
-# include <stdio.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
@@ -31,11 +31,10 @@
 
 // MACROS
 # define BUFFER_SIZE 5000
-
 # define OPERATORS "|<>"
 # define SEPARATORS " $\'\"\t0"
 
-extern int			g_signal_glob;
+extern int	g_signal_glob;
 
 // ── PARSING ─────────────────────────────────────────
 # include "parsing.h"
@@ -49,7 +48,6 @@ extern int			g_signal_glob;
 // ── UTILS ───────────────────────────────────────────
 # include "utils.h"
 
-
-void	print_header(void);
+void		print_header(void);
 
 #endif

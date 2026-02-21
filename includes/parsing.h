@@ -43,5 +43,3 @@ void	ft_quotes_handle(t_minishell *minishell, t_token *token);
 //------
 
 #endif
-
-//------
