@@ -9,13 +9,6 @@
 
 #include "minishell.h"
 
-// TRAITER LES CHANGEMENTS D'ETAT
-/*
-	Lorsque "
-	Lorsque '
-	Lorsque SPACE
-*/
-
 // A SECURISER VIA LA TAILLE MAX
 int	ft_buffer_add(char *buffer, char c)
 {
@@ -35,7 +28,6 @@ int	ft_buffer_add(char *buffer, char c)
 // AFFECTE L'ETAT A MINISHELL POUR
 void	ft_state_detect(char c, t_minishell *minishell)
 {
-	// SI GUILLEMETS
 	if (c == '"')
 	{
 		if (minishell->state == NORMAL || minishell->state == WAITING)
@@ -43,7 +35,6 @@ void	ft_state_detect(char c, t_minishell *minishell)
 		else if (minishell->state == IN_DQUOTE)
 			minishell->state = NORMAL;
 	}
-	// SI APOSTROPHE
 	else if (c == '\'')
 	{
 		if (minishell->state == NORMAL || minishell->state == WAITING)
@@ -51,7 +42,6 @@ void	ft_state_detect(char c, t_minishell *minishell)
 		else if (minishell->state == IN_QUOTE)
 			minishell->state = NORMAL;
 	}
-	// SI EN PAUSE ET TROUVE UN AUTRE
 	else if (!ft_ischarset(c, SPACES) && minishell->state == WAITING)
 		minishell->state = NORMAL;
 }
@@ -63,7 +53,6 @@ int	ft_state_interpret(char *line, int *index, char *buffer,
 	int	len_buffer;
 
 	len_buffer = ft_strlen(buffer);
-	// SI ESPACES
 	if (ft_ischarset(line[*index], SPACES) && minishell->state == NORMAL)
 	{
 		if (len_buffer > 0)
@@ -72,7 +61,6 @@ int	ft_state_interpret(char *line, int *index, char *buffer,
 						"Fail Malloc Interpreter", NULL));
 		minishell->state = WAITING;
 	}
-	// SI OPERATORS
 	else if (ft_ischarset(line[*index], OPERATORS)
 		&& minishell->state == NORMAL)
 	{
@@ -83,7 +71,6 @@ int	ft_state_interpret(char *line, int *index, char *buffer,
 		if (ft_buffer_add(buffer, line[*index]))
 			return (BUFFER_FAIL);
 	}
-	// SI STATE != WAITING
 	else if (minishell->state != WAITING)
 	{
 		if (!ft_ischarset(line[*index], OPERATORS) && ft_ischarset(buffer[0],
@@ -100,40 +87,30 @@ int	ft_state_interpret(char *line, int *index, char *buffer,
 // CREE LA LISTE DES TOKENS A UTILSER POUR LE PARSING
 int	ft_token_lst_create(t_minishell *minishell)
 {
-	char	*line;
 	char	*buffer;
 	int		line_len;
 	int		i;
 
-	// On recupere la ligne
-	line = minishell->line;
-	line_len = ft_strlen(line);
+	line_len = ft_strlen(minishell->line);
 	minishell->state = NORMAL;
-	// INITIALISATION DU TABLEAU ARGS
 	buffer = ft_calloc_gc(line_len + 1, sizeof(char), &minishell->gc);
 	if (!buffer)
 		return (ft_error(minishell, MALLOC_FAIL,
 				"Fail Malloc Buffer Interpreter", NULL));
-	// BOUCLE POUR TRAITER CHAQUE CHAR DE MINISHELL.LINE
-	i = 0;
-	while (i < line_len)
+	i = -1;
+	while (++i < line_len)
 	{
-		// ON DETECTE L'ETAT POUR POUVOIR DETERMINER QUOI FAIRE DU CHARACTERE
-		ft_state_detect(line[i], minishell);
-		// ON TRAITE line[i] EN FONCTION DE L'ETAT
-		// ON INTERPRETE L'ETAT POUR CREER LA CHAINE DE TOKENS
-		if (ft_state_interpret(line, &i, buffer, minishell))
+		ft_state_detect(minishell->line[i], minishell);
+		if (ft_state_interpret(minishell->line, &i, buffer, minishell))
 			return (1);
-		i++;
 	}
-	line[i] = '\0';
+	minishell->line[i] = '\0';
 	if (minishell->state == IN_QUOTE || minishell->state == IN_DQUOTE)
-		return (ft_error(minishell, PARSING_FAIL,
-				"Syntax error: unclosed quotes", NULL));
-	if (ft_strlen(buffer) > 0)
-		if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
-			return (ft_error(minishell, MALLOC_FAIL, "Fail Malloc Interpreter",
-					NULL));
+		return (ft_error(minishell, PARSING_FAIL, ERR_QUOTES, NULL));
+	if (ft_strlen(buffer) > 0 && ft_token_add(minishell,
+			ft_token_create(minishell, buffer)))
+		return (ft_error(minishell, MALLOC_FAIL, "Fail Malloc Interpreter",
+				NULL));
 	return (0);
 }
 
@@ -149,14 +126,12 @@ void	ft_type_affect(t_minishell *minishell)
 		else if (current->str[0] == '<')
 		{
 			current->type = IN_CHEVRON;
-			// FIX: handle case if str[i] != <
 			if (current->str[1])
 				current->type = IN_DCHEVRON;
 		}
 		else if (current->str[0] == '>')
 		{
 			current->type = OUT_CHEVRON;
-			// FIX: handle case if str[i] != >
 			if (current->str[1])
 				current->type = OUT_DCHEVRON;
 		}
@@ -170,7 +145,6 @@ void	ft_type_affect(t_minishell *minishell)
 // On les récupere ensuite pour créer des phrases
 int	ft_tokenize(t_minishell *minishell)
 {
-	// ON RECUPERE LES TYPES DANS UN PREMIER TEMPS
 	if (ft_token_lst_create(minishell))
 		return (1);
 	ft_type_affect(minishell);
