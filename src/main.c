@@ -56,7 +56,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	ft_bzero(&minishell, sizeof(t_minishell));
 	ft_env_setup(&minishell, envp);
-	print_header();
+	// print_header();
 	while (1)
 	{
 		setup_signal();
