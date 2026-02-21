@@ -3,6 +3,7 @@ NAME= minishell
 SRCS = src/main.c \
 	   src/display.c \
 		src/parsing/lexer.c \
+		src/parsing/lexer_utils.c \
 		src/parsing/parser.c \
 		src/parsing/check.c \
 		src/parsing/check2.c \

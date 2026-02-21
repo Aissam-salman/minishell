@@ -1,29 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/05 15:58:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/09 16:22:59 by alamjada         ###   ########.fr       */
+/*   Created: 2026/02/21 19:04:22 by alamjada          #+#    #+#             */
+/*   Updated: 2026/02/21 19:04:29 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// A SECURISER VIA LA TAILLE MAX
-int	ft_buffer_add(char *buffer, char c)
-{
-	int	len;
-
-	len = ft_strlen(buffer);
-	if (len < BUFFER_SIZE)
-	{
-		buffer[len] = c;
-		buffer[len + 1] = '\0';
-		return (0);
-	}
-	else
-		return (ft_error(NULL, BUFFER_FAIL, "Insufficient buffer size", NULL));
-}
 
 // AFFECTE L'ETAT A MINISHELL POUR
 void	ft_state_detect(char c, t_minishell *minishell)
@@ -50,38 +37,14 @@ void	ft_state_detect(char c, t_minishell *minishell)
 int	ft_state_interpret(char *line, int *index, char *buffer,
 		t_minishell *minishell)
 {
-	int	len_buffer;
-
-	len_buffer = ft_strlen(buffer);
 	if (ft_ischarset(line[*index], SPACES) && minishell->state == NORMAL)
-	{
-		if (len_buffer > 0)
-			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
-				return (ft_error(minishell, MALLOC_FAIL,
-						"Fail Malloc Interpreter", NULL));
-		minishell->state = WAITING;
-	}
+		return (ft_state_inter_space_normal(minishell, buffer));
 	else if (ft_ischarset(line[*index], OPERATORS)
 		&& minishell->state == NORMAL)
-	{
-		if (len_buffer > 0 && (buffer[0] != line[*index] || len_buffer >= 2))
-			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
-				return (ft_error(minishell, MALLOC_FAIL,
-						"Fail Malloc Interpreter", NULL));
-		if (ft_buffer_add(buffer, line[*index]))
-			return (BUFFER_FAIL);
-	}
+		return (ft_state_inter_ope_normal(minishell, buffer, line, *index));
 	else if (minishell->state != WAITING)
-	{
-		if (!ft_ischarset(line[*index], OPERATORS) && ft_ischarset(buffer[0],
-				OPERATORS))
-			if (ft_token_add(minishell, ft_token_create(minishell, buffer)))
-				return (ft_error(minishell, MALLOC_FAIL,
-						"Fail Malloc Interpreter", NULL));
-		if (ft_buffer_add(buffer, line[*index]))
-			return (BUFFER_FAIL);
-	}
-	return (0);
+		return (ft_state_inter_not_waiting(minishell, buffer, line, *index));
+	return (SUCCESS);
 }
 
 // CREE LA LISTE DES TOKENS A UTILSER POUR LE PARSING

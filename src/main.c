@@ -6,7 +6,7 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 20:30:32 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/21 16:35:09 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/21 19:06:30 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	ft_run_shell(t_minishell *minishell)
 	return (SUCCESS);
 }
 
+// print_header();
 int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	minishell;
@@ -56,7 +57,6 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	ft_bzero(&minishell, sizeof(t_minishell));
 	ft_env_setup(&minishell, envp);
-	// print_header();
 	while (1)
 	{
 		setup_signal();

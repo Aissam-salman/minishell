@@ -6,7 +6,7 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 13:04:05 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/19 09:07:41 by alamjad         ###   ########.fr       */
+/*   Updated: 2026/02/21 19:09:00 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,7 @@ int	ft_expend(char *str, int *start, char *usable_str, t_minishell *minishell)
 		(*start)++;
 	}
 	// ON RECUPERE L'ENV
-	// ft_printf("BUFFER = %s\n", buffer);
 	path_env = ft_env_find(minishell->head_env, buffer);
-	// ft_printf("ENV = %s\n", env);
 	if (path_env && path_env->content)
 	{
 		if (ft_strlcat(usable_str, path_env->content,

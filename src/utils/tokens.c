@@ -6,7 +6,7 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 14:14:33 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/19 22:36:14 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/21 19:06:58 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 int	ft_tokens_count(t_token *head)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(head)
+	while (head)
 	{
 		i++;
 		head = head->next;
