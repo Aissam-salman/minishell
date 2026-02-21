@@ -6,7 +6,7 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 20:06:40 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/19 20:57:13 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/21 15:05:37 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,8 @@ extern int			g_signal_glob;
 
 // ── UTILS ───────────────────────────────────────────
 # include "utils.h"
+
+
+void	print_header(void);
 
 #endif

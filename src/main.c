@@ -6,14 +6,13 @@
 /*   By: alamjada <alamjada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 20:30:32 by alamjada          #+#    #+#             */
-/*   Updated: 2026/02/19 21:15:48 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/21 16:35:09 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "errors.h"
 #include "minishell.h"
 
-int	g_signal_glob = 0;
+int		g_signal_glob = 0;
 
 void	ft_minishell_reset(t_minishell *minishell)
 {
@@ -30,7 +29,7 @@ void	ft_minishell_reset(t_minishell *minishell)
 	minishell->head_token = NULL;
 	minishell->head_cmd = NULL;
 	minishell->state = NORMAL;
-	minishell->cached_status = minishell->exit_status ;
+	minishell->cached_status = minishell->exit_status;
 	minishell->exit_status = 0;
 }
 
@@ -57,11 +56,12 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	ft_bzero(&minishell, sizeof(t_minishell));
 	ft_env_setup(&minishell, envp);
+	print_header();
 	while (1)
 	{
 		setup_signal();
 		ft_minishell_reset(&minishell);
-		minishell.line = readline("foo$> ");
+		minishell.line = readline("Break ?   > ");
 		if (!minishell.line)
 			ft_exit(&minishell, minishell.exit_status, NULL);
 		if (!*minishell.line)
