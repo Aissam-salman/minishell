@@ -6,14 +6,15 @@
 /*   By: tibras <tibras@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 15:04:28 by tibras            #+#    #+#             */
-/*   Updated: 2026/02/21 19:42:39 by alamjada         ###   ########.fr       */
+/*   Updated: 2026/02/21 19:57:32 by alamjada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "errors.h"
+#include "includes/ft_output.h"
 #include "minishell.h"
 
-void ft_signal_heredoc_handler(int sig)
+void	ft_signal_heredoc_handler(int sig)
 {
 	(void)sig;
 	g_signal_glob = SIGINT;
@@ -21,17 +22,18 @@ void ft_signal_heredoc_handler(int sig)
 	close(STDIN_FILENO);
 }
 
-int ft_signal_here_ctrld(int saved_stdin, t_token *token)
+int	ft_signal_here_ctrld(int saved_stdin, t_token *token)
 {
 	dup2(saved_stdin, STDIN_FILENO);
 	close(saved_stdin);
-	ft_putstr_fd("minishell: warning: here-document delimited by end-of-file (wanted `", 2);
+	ft_putstr_fd("minishell: warning: here-document", 2);
+	ft_putstr_fd("delimited by end-of-file (wanted `", 2);
 	ft_putstr_fd(token->str, 2);
 	ft_putstr_fd("')\n", 2);
 	return (SUCCESS);
 }
 
-int ft_signal_here_ctrlc(int saved_stdin, char *line)
+int	ft_signal_here_ctrlc(int saved_stdin, char *line)
 {
 	dup2(saved_stdin, STDIN_FILENO);
 	close(saved_stdin);
@@ -45,7 +47,7 @@ void	ft_heredoc(t_minishell *minishell, t_cmd *cmd, t_token *token, int mod)
 	int		pipefd[2];
 	size_t	limiter_len;
 	size_t	line_len;
-	int 	saved_stdin;
+	int		saved_stdin;
 
 	limiter_len = ft_strlen(token->str);
 	if (pipe(pipefd))
@@ -74,7 +76,7 @@ void	ft_heredoc(t_minishell *minishell, t_cmd *cmd, t_token *token, int mod)
 		line = NULL;
 	}
 	close(saved_stdin);
-	//pipefd, minishell, mod, cmd
+	// pipefd, minishell, mod, cmd
 	close(pipefd[1]);
 	if (g_signal_glob == SIGINT)
 	{
