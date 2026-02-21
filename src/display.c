@@ -36,6 +36,6 @@ void	print_header(void)
 	printf("         (  - .-)  \033[3m~ chillin'...\033[0;1;35m\n");
 	printf("          >  ^  < \n");
 	printf("\033[1;37m");
-	printf("%63s\n", "by tibras and alamjada");
+	printf("%63s\n", "by alamjada and tibras");
 	printf("\033[0m\n");
 }
