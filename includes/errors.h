@@ -34,6 +34,8 @@ typedef enum e_errors
 
 # define ERRS_SYNT_NEAR "Syntax error near unexpected token "
 
+#define ERR_QUOTES "Syntax error: unclosed quotes"
+
 #endif
 
 //------
